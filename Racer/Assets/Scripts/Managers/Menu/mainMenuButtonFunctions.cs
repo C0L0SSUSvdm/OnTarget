@@ -45,7 +45,7 @@ public class mainMenuButtonFunctions : MonoBehaviour
 
     public void QuitToTitleScreen()
     {
-        gameManager.instance.SelectedUI = "TitleUI";
+        gameManager.instance.SelectedUI = "UI_Title";
         gameManager.instance.SelectedLevel = "TitleLevel";
         gameManager.instance.LoadSelectedLevel();
     }

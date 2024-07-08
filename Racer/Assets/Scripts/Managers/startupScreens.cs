@@ -95,11 +95,11 @@ public class startupScreens : MonoBehaviour
         }
         else
         {
-            gameManager.instance.ActiveUI = "TitleUI";
+            gameManager.instance.ActiveUI = "UI_Title";
             gameManager.instance.ActiveLevel = "TitleLevel";
             //gameManager.instance.SelectedUI = "GamePlayUI";
             //gameManager.instance.SelectedLevel = "DebugRoom2";
-            SceneManager.LoadSceneAsync("TitleUI", LoadSceneMode.Additive);
+            SceneManager.LoadSceneAsync("UI_Title", LoadSceneMode.Additive);
             SceneManager.LoadSceneAsync("TitleLevel", LoadSceneMode.Additive);
             SceneManager.UnloadSceneAsync("SplashScreens");
             SceneManager.UnloadSceneAsync("BlankScene");

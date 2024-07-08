@@ -40,16 +40,21 @@ public class gameManager : MonoBehaviour
     [SerializeField] public AudioSource MusicSource;
     [SerializeField] public AudioSource SFX;
 
+    [Header("----- Persistent Data -----")]
+    [SerializeField] GameObject PersistantDataObject;
+    [SerializeField] DataManager dataHandler;
+
     void Awake()
     {
         if (instance != null)
             Destroy(gameObject);
         else
-            instance = this;     
+            instance = this;
     }
 
     private void Start()
-    {   
+    {
+        dataHandler = PersistantDataObject.GetComponent<DataManager>();
         InitializeAudioMixer();
         if(GameManagerInitialized == false)
         {
@@ -121,9 +126,7 @@ public class gameManager : MonoBehaviour
         StopMusic();
         Menu.SetActive(false);
         LoadingScreen.SetActive(true);
-
-        
-        
+    
         SceneManager.UnloadSceneAsync(ActiveUI);
         SceneManager.UnloadSceneAsync(ActiveLevel);
         scenesToLoad.Add(SceneManager.LoadSceneAsync(SelectedUI, LoadSceneMode.Additive));
@@ -179,6 +182,8 @@ public class gameManager : MonoBehaviour
         //}
     }
 
+    #region ----------------- Audio Methods -----------------
+
     public void InitializeAudioMixer()
     {          
         float music = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
@@ -196,4 +201,12 @@ public class gameManager : MonoBehaviour
     {
         MusicSource.Stop();
     }
+    #endregion
+
+    #region ----------------- Save Load Methods -----------------
+    public DataManager DataManager()
+    {
+        return dataHandler;
+    }
+    #endregion
 }

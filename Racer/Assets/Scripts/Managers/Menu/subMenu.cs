@@ -9,9 +9,9 @@ public class subMenu : MonoBehaviour
 
     [Header("----- Members -----")]
 
-    [SerializeField] GameObject activeView;
+    [SerializeField] protected GameObject activeView;
 
-    protected void ToggleTab(GameObject obj)
+    public void ToggleTab(GameObject obj)
     {
         if (activeView == obj)
         {
@@ -28,7 +28,7 @@ public class subMenu : MonoBehaviour
         }
     }
 
-    protected void CloseActiveTab()
+    public void CloseActiveTab()
     {
         activeView.SetActive(false);
         activeView = null;
