@@ -785,13 +785,13 @@ MonoBehaviour:
   steerPower: 35
   brakePower: 2500
   basemass: 1000
-  baseDrag: 0.1
+  baseDrag: 50
   baseAngularDrag: 0.05
-  mass: 20
+  mass: 200
   wheelDampingRate: 100
   suspensionDistance: 0.3
   forceAppPointDistance: 0.2
-  SpringForce: 35000
+  SpringForce: 3500
   SpringDamper: 4500
   SpringTargetPosition: 0.5
   fwdExtremumSlip: 0.8
@@ -1034,7 +1034,7 @@ WheelCollider:
     targetPosition: 0.5
   m_SuspensionDistance: 0.3
   m_ForceAppPointDistance: -0.2
-  m_Mass: 20
+  m_Mass: 142.51
   m_WheelDampingRate: 50
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
