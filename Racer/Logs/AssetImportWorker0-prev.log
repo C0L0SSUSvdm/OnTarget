@@ -1,0 +1,202 @@
+Unity Editor version:    2021.3.10f1 (1c7d0df0160b)
+Branch:                  2021.3/staging
+Build type:              Release
+Batch mode:              YES
+macOS version:           Version 14.5 (Build 23F79)
+Darwin version:          23.5.0
+Architecture:            arm64
+Running under Rosetta:   NO
+Available memory:        32768 MB
+Using pre-set license
+Pro License: YES
+
+COMMAND LINE ARGUMENTS:
+/Applications/Unity/Hub/Editor/2021.3.10f1/Unity.app/Contents/MacOS/Unity
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker0
+-projectPath
+/Users/mathewarenson/Desktop/Modeling Projects/P1 Race car/OnTarget/Racer
+-logFile
+Logs/AssetImportWorker0.log
+-srvPort
+56240
+Successfully changed project path to: /Users/mathewarenson/Desktop/Modeling Projects/P1 Race car/OnTarget/Racer
+/Users/mathewarenson/Desktop/Modeling Projects/P1 Race car/OnTarget/Racer
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gfx=262144"
+Refreshing native plugins compatible for Editor in 74.70 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2021.3.10f1 (1c7d0df0160b)
+[Subsystems] Discovering subsystems at path /Applications/Unity/Hub/Editor/2021.3.10f1/Unity.app/Contents/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path /Users/mathewarenson/Desktop/Modeling Projects/P1 Race car/OnTarget/Racer/Assets
+GfxDevice: creating device client; threaded=0; jobified=0
+ preferred device: Apple M1 Max (high power)
+Metal devices available: 1
+0: Apple M1 Max (high power)
+Using device Apple M1 Max (high power)
+Initializing Metal device caps: Apple M1 Max
+Initialize mono
+Mono path[0] = '/Applications/Unity/Hub/Editor/2021.3.10f1/Unity.app/Contents/Managed'
+Mono path[1] = '/Applications/Unity/Hub/Editor/2021.3.10f1/Unity.app/Contents/MonoBleedingEdge/lib/mono/unityjit-macos'
+Mono config path = '/Applications/Unity/Hub/Editor/2021.3.10f1/Unity.app/Contents/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56793
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: /Applications/Unity/Hub/Editor/2021.3.10f1/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll
+Registered in 0.001022 seconds.
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 77.57 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.459 seconds
+Domain Reload Profiling:
+	ReloadAssembly (459ms)
+		BeginReloadAssembly (55ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (0ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (1ms)
+		EndReloadAssembly (326ms)
+			LoadAssemblies (55ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (74ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (22ms)
+			SetupLoadedEditorAssemblies (198ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (4ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (78ms)
+				BeforeProcessingInitializeOnLoad (1ms)
+				ProcessInitializeOnLoadAttributes (86ms)
+				ProcessInitializeOnLoadMethodAttributes (29ms)
+				AfterProcessingInitializeOnLoad (0ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (0ms)
+Platform modules already initialized, skipping
+Registering precompiled user dll's ...
+Registered in 0.005459 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image /Users/mathewarenson/Desktop/Modeling Projects/P1 Race car/OnTarget/Racer/Library/PackageCache/com.unity.visualscripting@1.7.8/Editor/VisualScripting.Core/Dependencies/YamlDotNet/Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image /Users/mathewarenson/Desktop/Modeling Projects/P1 Race car/OnTarget/Racer/Library/PackageCache/com.unity.visualscripting@1.7.8/Editor/VisualScripting.Core/Dependencies/DotNetZip/Unity.VisualScripting.IonicZip.dll
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 0.36 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.681 seconds
+Domain Reload Profiling:
+	ReloadAssembly (682ms)
+		BeginReloadAssembly (61ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (4ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (17ms)
+		EndReloadAssembly (543ms)
+			LoadAssemblies (49ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (188ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (38ms)
+			SetupLoadedEditorAssemblies (236ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (3ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (0ms)
+				BeforeProcessingInitializeOnLoad (58ms)
+				ProcessInitializeOnLoadAttributes (154ms)
+				ProcessInitializeOnLoadMethodAttributes (20ms)
+				AfterProcessingInitializeOnLoad (1ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (3ms)
+Platform modules already initialized, skipping
+========================================================================
+Worker process is ready to serve import requests
+Launching external process: /Applications/Unity/Hub/Editor/2021.3.10f1/Unity.app/Contents/Tools/UnityShaderCompiler
+Launched and connected shader compiler UnityShaderCompiler after 0.03 seconds
+Refreshing native plugins compatible for Editor in 0.42 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3432 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 25 unused Assets / (40.3 KB). Loaded Objects now: 3893.
+Memory consumption went from 114.9 MB to 114.8 MB.
+Total: 2.544625 ms (FindLiveObjects: 0.110959 ms CreateObjectMapping: 0.050166 ms MarkObjects: 2.311875 ms  DeleteObjects: 0.070834 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:framework-osx-AVFoundation: e770b220cccbd017edd2c1fefb359320 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 406597.500055 seconds.
+  path: Assets/Audio/Mixer.mixer
+  artifactKey: Guid(55fd3aa9ca6ad4a4ba458575212cb4fa) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Audio/Mixer.mixer using Guid(55fd3aa9ca6ad4a4ba458575212cb4fa) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f8de2ffafd5326816ec89628b9221753') in 0.061992 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 13.055895 seconds.
+  path: Assets/WorkInProgress/Louis/model/barrel_model.fbx
+  artifactKey: Guid(92344a50664299040b641fd85f959f99) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/WorkInProgress/Louis/model/barrel_model.fbx using Guid(92344a50664299040b641fd85f959f99) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '19efec3faf2ddd5167f852801cd90a5e') in 0.118437 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000057 seconds.
+  path: Assets/WorkInProgress/Louis/model/fence_model_v01.fbx
+  artifactKey: Guid(5d175418c8244614d9d00891c02f0f90) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/WorkInProgress/Louis/model/fence_model_v01.fbx using Guid(5d175418c8244614d9d00891c02f0f90) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9487e5f70034748a9b1ca53a76c83a00') in 0.039799 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 3.264799 seconds.
+  path: Assets/WorkInProgress/Mathew Arenson/Models/New Start and finish sign.obj
+  artifactKey: Guid(f197a9b3c390649ffb9b237d2bd02ec3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/WorkInProgress/Mathew Arenson/Models/New Start and finish sign.obj using Guid(f197a9b3c390649ffb9b237d2bd02ec3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5d3239ccb86e8e3b4c89e700e676ac12') in 0.754496 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000055 seconds.
+  path: Assets/WorkInProgress/Mathew Arenson/Models/Track 1.obj
+  artifactKey: Guid(f318d20c4d98f4947bb10113f8a129ff) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/WorkInProgress/Mathew Arenson/Models/Track 1.obj using Guid(f318d20c4d98f4947bb10113f8a129ff) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '3a75466e69b068190247a04b9336ac55') in 0.016046 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000052 seconds.
+  path: Assets/WorkInProgress/Mathew Arenson/Models/Start line sign copy.jpg
+  artifactKey: Guid(3861438b6e0ad4748a651db729a5e68f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/WorkInProgress/Mathew Arenson/Models/Start line sign copy.jpg using Guid(3861438b6e0ad4748a651db729a5e68f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'bb6e88638f7b68f15b5db68869c921fb') in 0.308686 seconds 
