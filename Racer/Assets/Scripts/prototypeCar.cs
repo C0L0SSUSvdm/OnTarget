@@ -88,7 +88,7 @@ public class prototypeCar : MonoBehaviour
     void Start()
     {
         gameManager.instance.SetPlayerObejct(this.gameObject);
-        SetRigidBodyProperties();
+        //SetRigidBodyProperties();
         InitializeWheelReferences();
         SetWheelBasics(wheel_FL);
         SetWheelBasics(wheel_FR);
@@ -117,7 +117,7 @@ public class prototypeCar : MonoBehaviour
 
     void Update()
     {
-        SetRigidBodyProperties();
+        //SetRigidBodyProperties();
         SetWheelBasics(wheel_FL);
         SetWheelBasics(wheel_FR);
         SetWheelBasics(wheel_BL);
@@ -134,10 +134,14 @@ public class prototypeCar : MonoBehaviour
 
         //Player Inputs, Move to Player Script to Inherit from this Script
         float torque = Input.GetAxis("Vertical") * motorPower;
+
         wheel_FL.motorTorque = torque;
         wheel_FR.motorTorque = torque;
         wheel_BL.motorTorque = torque;
         wheel_BR.motorTorque = torque;
+
+
+
 
         float angle = Input.GetAxis("Horizontal") * steerPower;
         wheel_FL.steerAngle = angle;
@@ -173,6 +177,7 @@ public class prototypeCar : MonoBehaviour
         //Step 1: Calculate rotation angle for the cameras local offset position
 
         float forwardInput = Input.GetAxisRaw("Vertical");
+        
         if (forwardInput >= 0)
         {
             forwardInput = 1;
@@ -243,11 +248,12 @@ public class prototypeCar : MonoBehaviour
 
     void SetRigidBodyProperties()
     {
-        rigidBody.interpolation = RigidbodyInterpolation.Interpolate;
+        //rigidBody.interpolation = RigidbodyInterpolation.Interpolate;
 
         rigidBody.mass = basemass;
         rigidBody.drag = baseDrag;
         rigidBody.angularDrag = baseAngularDrag;
+        //rigidBody.useGravity = true;
     }
 
     void SetWheelBasics(WheelCollider wheel)
