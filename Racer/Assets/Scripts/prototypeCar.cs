@@ -113,6 +113,8 @@ public class prototypeCar : MonoBehaviour
         {
             SwingDirection = 1;
         }
+
+        //Physics.gravity = new Vector3(0, -1.0F, 0);
     }
 
     void Update()
@@ -130,7 +132,7 @@ public class prototypeCar : MonoBehaviour
         SetWheelFriction(wheel_FR);
         SetWheelFriction(wheel_BL);
         SetWheelFriction(wheel_BR);
-
+        
 
         //Player Inputs, Move to Player Script to Inherit from this Script
         float torque = Input.GetAxis("Vertical") * motorPower;
