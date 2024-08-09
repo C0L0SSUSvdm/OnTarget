@@ -782,17 +782,17 @@ MonoBehaviour:
   CameraTiltAngle: 0
   ToggleCameraSwing: 1
   motorPower: 20000
-  steerPower: 12
+  steerPower: 11
   brakePower: 2500
-  basemass: 13000
+  basemass: 9000
   baseDrag: 70
   baseAngularDrag: 0.05
   mass: 1100
   wheelDampingRate: 100
   suspensionDistance: 0.3
-  forceAppPointDistance: 0.2
-  SpringForce: 3500
-  SpringDamper: 4500
+  forceAppPointDistance: 0.4
+  SpringForce: 4500
+  SpringDamper: 3500
   SpringTargetPosition: 0.5
   fwdExtremumSlip: 0.8
   fwdExtremumValue: 1
@@ -818,7 +818,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4197590361882754322}
   serializedVersion: 2
-  m_Mass: 600
+  m_Mass: 6000
   m_Drag: 0.2
   m_AngularDrag: 0.1
   m_UseGravity: 1

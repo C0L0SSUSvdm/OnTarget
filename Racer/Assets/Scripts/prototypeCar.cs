@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class prototypeCar : MonoBehaviour
 {
+    //[SerializeField] float Grav = -1.0f;
 
     [Header("----- Camera Settings -----")]
     [Tooltip("This is the Raycast Origin for the Camera")]
@@ -114,7 +115,7 @@ public class prototypeCar : MonoBehaviour
             SwingDirection = 1;
         }
 
-        //Physics.gravity = new Vector3(0, -1.0F, 0);
+        //Physics.gravity = new Vector3(0, Grav, 0);
     }
 
     void Update()
