@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class prototypeCar : MonoBehaviour
 {
+    //[SerializeField] float Grav = -1.0f;
 
     [Header("----- Camera Settings -----")]
     [Tooltip("This is the Raycast Origin for the Camera")]
@@ -88,7 +89,7 @@ public class prototypeCar : MonoBehaviour
     void Start()
     {
         gameManager.instance.SetPlayerObejct(this.gameObject);
-        SetRigidBodyProperties();
+        //SetRigidBodyProperties();
         InitializeWheelReferences();
         SetWheelBasics(wheel_FL);
         SetWheelBasics(wheel_FR);
@@ -113,11 +114,14 @@ public class prototypeCar : MonoBehaviour
         {
             SwingDirection = 1;
         }
+
+        //Physics.gravity = new Vector3(0, Grav, 0);
     }
 
     void Update()
     {
-        SetRigidBodyProperties();
+        
+        //SetRigidBodyProperties();
         SetWheelBasics(wheel_FL);
         SetWheelBasics(wheel_FR);
         SetWheelBasics(wheel_BL);
@@ -134,10 +138,14 @@ public class prototypeCar : MonoBehaviour
 
         //Player Inputs, Move to Player Script to Inherit from this Script
         float torque = Input.GetAxis("Vertical") * motorPower;
+
         wheel_FL.motorTorque = torque;
         wheel_FR.motorTorque = torque;
         wheel_BL.motorTorque = torque;
         wheel_BR.motorTorque = torque;
+
+
+
 
         float angle = Input.GetAxis("Horizontal") * steerPower;
         wheel_FL.steerAngle = angle;
@@ -148,15 +156,10 @@ public class prototypeCar : MonoBehaviour
         float brake = Input.GetKey(KeyCode.Space) ? brakePower : 0;
         wheel_FL.brakeTorque = brake;
         wheel_FR.brakeTorque = brake;
-
-        wheelMesh_FL.transform.localPosition = new Vector3(2, wheel_FL.suspensionDistance * -0.5f, 0);
-        wheelMesh_FR.transform.localPosition = new Vector3(-2, wheel_FR.suspensionDistance * -0.5f, 0);
-        wheelMesh_BL.transform.localPosition = new Vector3(0, wheel_BL.suspensionDistance * -0.5f, 0);
-        wheelMesh_BR.transform.localPosition = new Vector3(0, wheel_BR.suspensionDistance * -0.5f, 0);
-
+        
         HUD.Item.UpdateSpeedometer(rigidBody.velocity.magnitude);
 
-
+        AnimateWheels();
     }
 
     private void LateUpdate()
@@ -173,6 +176,7 @@ public class prototypeCar : MonoBehaviour
         //Step 1: Calculate rotation angle for the cameras local offset position
 
         float forwardInput = Input.GetAxisRaw("Vertical");
+        
         if (forwardInput >= 0)
         {
             forwardInput = 1;
@@ -243,11 +247,12 @@ public class prototypeCar : MonoBehaviour
 
     void SetRigidBodyProperties()
     {
-        rigidBody.interpolation = RigidbodyInterpolation.Interpolate;
+        //rigidBody.interpolation = RigidbodyInterpolation.Interpolate;
 
         rigidBody.mass = basemass;
         rigidBody.drag = baseDrag;
         rigidBody.angularDrag = baseAngularDrag;
+        //rigidBody.useGravity = true;
     }
 
     void SetWheelBasics(WheelCollider wheel)
@@ -289,5 +294,20 @@ public class prototypeCar : MonoBehaviour
             asymptoteValue = sideAsymptoteValue,
             stiffness = sideStiffness
         };
+    }
+
+    void AnimateWheels()
+    {
+        Vector3 pos;
+        Quaternion rot;
+        wheel_FL.GetWorldPose(out pos, out rot);
+        wheelMesh_FL.transform.SetPositionAndRotation(wheel_FL.transform.position + new Vector3(0, wheel_FL.suspensionDistance * -0.5f, 0), rot);
+        wheel_FR.GetWorldPose(out pos, out rot);
+        wheelMesh_FR.transform.SetPositionAndRotation(wheel_FR.transform.position + new Vector3(0, wheel_FR.suspensionDistance * -0.5f, 0), rot);
+        wheel_BL.GetWorldPose(out pos, out rot);
+        wheelMesh_BL.transform.SetPositionAndRotation(wheel_BL.transform.position + new Vector3(0, wheel_BL.suspensionDistance * -0.5f, 0), rot);
+        wheel_BR.GetWorldPose(out pos, out rot);
+        wheelMesh_BR.transform.SetPositionAndRotation(wheel_BR.transform.position + new Vector3(0, wheel_BR.suspensionDistance * -0.5f, 0), rot);
+        
     }
 }

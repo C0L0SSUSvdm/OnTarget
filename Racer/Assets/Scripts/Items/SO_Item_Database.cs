@@ -14,7 +14,7 @@ public class SO_Item_Database : ScriptableObject, ISerializationCallbackReceiver
 
     public void OnAfterDeserialize()
     {
-        Debug.Log("After Deserialize");
+        //Debug.Log("After Deserialize");
         itemMap = new Dictionary<uint, Item>();
         idMap = new Dictionary<Item, uint>();
         AddItemArrayToDictionary();

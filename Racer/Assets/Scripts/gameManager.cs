@@ -44,6 +44,8 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject PersistantDataObject;
     [SerializeField] DataManager dataHandler;
 
+    [SerializeField] public float Grav = -9.82f;
+
     void Awake()
     {
         if (instance != null)
@@ -62,6 +64,8 @@ public class gameManager : MonoBehaviour
             scenesToLoad.Add(SceneManager.LoadSceneAsync(SelectedLevel, LoadSceneMode.Additive));
             StartCoroutine(LoadingProgress());
         }
+        Physics.gravity = new Vector3(0, Grav, 0);
+
     }
 
     void Update()
