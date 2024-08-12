@@ -47,7 +47,8 @@ public class Wheel : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         DrawForwardArrow();
-        DrawHelix();
+        if(transform.parent != null)
+            DrawHelix();
     }
 
     void DrawGizmoWheel()
