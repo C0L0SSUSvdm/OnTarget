@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6657638582831102463}
   - component: {fileID: 527653795664097934}
   - component: {fileID: 320260801438777472}
+  - component: {fileID: 3422717433560376318}
   m_Layer: 0
   m_Name: Wheel_Right
   m_TagString: Untagged
@@ -47,14 +48,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3379bc260be444643ba0bb5343e469fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WheelCollider: {fileID: 320260801438777472}
+  MaximumSpringForce: 0
+  springLength: 0
+  springRestPosition: 0
+  springShockDisipation: 0
+  springBobberForce: 0
+  SpringStiffness: 1
+  SpringDampening: 1
+  LastFramesVelocity: {x: 0, y: 0, z: 0}
+  DeltaVelocity: {x: 0, y: 0, z: 0}
+  DistanceFromGround: 0
+  SpringMass: 0
+  RoadCollider: {fileID: 0}
   MaxTurnAngle: 15
   CurrentTurnAngle: 0
   WheelSize: 1
   GizmoSpringOffset: 0.5
-  GizmoSpringLength: 0
   GizmoSpringRadius: 0.2
   isGrounded: 0
+  line: {fileID: 0}
 --- !u!33 &6657638582831102463
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -119,3 +131,17 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -937226228880852356, guid: 8daf64b54120f3842a4ea495ec3822cf, type: 3}
+--- !u!136 &3422717433560376318
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7143897251326755843}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.25
+  m_Height: 1.25
+  m_Direction: 2
+  m_Center: {x: 0, y: -0.82, z: 0}

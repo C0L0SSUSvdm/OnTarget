@@ -119,24 +119,35 @@ MonoBehaviour:
   airDensity: 1.838
   dragCoefficients: {x: 0.5, y: 1, z: 0.3}
   BodyAreas: {x: 3, y: 5, z: 2.2}
-  WorldForces: {x: 0, y: 0, z: 0}
+  EnvironmentForces: {x: 0, y: 0, z: 0}
+  ActingForces: {x: 0, y: 0, z: 0}
   freefallResistance_y: {x: 0, y: 0, z: 0}
   freefallResistance_x: {x: 0, y: 0, z: 0}
   freefallResistance_z: {x: 0, y: 0, z: 0}
-  steeringColumn: {fileID: 5514439489027508417}
-  Chasis: {fileID: 8003404041378083612}
+  collisionCounter: 0
+  ResetCounter: 0
+  SpringForce: 0
+  wheelMass: 1
+  SpringLength: 1
+  SpringDamper: 1
   SteerAngle: 0
   ForwardForce: 20000
-  SpringLength: 1
-  wheelGrounded_FL: 0
-  wheelGrounded_FR: 0
-  wheelGrounded_BL: 0
-  wheelGrounded_BR: 0
+  steeringColumn: {fileID: 5514439489027508417}
+  Chasis: {fileID: 8003404041378083612}
   wheelFL: {fileID: 7371083171695984443}
   wheelFR: {fileID: 6103815443312062908}
   wheelBL: {fileID: 2335275327339331868}
   wheelBR: {fileID: 8577158539934452627}
+  wheelFL_distance: 0
+  wheelFR_distance: 0
+  wheelBL_distance: 0
+  wheelBR_distance: 0
+  wheelFL_mass: 0
+  wheelFR_mass: 0
+  wheelBL_mass: 0
+  wheelBR_mass: 0
   windDirection: {x: 0, y: 0, z: 0}
+  CenterOfMass: {fileID: 74266621795601102}
 --- !u!1 &4471707095913003636
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,6 +448,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wheel_Right Rear
       objectReference: {fileID: 0}
+    - target: {fileID: 7371320089504205971, guid: f379aa4e4cc38574aaa0bb85ff8c9c12, type: 3}
+      propertyPath: GizmoSpringOffset
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7371320089504205971, guid: f379aa4e4cc38574aaa0bb85ff8c9c12, type: 3}
+      propertyPath: GizmoSpringRadius
+      value: 0.15
+      objectReference: {fileID: 0}
     - target: {fileID: 8518140023466118943, guid: f379aa4e4cc38574aaa0bb85ff8c9c12, type: 3}
       propertyPath: GizmoSpringOffset
       value: -0.6
@@ -460,6 +479,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6741920244295713006}
     m_Modifications:
+    - target: {fileID: 1977543872362107409, guid: e0f0e6694655e0d4695af7638a6baccc, type: 3}
+      propertyPath: GizmoSpringOffset
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977543872362107409, guid: e0f0e6694655e0d4695af7638a6baccc, type: 3}
+      propertyPath: GizmoSpringRadius
+      value: 0.15
+      objectReference: {fileID: 0}
     - target: {fileID: 4168702200620959719, guid: e0f0e6694655e0d4695af7638a6baccc, type: 3}
       propertyPath: m_Name
       value: Wheel_Left Rear
@@ -595,6 +622,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wheel_Right
       objectReference: {fileID: 0}
+    - target: {fileID: 7371320089504205971, guid: f379aa4e4cc38574aaa0bb85ff8c9c12, type: 3}
+      propertyPath: GizmoSpringOffset
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7371320089504205971, guid: f379aa4e4cc38574aaa0bb85ff8c9c12, type: 3}
+      propertyPath: GizmoSpringRadius
+      value: 0.15
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f379aa4e4cc38574aaa0bb85ff8c9c12, type: 3}
 --- !u!4 &3568596558663213649 stripped
@@ -614,6 +649,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6741920244295713006}
     m_Modifications:
+    - target: {fileID: 1977543872362107409, guid: e0f0e6694655e0d4695af7638a6baccc, type: 3}
+      propertyPath: GizmoSpringOffset
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977543872362107409, guid: e0f0e6694655e0d4695af7638a6baccc, type: 3}
+      propertyPath: GizmoSpringRadius
+      value: 0.15
+      objectReference: {fileID: 0}
     - target: {fileID: 4168702200620959719, guid: e0f0e6694655e0d4695af7638a6baccc, type: 3}
       propertyPath: m_Name
       value: Wheel_Left

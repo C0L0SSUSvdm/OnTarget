@@ -8,7 +8,7 @@ public class CarCamera : MonoBehaviour
     [Tooltip("This is the Raycast Origin for the Camera")]
     [SerializeField] GameObject CameraAnchor;
     //[SerializeField] GameObject RayCastOrigin;
-    [SerializeField] baseCar carScript;
+    [SerializeField] baseVehicle VehicleScript;
 
     [Tooltip("Current Euler Angle for Lerping a rotation around the car")]
     [SerializeField] float CameraAngleY = 0;
@@ -42,7 +42,7 @@ public class CarCamera : MonoBehaviour
 
 
         CameraAnchor = transform.parent.gameObject;
-        carScript = CameraAnchor.transform.parent.GetComponent<baseCar>();
+        VehicleScript = CameraAnchor.transform.parent.GetComponent<baseVehicle>();
     }
 
     private void LateUpdate()
@@ -66,14 +66,14 @@ public class CarCamera : MonoBehaviour
             forwardInput = 1;
             //Moves Camera to the outside of the turn at the steer angle
             //CameraAngleY = -wheel_FL.steerAngle;
-            CameraAngleY = Mathf.LerpAngle(CameraAngleY, SwingDirection * carScript.GetSteeringAngle(), Time.deltaTime * CameraRatationSpeed);
+            CameraAngleY = Mathf.LerpAngle(CameraAngleY, SwingDirection * VehicleScript.GetSteeringAngle(), Time.deltaTime * CameraRatationSpeed);
         }
         else
         {
             //Calculate the Reverse Camera Angles and Values
             reverseScalar = CameraReverseLookScalar;
             float maxAngle = 180;
-            if (Camera.main.transform.localRotation.y < 0)
+            if (transform.localRotation.y < 0)
             {
                 maxAngle *= -1;
             }
@@ -113,7 +113,7 @@ public class CarCamera : MonoBehaviour
         //Camera.main.transform.LookAt(gameObject.transform.position + (gameObject.transform.forward  * 15)); //Static Camera look Position
 
         //Step 6: Give the Camera a little bit of a tilt on turns
-        CameraTiltAngle = Mathf.LerpAngle(CameraTiltAngle, carScript.GetSteeringAngle() * CameraTiltDampener, Time.deltaTime * CameraRatationSpeed);
+        CameraTiltAngle = Mathf.LerpAngle(CameraTiltAngle, VehicleScript.GetSteeringAngle() * CameraTiltDampener, Time.deltaTime * CameraRatationSpeed);
         transform.Rotate(Vector3.back, CameraTiltAngle * forwardInput);
     }
 }

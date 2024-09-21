@@ -12,11 +12,10 @@ public class GravityBody : MonoBehaviour
     [SerializeField] Vector3 dragCoefficients = new Vector3(0.5f, 1, 0.3f); //Drag Coefficient of a Car
     [SerializeField] Vector3 BodyAreas = new Vector3(3.0f, 5.0f, 2.2f); //Frontal Area of a Car
 
-    [SerializeField] protected Vector3 WorldForces = Vector3.zero;
-
-    [SerializeField] Vector3 freefallResistance_y = Vector3.zero;
-    [SerializeField] Vector3 freefallResistance_x = Vector3.zero;
-    [SerializeField] Vector3 freefallResistance_z = Vector3.zero;
+    protected Vector3 EnvironmentForces = Vector3.zero;
+    Vector3 freefallResistance_y = Vector3.zero;
+    Vector3 freefallResistance_x = Vector3.zero;
+    Vector3 freefallResistance_z = Vector3.zero;
 
     protected Vector3 CalculateGravity()
     {
@@ -46,14 +45,16 @@ public class GravityBody : MonoBehaviour
         }
 
 
-        WorldForces = new Vector3(freefallResistance_x.x, y_force + freefallResistance_y.y, freefallResistance_z.z);
-        return WorldForces;
+        EnvironmentForces = new Vector3(freefallResistance_x.x, y_force + freefallResistance_y.y, freefallResistance_z.z);
+        return EnvironmentForces;
         //rb.AddForce(freefallResistance_x.x, y_force + freefallResistance_y.y, freefallResistance_z.z);
     }
 
+    // Rigidbody is already applying interference forces from world objects
+    // Only need to apply gravity because I'm not using unity's gravity physics
     protected void ApplyGravity()
     {
-        rb.AddForce(WorldForces);
+        rb.AddForce(EnvironmentForces);
     }
 
 
@@ -92,5 +93,37 @@ public class GravityBody : MonoBehaviour
     {
         CalculateGravity();
         ApplyGravity();
+
     }
+
+    public Vector3 GetWeight()
+    {
+        return EnvironmentForces + (rb.velocity * rb.mass);
+    }
+
+    ////Find Forces from things acting on the car.
+    private void OnCollisionStay(Collision collision)
+    {
+        
+
+
+        //Rigidbody rb = collision.gameObject.GetComponent<Rigidbody>();
+        //if(rb != null)
+        //{
+        //    collisionCounter++;
+        //    Vector3 test = (rb.mass * rb.velocity) + (rb.mass * Physics.gravity);            
+        //    ActingForces += test;
+        //    if(ActingForces.y < -80000)
+        //    {
+        //        Debug.Log($"obj: {collision.gameObject.name}, mass: {rb.mass}, velocity: {rb.velocity}, this collision: {test}, total collistion: {ActingForces}");
+        //    }
+        //    else
+        //    {
+        //        Debug.Log($"velocity: {rb.velocity}, this collision: {test}, total collistion: {ActingForces}");
+        //    }
+        //}
+        
+
+    }
+
 }
