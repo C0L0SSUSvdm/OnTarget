@@ -11,7 +11,7 @@ public class baseVehicle : GravityBody
     [SerializeField] protected float MotorForce = 10.0f;
     //https://www.hagerty.com/media/maintenance-and-tech/10-factors-that-influence-an-engines-character/#:~:text=How%20an%20engine%20breathes%20is,and%20fuel%20into%20the%20cylinders.
     [Header("----- Engine Item Fields -----")]
-    [Range(0.05f, 1.0f), SerializeField] float CamShaftRadius = 0.1f;// length = pi r
+    [Range(0.2f, 1.0f), SerializeField] float CamShaftRadius = 0.75f;// length = pi r
     [SerializeField] float CylinderCount = 8;
     [SerializeField] float CrankShaftAngle = 45; // 1 / (Number of Cylinders), can be other angles
     [SerializeField] float MaxRPMs = 8000;
@@ -20,12 +20,14 @@ public class baseVehicle : GravityBody
     [SerializeField] float RunTimeCompressionRatio;
     [SerializeField] float RunTimeMeanRPM;
     [SerializeField] float RunTimeCurveDeviation_Inverse;
+    [SerializeField] float RunTimeBackPressure;
     [Header ("---- Air Control Valve -----")]
     [Range(500, 1500), SerializeField] float IdleRPMs = 1000;
     [Header("----- Piston Fields -----")]
     [Range(-20, 20), SerializeField] float PistonCC = 0;
     [Header("----- Engine Header -----")]
     [Range(10, 200), SerializeField] float ChamberVolume = 46.0f;
+    [Range(0.01f, 0.2f), SerializeField] float HeaderBackPressure = 0.1f;
     [Header("----- Transmission Fields -----")]
     [SerializeField] int GearIndex = 0;
     [SerializeField] int ShiftUpRPM = 6000;
@@ -36,6 +38,11 @@ public class baseVehicle : GravityBody
     [SerializeField] float DifferentialRatio = 3.42f;
     [Header("----- Wheel Fields -----")]
     [SerializeField] float DriveWheelRadius = 1.0f;
+    [Header("----- Turbo Fields -----")]
+    [Range(1.0f, 5.0f), SerializeField] float TurboBoost = 2.3f;
+    [Header("----- Exhaust Header -----")]
+    [Range(0.1f, 1.0f), SerializeField] float ExhaustHeaderBackPressure = 0.5f;
+    [Header("----- Exhaust Pipes -----")] float ExhaustPipeBackPressure = 1.3f;
 
     [Header("----- Collider Fields -----")]
     [SerializeField] Transform COM; //Center of Mass
@@ -74,6 +81,10 @@ public class baseVehicle : GravityBody
         wheel_BL.InitializeSuspension(rb);
         wheel_BR.InitializeSuspension(rb);
 
+        CurrentRPMs = IdleRPMs;
+        //TODO: Current BackPressure is linear, Calculate BackPressure on some kind of bell curve to find optimal value
+        RunTimeBackPressure = HeaderBackPressure + ExhaustHeaderBackPressure + ExhaustPipeBackPressure;
+        InitializeNormalDistibutionCurve();
     }
 
     protected new void Update()
@@ -106,6 +117,7 @@ public class baseVehicle : GravityBody
 
     protected void ApplyGasPedal(float input)
     {
+        
         if(CurrentRPMs < ShiftDownRPM && GearIndex > 0)
         {
             GearIndex--;
@@ -117,14 +129,18 @@ public class baseVehicle : GravityBody
 
         float wheelTrainRatio = DifferentialRatio * GearRatio[GearIndex] * DriveWheelRadius * CrankShaftAngle;
         float RPM_fromKineticEnergy = wheel_BL.AngularVelocity / wheelTrainRatio;
-        float deltaRPM = RPM_fromKineticEnergy - CurrentRPMs; //Convert deltaRPM to Force
-        if (input != 0)
+        //float deltaRPM = RPM_fromKineticEnergy - CurrentRPMs; //Convert deltaRPM to Force
+        if (input != 0) //Exponential Increase of RPM
         {
-            CurrentRPMs = Mathf.Lerp(CurrentRPMs, MaxRPMs, Time.deltaTime * (RPM_fromKineticEnergy - CurrentRPMs + 1));
+            float CurveRatio = Mathf.Pow(PistonDiameter, CalculateCurveExponent());
+            //TODO: Add TurboBoose, BackPressure, 
+            float RateOfChange = CurveRatio * CylinderCount * RunTimeCompressionRatio * RunTimeBackPressure * 15;
+            CurrentRPMs += RateOfChange * Time.deltaTime;
+            
         }
-        else
+        else //Linear Reduction of RPM
         {
-            CurrentRPMs = Mathf.Lerp(CurrentRPMs, IdleRPMs, Time.deltaTime * (RPM_fromKineticEnergy - CurrentRPMs + 1));
+            CurrentRPMs = Mathf.Lerp(CurrentRPMs, IdleRPMs, (CurrentRPMs - IdleRPMs) * Time.deltaTime * Time.deltaTime * 0.5f);
         }
         wheel_BL.DriveWheel(CurrentRPMs, wheelTrainRatio);
         wheel_BR.DriveWheel(CurrentRPMs, wheelTrainRatio);
@@ -156,13 +172,14 @@ public class baseVehicle : GravityBody
     {
         float minimumCompression = ChamberVolume + PistonCC;
         // Total Volume when piston at lowest Point / Volume when Piston at highest Point
-        float ConvertToCC = 16.387f;
+        float ConvertToCC = 16.387f;//cubic inches to Cubic Centimeter ratio
         RunTimeCompressionRatio = (((Mathf.PI / PistonDiameter) * PistonDiameter * PistonDiameter * ConvertToCC) + minimumCompression) / minimumCompression;
         
         RunTimeMeanRPM = (MaxRPMs - IdleRPMs) * 0.5f;
 
         float deviation = MaxRPMs / (CylinderCount * CamShaftRadius);
-        RunTimeCurveDeviation_Inverse = (1 / 2 * deviation * deviation);
+
+        RunTimeCurveDeviation_Inverse = 1 / (2 * deviation * deviation);
 
 
     }
@@ -173,6 +190,7 @@ public class baseVehicle : GravityBody
         float test2 = test * test;
         float test3 = (test2 * RunTimeCurveDeviation_Inverse);
         //Make Sure to return a negative value to make the bell curve
+        Debug.Log(test3);
         return -test3;
     }
 }
