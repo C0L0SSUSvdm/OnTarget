@@ -144,6 +144,9 @@ public class prototypeCar : MonoBehaviour
         wheel_BL.motorTorque = torque;
         wheel_BR.motorTorque = torque;
 
+
+
+
         float angle = Input.GetAxis("Horizontal") * steerPower;
         wheel_FL.steerAngle = angle;
         wheel_FR.steerAngle = angle;

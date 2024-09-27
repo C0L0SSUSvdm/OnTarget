@@ -1,55 +1,72 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
-using UnityEditor.UIElements;
 using UnityEngine;
 
-public class baseCar : GravityBody
+public class baseCar : MonoBehaviour
 {
-    [Header("----- Temporary Fields -----")]
-    [Range(1, 100000), SerializeField] float SpringForce;
-    [Tooltip("The Length of the Shock Absorber, Will likely be moved to item")]
-    [Range(1, 100), SerializeField] float wheelMass = 1;
-    [Range(0, 2), SerializeField] float SpringLength = 1.2f;
-    [Range(1, 100000), SerializeField] float SpringDamper = 1;
-    [SerializeField] float SteerAngle;
-    [SerializeField] protected float MotorForce = 10.0f;
-
-
     [Header("Car Parts")]
-    [SerializeField] GameObject steeringColumn;
     [SerializeField] GameObject Chasis;
-    [SerializeField] GameObject wheelFL;
-    [SerializeField] GameObject wheelFR;
-    [SerializeField] GameObject wheelBL;
-    [SerializeField] GameObject wheelBR;
 
-    [SerializeField] float wheelFL_distance;
-    [SerializeField] float wheelFR_distance;
-    [SerializeField] float wheelBL_distance;
-    [SerializeField] float wheelBR_distance;
+    [SerializeField] protected Rigidbody rb;
+    [SerializeField] protected float ForwardForce = 10.0f;
 
-    [SerializeField] float wheelFL_mass = 0;
-    [SerializeField] float wheelFR_mass = 0;
-    [SerializeField] float wheelBL_mass = 0;
-    [SerializeField] float wheelBR_mass = 0;
+    [Tooltip("The Length of the Shock Absorber, Will likely be moved to item")]
+    [Range(0, 2), SerializeField] float SpringLength = 1.2f;
 
-    Wheel wheelFL_data;
-    Wheel wheelFR_data;
-    Wheel wheelBL_data;
-    Wheel wheelBR_data;
 
+    [SerializeField] protected Wheel wheelFL;
+    [SerializeField] protected Wheel wheelFR;
+    [SerializeField] protected Wheel wheelBL;
+    [SerializeField] protected Wheel wheelBR;
 
     [Header("----- Environment Fields -----)")]
     [SerializeField] Vector3 windDirection;
-    [SerializeField] GameObject CenterOfMass;
+    //[SerializeField] float windSpeed = 0.0f;
 
+    [SerializeField] float airDensity = 1.838f; //Sea Level Air Density 1.225 kg/m^3
+    [Tooltip("Drag Coefficients for a Car in Cartesian Cooridnates, (xyz) = (Sides, Top/bottom, front/back")]
+    [SerializeField] Vector3 dragCoefficients = new Vector3(0.5f, 1, 0.3f); //Drag Coefficient of a Car
+    [SerializeField] Vector3 CarAreas = new Vector3(3.0f, 5.0f, 2.2f); //Frontal Area of a Car
+
+    void ApplyForces()
+    {
+        float y_force = rb.mass * Physics.gravity.y;
+        Vector3 freefallResistance_y = CalculateResistance(Vector3.up, rb.velocity.y);
+        Vector3 freefallResistance_x = CalculateResistance(Vector3.right, rb.velocity.x);
+        Vector3 freefallResistance_z = CalculateResistance(Vector3.forward, rb.velocity.z);
+
+        Debug.Log($"wind resistance: {new Vector3(freefallResistance_x.x, freefallResistance_y.y, freefallResistance_z.z)}, speed: {rb.velocity.y}");
+   
+        rb.AddForce(new Vector3(freefallResistance_y.x - freefallResistance_x.x, y_force + freefallResistance_y.y, freefallResistance_y.z - freefallResistance_z.z));
+    }
+
+    /// <summary>
+    /// Pojects a wind direction onto the car car and calculates the area used from each side and returns the amount of force applied to the car in Cartesian Coordinates
+    /// Formula used: 0.5f * airDensity * dragCoefficients * carAreaUsed * windSpeed * windSpeed
+    /// </summary>
+    /// <param name="NormalizedWindDirection"></param>
+    /// <returns></returns>
+    Vector3 CalculateResistance(Vector3 NormalizedWindDirection, float windSpeed)
+    {
+        //Project the Direction of the Wind on to the Car
+        float front = Mathf.Max(0, Vector3.Dot(NormalizedWindDirection, transform.forward)) * CarAreas.z;
+        float top = Mathf.Max(0, Vector3.Dot(NormalizedWindDirection, transform.up)) * CarAreas.y;
+        float rightside = Mathf.Max(0, Vector3.Dot(NormalizedWindDirection, -transform.right)) * CarAreas.x;
+
+        float backproject = Mathf.Max(0, Vector3.Dot(NormalizedWindDirection, -transform.forward)) * CarAreas.z;
+        float bottomproject = Mathf.Max(0, Vector3.Dot(NormalizedWindDirection, -transform.up)) * CarAreas.y;
+        float leftside = Mathf.Max(0, Vector3.Dot(NormalizedWindDirection, transform.right)) * CarAreas.x;
+
+        float carAreaUsed = front + top + rightside + backproject + bottomproject + leftside;
+        Vector3 ForceApplied = 0.5f * airDensity * dragCoefficients * carAreaUsed * windSpeed * windSpeed;
+
+        return ForceApplied;
+    }
+
+    // Start is called before the first frame update
     void Start()
     {
-        wheelFL_data = wheelFL.GetComponent<Wheel>();
-        wheelFR_data = wheelFR.GetComponent<Wheel>();
-        wheelBL_data = wheelBL.GetComponent<Wheel>();
-        wheelBR_data = wheelBR.GetComponent<Wheel>();
+       
 
         rb = gameObject.AddComponent<Rigidbody>();
         rb.useGravity = false;
@@ -57,131 +74,46 @@ public class baseCar : GravityBody
         rb.drag = 0;// 0.5f;
         rb.angularDrag = 0;// 0.5f;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
-        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
-        wheelFL_data.SetMaxTurnAngle(35);
-        wheelFR_data.SetMaxTurnAngle(35);
+        wheelFL.SetMaxTurnAngle(35);
+        wheelFR.SetMaxTurnAngle(35);
 
         UpdateSprings();
         
     }
 
-
     // Update is called once per frame
-    public new void Update()
+    protected void Update()
     {
-        //base.Update();
-        CalculateGravity();
-
-
-
-
-        //int groundedWheels = 0;
-        float sumOfDistances = 0;
-        float sumOfSuspension = 0;
-       
-        if (wheelFL_data.isGrounded)
-        {
-            //groundedWheels++;
-            wheelFL_distance = Vector3.Distance(wheelFL_data.transform.localPosition, CenterOfMass.transform.localPosition);
-            sumOfDistances += wheelFL_distance;
-            sumOfSuspension += wheelFL_data.GetCompressedDistance();
-            //Debug.Log($"{sumOfSuspension}, FL: {wheelFL_data.GetCompressedDistance()}");
-        }
-        if (wheelFR_data.isGrounded)
-        {
-            //groundedWheels++;
-            wheelFR_distance = Vector3.Distance(wheelFR_data.transform.localPosition, CenterOfMass.transform.localPosition);
-            sumOfDistances += wheelFR_distance;
-            sumOfSuspension += wheelFR_data.GetCompressedDistance();
-            //Debug.Log($"{sumOfSuspension}, FR: {wheelFR_data.GetCompressedDistance()}");
-        }
-        if (wheelBL_data.isGrounded)
-        {
-            //groundedWheels++;
-            wheelBL_distance = Vector3.Distance(wheelBL_data.transform.localPosition, CenterOfMass.transform.localPosition);
-            sumOfDistances += wheelBL_distance;
-            sumOfSuspension += wheelBL_data.GetCompressedDistance();
-            //Debug.Log($"{sumOfSuspension}, BL: {wheelBL_data.GetCompressedDistance()}");
-        }
-        if (wheelBR_data.isGrounded)
-        {
-            //groundedWheels++;
-            wheelBR_distance = Vector3.Distance(wheelBR_data.transform.localPosition, CenterOfMass.transform.localPosition);
-            sumOfDistances += wheelBR_distance;
-            sumOfSuspension += wheelBR_data.GetCompressedDistance();
-            //Debug.Log($"{sumOfSuspension}, BR: {wheelBR_data.GetCompressedDistance()}");
-        }
-
-        float inverseSumOfDistances = (sumOfDistances != 0 ? 1 / sumOfDistances : 0);
-        float inverseSumOfSuspension = (sumOfSuspension != 0 ? (1 / sumOfSuspension) : 0);
-
-        wheelFL_mass = wheelFL_data.isGrounded ? rb.mass * wheelFL_data.GetCompressedDistance() * inverseSumOfSuspension : 0;
-        wheelFR_mass = wheelFR_data.isGrounded ? rb.mass * wheelFR_data.GetCompressedDistance() * inverseSumOfSuspension : 0;
-        wheelBL_mass = wheelBL_data.isGrounded ? rb.mass * wheelBL_data.GetCompressedDistance() * inverseSumOfSuspension : 0;
-        wheelBR_mass = wheelBR_data.isGrounded ? rb.mass * wheelBR_data.GetCompressedDistance() * inverseSumOfSuspension : 0;
-
-        float weight = GetWeight().y * inverseSumOfDistances;
-        float suspension = GetWeight().y * inverseSumOfSuspension;
-
-        Vector3 fl = wheelFL_data.GetCurrentSpringForce(rb.GetPointVelocity(wheelFL.transform.position), wheelFL_mass, weight * wheelFL_distance);
-        Vector3 fr = wheelFR_data.GetCurrentSpringForce(rb.GetPointVelocity(wheelFR.transform.position), wheelFR_mass, weight * wheelFR_distance);
-        Vector3 bl = wheelBL_data.GetCurrentSpringForce(rb.GetPointVelocity(wheelBL.transform.position), wheelBL_mass, weight * wheelBL_distance);
-        Vector3 br = wheelBR_data.GetCurrentSpringForce(rb.GetPointVelocity(wheelBR.transform.position), wheelBR_mass, weight * wheelBR_distance);
-
+        //Chasis.transform.position = new Vector3(0, SpringLength, -3.0f);
+        UpdateSprings();
+        ApplyForces();
         
-        //rb.AddForceAtPosition(fl, wheelFL.transform.position, ForceMode.Force);
-        //rb.AddForceAtPosition(fr, wheelFR.transform.position, ForceMode.Force);
-        //rb.AddForceAtPosition(bl, wheelBL.transform.position, ForceMode.Force);
-        //rb.AddForceAtPosition(br, wheelBR.transform.position, ForceMode.Force);
-
-
-        ApplyGravity();
     }
-
-
 
     protected void TurnCar(float input)
     {
-       
-
-
-
-        //transform.Rotate(0, wheelFL_data.GetTurnAngle() * Time.deltaTime * rb.velocity.magnitude, 0);   
+        
+        transform.Rotate(0, wheelFL.GetTurnAngle() * Time.deltaTime * rb.velocity.magnitude, 0);   
     }
 
-    protected void ApplyGasPedal(float GasPedal)
+    protected void AddForcesToCar(Vector3 forces)
     {
-
-        if(wheelBL_data.isGrounded)
-        {
-            rb.AddForceAtPosition(transform.forward * GasPedal * MotorForce, wheelBL.transform.position);
-        }
-        if (wheelBR_data.isGrounded)
-        {
-            rb.AddForceAtPosition(transform.forward * GasPedal * MotorForce, wheelBR.transform.position);
-        }
+        rb.AddForce(forces);
     }
 
     protected void UpdateWheelTurnAngle(float ratio)
     {
-
-        wheelFL_data.UpdateWheelAngle(ratio); //TODO:: Clean up with better steer angle communication
-        wheelFR_data.UpdateWheelAngle(ratio);
+        wheelFL.UpdateWheelAngle(ratio);
+        wheelFR.UpdateWheelAngle(ratio);
     }
 
      void UpdateSprings()
     {
-        wheelFL_data.InitializeShockAbsorber(SpringLength, SpringForce, SpringDamper, wheelMass);
-        wheelFR_data.InitializeShockAbsorber(SpringLength, SpringForce, SpringDamper, wheelMass);
-        wheelBR_data.InitializeShockAbsorber(SpringLength, SpringForce, SpringDamper, wheelMass);
-        wheelBL_data.InitializeShockAbsorber(SpringLength, SpringForce, SpringDamper, wheelMass);
+        wheelFL.SetShockAbsorberLength(SpringLength);
+        wheelFR.SetShockAbsorberLength(SpringLength);
+        wheelBL.SetShockAbsorberLength(SpringLength);
+        wheelBR.SetShockAbsorberLength(SpringLength);
     }
     
-    public float GetSteeringAngle()
-    {
-        return wheelFL_data.GetTurnAngle();
-    }
-
 }
-
