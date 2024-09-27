@@ -254,7 +254,6 @@ MonoBehaviour:
   massOnWheel: 0
   SpringRestPosition: 0
   Wheel: {fileID: 2162125354338624969}
-  WheelSize: 1
   AngularVelocity: 0
   SpringHelix: {fileID: 758087184076561277}
   SpringThickness: 0.035
@@ -433,7 +432,6 @@ MonoBehaviour:
   massOnWheel: 0
   SpringRestPosition: 0
   Wheel: {fileID: 57012648096002074}
-  WheelSize: 1
   AngularVelocity: 0
   SpringHelix: {fileID: 2001337042841432021}
   SpringThickness: 0.035
@@ -839,7 +837,6 @@ MonoBehaviour:
   massOnWheel: 0
   SpringRestPosition: 0
   Wheel: {fileID: 3534365839533297361}
-  WheelSize: 1
   AngularVelocity: 0
   SpringHelix: {fileID: 521169789014616070}
   SpringThickness: 0.035
@@ -1018,7 +1015,6 @@ MonoBehaviour:
   massOnWheel: 0
   SpringRestPosition: 0
   Wheel: {fileID: 7752079403560621325}
-  WheelSize: 1
   AngularVelocity: 0
   SpringHelix: {fileID: 1249354695317139900}
   SpringThickness: 0.035
@@ -1156,7 +1152,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5376036760903563066
 Transform:
   m_ObjectHideFlags: 0
@@ -1303,12 +1299,33 @@ MonoBehaviour:
   airDensity: 1.838
   dragCoefficients: {x: 0.5, y: 1, z: 0.3}
   BodyAreas: {x: 3, y: 5, z: 2.2}
+  EnvironmentForces: {x: 0, y: 0, z: 0}
+  freefallResistance_y: {x: 0, y: 0, z: 0}
+  freefallResistance_x: {x: 0, y: 0, z: 0}
+  freefallResistance_z: {x: 0, y: 0, z: 0}
+  controller: {fileID: 0}
   maximumSteerAngle: 15
   currentSteerAngle: 0
   MotorForce: 20000
-  CamShafdRadius: 0.1
+  isClutchEngaged: 1
+  AeroDynamicDrag: 0.5
+  CamShaftRadius: 0.75
   CylinderCount: 8
+  CrankShaftAngle: 45
+  MaxRPMs: 8000
+  CurrentRPMs: 0
+  PistonDiameter: 4.5
+  RunTimeCompressionRatio: 0
+  RunTimeMeanRPM: 0
+  RunTimeCurveDeviation_Inverse: 0
+  RunTimeBackPressure: 0
+  IdleRPMs: 1000
+  PistonCC: 0
+  ChamberVolume: 46
+  HeaderBackPressure: 0.1
   GearIndex: 0
+  ShiftUpRPM: 6000
+  ShiftDownRPM: 2000
   ShiftTime: 0.1
   GearRatio:
   - 3.82
@@ -1318,8 +1335,22 @@ MonoBehaviour:
   - 0.72
   - 0.5
   DifferentialRatio: 3.42
+  DriveWheelRadius: 1
+  TurboBoost: 2.3
+  ExhaustHeaderBackPressure: 0.5
   COM: {fileID: 4556235776714807338}
   SteerPoint: {fileID: 758172352775314430}
+  RayCastOrigin: {fileID: 8245888265824781154}
+  CameraAngleY: 0
+  CameraRatationSpeed: 10
+  cameraFollowDistance: 20
+  cameraExtraHeight: 10
+  CurrentCameraLookPoint: {x: 0, y: 0, z: 0}
+  CameraLookOffset: 15
+  CameraReverseLookScalar: 2
+  CameraTiltDampener: 0.2
+  CameraTiltAngle: 0
+  ToggleCameraSwing: 0
 --- !u!1 &7752079403560621325
 GameObject:
   m_ObjectHideFlags: 0

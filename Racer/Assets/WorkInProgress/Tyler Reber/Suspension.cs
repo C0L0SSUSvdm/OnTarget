@@ -23,7 +23,7 @@ public class Suspension : MonoBehaviour
     [SerializeField] float SpringRestPosition;
     [Header("----- Wheel Values -----")]
     [SerializeField] GameObject Wheel;
-    [SerializeField] public float WheelRadius = 1.0f;
+    //[SerializeField] public float WheelRadius = 1.0f;
     [SerializeField] public float AngularVelocity; //w
 
 
@@ -81,39 +81,38 @@ public class Suspension : MonoBehaviour
         rb = rigidBody;
     }
 
-    public void DriveWheel(float RPMs, float torque)
+    public void DriveWheel(float WheelAngularVelocity)
     {
-        torque *= WheelRadius;
-        float theta = Wheel.transform.localRotation.eulerAngles.x;
-        if (isGrounded)
-        {
-            //Calculate How much work is being done, Amount of force actually turning the wheel
-            //Torque = Sum of Ratios * Crank Shaft Angle
-            float currentSpeed = WheelVelocity.magnitude * (WheelRadius * 2 * Mathf.PI);
-            float wheelRPM = currentSpeed / torque;
+        AngularVelocity = WheelAngularVelocity;      
+        float theta = AngularVelocity;
+        //if (isGrounded)
+        //{
 
+        //    //Debug.Log($"{torque}, {RPMs}");
+        //    Vector3 force = transform.forward * 100 * Input.GetAxis("Vertical");
+        //    //Debug.Log($"Force: {force}");
+        //    //rb.AddForceAtPosition(force, transform.localPosition, ForceMode.Acceleration);          
+        //}
+        //else
+        //{
 
-            //rb.AddForceAtPosition(transform.forward * power, transform.position);          
-        }
-        else
-        {
-
-        }
-        Wheel.transform.localRotation = Quaternion.Euler(theta, 0, 0);
+        //}
+        Wheel.transform.Rotate(theta, 0, 0);
     }
 
-    public void SteerVehicle()
+    public float SteerVehicle()
     {
-        //transform.Rotate(0, wheelFL_data.GetTurnAngle() * Time.deltaTime * rb.velocity.magnitude, 0);   
+        
         Vector3 steerDirection = transform.right;
         Vector3 wheelWorldVelocity = rb.GetPointVelocity(transform.position);
 
         float SteerVelocity = Vector3.Dot(steerDirection, wheelWorldVelocity);
-
+        //Debug.Log($"Steer Velocity: {SteerVelocity}, WheelWorldVelocity: {wheelWorldVelocity}");
         float desiredSteerVelocity = -SteerVelocity * 0.9f; //Friction or slippage
         float acceleration = desiredSteerVelocity / Time.deltaTime;
-        Debug.Log($"Steer Dir: {steerDirection}, acceleration: {acceleration}, weight: {massOnWheel}, total: {steerDirection * acceleration * massOnWheel}");
-        rb.AddForceAtPosition(steerDirection * acceleration * 75, transform.position);
+
+        //rb.AddForceAtPosition(steerDirection * acceleration, transform.position, ForceMode.Acceleration);
+        return acceleration;
     }
 
     public float COMDistance(Transform CenterOfMass)
@@ -156,7 +155,7 @@ public class Suspension : MonoBehaviour
 
     public Vector3 UpdateSpringPhysics(Vector3 WheelVelocity)
     {
-        Vector3 returnedForce = Vector3.zero;
+        //Vector3 returnedForce = Vector3.zero;
         Vector3 newPhysicalWheelPosition = transform.localPosition;
         float inverseMass = massOnWheel != 0 ? 1 / massOnWheel : WheelMass;
 
@@ -192,13 +191,16 @@ public class Suspension : MonoBehaviour
         else if (newPhysicalWheelPosition.y >= 0)
         {
             newPhysicalWheelPosition.y = 0;
-            returnedForce.y = (newPhysicalWheelPosition.y + EffectiveSpringLength) * SpringStrength;
+            //returnedForce.y = (newPhysicalWheelPosition.y + EffectiveSpringLength) * SpringStrength;
         }
         
         transform.localPosition = newPhysicalWheelPosition;
 
 
-        return returnedForce;
+        float y = WheelMass * Physics.gravity.y;
+        rb.AddForceAtPosition(transform.up * y, transform.position - new Vector3(0, -EffectiveSpringLength, 0), ForceMode.Force);
+
+        return transform.up * -(weightOnWheel + massOnWheel);
     }
 
     public void OnTriggerEnter(Collider other)

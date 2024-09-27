@@ -2,47 +2,61 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class baseVehicle : GravityBody
 {
     [Header("----- Vehicle Fields -----")]
+    [SerializeField] CharacterController controller;
     [SerializeField] float maximumSteerAngle;
-    [SerializeField] float currentSteerAngle;
+    [SerializeField] protected float currentSteerAngle;
     [SerializeField] protected float MotorForce = 10.0f;
+    [SerializeField] bool isClutchEngaged = true;
+    [SerializeField] float AeroDynamicDrag = 0.5f;
     //https://www.hagerty.com/media/maintenance-and-tech/10-factors-that-influence-an-engines-character/#:~:text=How%20an%20engine%20breathes%20is,and%20fuel%20into%20the%20cylinders.
     [Header("----- Engine Item Fields -----")]
-    [Range(0.2f, 1.0f), SerializeField] float CamShaftRadius = 0.75f;// length = pi r
+    [Range(0.01f, 1.0f), SerializeField] float EngineEfficiency = 0.3f;
+    [Range(0.1f, 1.0f), SerializeField] float CamShaftRadius = 0.75f;// length = pi r
+    [Tooltip("Value assumed to be in inches")]
+    [Range(1.00f, 3.0f), SerializeField] float CrankShaftRadius = 2.2f; //CrankThrow Radius is different from CrankShaft Radius
     [SerializeField] float CylinderCount = 8;
     [SerializeField] float CrankShaftAngle = 45; // 1 / (Number of Cylinders), can be other angles
-    [SerializeField] float MaxRPMs = 8000;
-    [SerializeField] float CurrentRPMs = 0;
-    [SerializeField] float PistonDiameter = 4.5f;
+    [SerializeField] float RedLineRPM = 8000;
+    [SerializeField] float CurrentRPM = 0;
+    //[SerializeField] float CurrentHorsePower = 0;
+    [SerializeField] float PistonDiameter = 4.0f;
+    [Tooltip("Typically 8.0 to 12.0 ")]
+    [SerializeField] float EngineCompressionRatio = 10.0f;
     [SerializeField] float RunTimeCompressionRatio;
     [SerializeField] float RunTimeMeanRPM;
     [SerializeField] float RunTimeCurveDeviation_Inverse;
     [SerializeField] float RunTimeBackPressure;
+    [SerializeField] float RunTimeCombustionForce;
     [Header ("---- Air Control Valve -----")]
-    [Range(500, 1500), SerializeField] float IdleRPMs = 1000;
+    [Range(500, 1500), SerializeField] float IdleRPMs = 1500;
     [Header("----- Piston Fields -----")]
     [Range(-20, 20), SerializeField] float PistonCC = 0;
-    [Header("----- Engine Header -----")]
-    [Range(10, 200), SerializeField] float ChamberVolume = 46.0f;
+    [Header("----- Engine Header -----")] //Phase Out
+    [Range(50, 200), SerializeField] float ChamberVolume = 59.0f;
     [Range(0.01f, 0.2f), SerializeField] float HeaderBackPressure = 0.1f;
     [Header("----- Transmission Fields -----")]
     [SerializeField] int GearIndex = 0;
     [SerializeField] int ShiftUpRPM = 6000;
     [SerializeField] int ShiftDownRPM = 2000;
     [SerializeField] float ShiftTime = 0.1f;
-    [SerializeField] float[] GearRatio = new float[6] { 0.50f, 0.72f, 1.0f, 1.4f, 2.2f, 3.82f };
+    [SerializeField] float[] GearRatio = new float[6] { 3.82f, 2.2f, 1.4f, 1.0f, 0.8f, 0.6f };
     [Header("----- Differential Fields -----")]
     [SerializeField] float DifferentialRatio = 3.42f;
     [Header("----- Wheel Fields -----")]
-    [SerializeField] float DriveWheelRadius = 1.0f;
+    [SerializeField] float RearTireRadius = 1.0f;
     [Header("----- Turbo Fields -----")]
     [Range(1.0f, 5.0f), SerializeField] float TurboBoost = 2.3f;
     [Header("----- Exhaust Header -----")]
     [Range(0.1f, 1.0f), SerializeField] float ExhaustHeaderBackPressure = 0.5f;
-    [Header("----- Exhaust Pipes -----")] float ExhaustPipeBackPressure = 1.3f;
+    [Header("----- Exhaust Pipes -----")] 
+    [SerializeField] float ExhaustPipeBackPressure = 1.3f;
+    [Header("----- Carborator-----")]
+    [Range(14.7f, 25.0f), SerializeField] float CompressedAirPressure = 14.7f;
 
     [Header("----- Collider Fields -----")]
     [SerializeField] Transform COM; //Center of Mass
@@ -81,7 +95,7 @@ public class baseVehicle : GravityBody
         wheel_BL.InitializeSuspension(rb);
         wheel_BR.InitializeSuspension(rb);
 
-        CurrentRPMs = IdleRPMs;
+        CurrentRPM = IdleRPMs;
         //TODO: Current BackPressure is linear, Calculate BackPressure on some kind of bell curve to find optimal value
         RunTimeBackPressure = HeaderBackPressure + ExhaustHeaderBackPressure + ExhaustPipeBackPressure;
         InitializeNormalDistibutionCurve();
@@ -105,46 +119,83 @@ public class baseVehicle : GravityBody
         wheel_BL.SetMassOnWheel(sumOfCompression_Inverse, rb.mass);
         wheel_BR.SetMassOnWheel(sumOfCompression_Inverse, rb.mass);
 
-        wheel_FL.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_FL.transform.position));
-        wheel_FR.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_FR.transform.position));
-        wheel_BL.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_BL.transform.position));
+        //rb.AddForceAtPosition(wheel_FL.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_FL.transform.position)), WheelOBJ_FL.transform.position, ForceMode.Force);
+        //rb.AddForceAtPosition(wheel_FR.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_FR.transform.position)), WheelOBJ_FR.transform.position, ForceMode.Force);
+        //rb.AddForceAtPosition(wheel_BL.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_BL.transform.position)), WheelOBJ_BL.transform.position, ForceMode.Force);
+        //rb.AddForceAtPosition(wheel_BR.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_BR.transform.position)), WheelOBJ_BR.transform.position, ForceMode.Force);
+        Vector3 groundForce = wheel_FL.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_FL.transform.position)) +
+        wheel_FR.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_FR.transform.position)) +
+        wheel_BL.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_BL.transform.position)) +
         wheel_BR.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_BR.transform.position));
-
-
+        //Debug.Log(counterweight);
+        rb.AddForce(groundForce - (Vector3.up * rb.velocity.magnitude * AeroDynamicDrag), ForceMode.Force);
 
         ApplyGravity();
+    }
+    
+    private float ShiftTranmission()
+    {
+        float WheelTrainRatio = DifferentialRatio * GearRatio[GearIndex] * RearTireRadius;
+        if (CurrentRPM < ShiftDownRPM && GearIndex > 0)
+        {
+            float wheelAV = CurrentRPM * 2 * Mathf.PI * RearTireRadius / WheelTrainRatio;
+            GearIndex--;
+            WheelTrainRatio = DifferentialRatio * GearRatio[GearIndex] * RearTireRadius;
+            CurrentRPM = (wheelAV * WheelTrainRatio) / (2 * Mathf.PI * RearTireRadius);
+        }
+        else if (CurrentRPM > ShiftUpRPM && GearIndex < GearRatio.Length - 1)
+        {
+            float wheelAV = CurrentRPM * 2 * Mathf.PI * RearTireRadius / WheelTrainRatio;
+            GearIndex++;
+            WheelTrainRatio = DifferentialRatio * GearRatio[GearIndex] * RearTireRadius;
+            CurrentRPM = (wheelAV * WheelTrainRatio) / (2 * Mathf.PI * RearTireRadius);
+
+        }
+        else
+        {
+            WheelTrainRatio = DifferentialRatio * GearRatio[GearIndex] * RearTireRadius;
+        }
+
+        return WheelTrainRatio;
     }
 
     protected void ApplyGasPedal(float input)
     {
-        
-        if(CurrentRPMs < ShiftDownRPM && GearIndex > 0)
-        {
-            GearIndex--;
-        }
-        else if(CurrentRPMs > ShiftUpRPM && GearIndex < GearRatio.Length - 1)
-        {
-            GearIndex++;
-        }
+        float WheelTrainRatio = ShiftTranmission();
+        float Torque = CrankShaftRadius * Mathf.Sin(CrankShaftAngle) * (RunTimeCombustionForce * EngineEfficiency) * WheelTrainRatio;
 
-        float wheelTrainRatio = DifferentialRatio * GearRatio[GearIndex] * DriveWheelRadius * CrankShaftAngle;
-        float RPM_fromKineticEnergy = wheel_BL.AngularVelocity / wheelTrainRatio;
-        //float deltaRPM = RPM_fromKineticEnergy - CurrentRPMs; //Convert deltaRPM to Force
         if (input != 0) //Exponential Increase of RPM
         {
-            float CurveRatio = Mathf.Pow(PistonDiameter, CalculateCurveExponent());
+            float exponent = CalculateCurveExponent();
+            float CurveRatio = Mathf.Pow(PistonDiameter, exponent);
+            
             //TODO: Add TurboBoose, BackPressure, 
-            float RateOfChange = CurveRatio * CylinderCount * RunTimeCompressionRatio * RunTimeBackPressure * 15;
-            CurrentRPMs += RateOfChange * Time.deltaTime;
+            float RateOfChange = CurveRatio * RunTimeBackPressure * Torque;
+
+            ///Debug.Log($"Piston: {PistonDiameter}^{CalculateCurveExponent()} = {CurveRatio} : RATE OF CHANGE = {RateOfChange}: TORQUE Multiplier: {TorqueScalar}");
+            CurrentRPM += RateOfChange * Time.deltaTime;
             
         }
         else //Linear Reduction of RPM
         {
-            CurrentRPMs = Mathf.Lerp(CurrentRPMs, IdleRPMs, (CurrentRPMs - IdleRPMs) * Time.deltaTime * Time.deltaTime * 0.5f);
+            //TODO:: Calculate Better RPM Reduction Method
+            CurrentRPM = Mathf.Lerp(CurrentRPM, ShiftDownRPM - IdleRPMs, 200 * Time.deltaTime * Time.deltaTime * 0.5f);
         }
-        wheel_BL.DriveWheel(CurrentRPMs, wheelTrainRatio);
-        wheel_BR.DriveWheel(CurrentRPMs, wheelTrainRatio);
 
+        //CurrentHorsePower = (CurrentRPMs * Torque) / 5252;
+        
+        float WheelAngularVelocity = CurrentRPM * 2 * Mathf.PI * RearTireRadius / (60 * WheelTrainRatio);
+        float test = WheelAngularVelocity * Torque;
+        
+        
+        wheel_BL.DriveWheel(WheelAngularVelocity);
+        wheel_BR.DriveWheel(WheelAngularVelocity);
+
+        Vector3 acceleration = (transform.forward * WheelAngularVelocity) / Time.fixedDeltaTime + (transform.forward * Torque * input);
+
+        rb.AddForceAtPosition(acceleration, WheelOBJ_BL.transform.position, ForceMode.Force);
+        rb.AddForceAtPosition(acceleration, WheelOBJ_BR.transform.position, ForceMode.Force);
+        
     }
 
     protected void UpdateSteeringAngle(float input)
@@ -156,10 +207,19 @@ public class baseVehicle : GravityBody
 
     protected void ApplySteerForce()
     {
-        
+
         //transform.RotateAround(SteerPoint.position, Vector3.up, currentSteerAngle * Time.deltaTime * rb.velocity.magnitude);
-        //wheel_FL.SteerVehicle();
+        float left = wheel_FL.SteerVehicle();
+        float right = wheel_FR.SteerVehicle();
+       
+        rb.AddForceAtPosition(transform.right * left, WheelOBJ_FL.transform.position, ForceMode.Force);
+        rb.AddForceAtPosition(transform.right * right, WheelOBJ_FR.transform.position, ForceMode.Force);
         //wheel_FR.SteerVehicle();
+
+        
+
+        //rb.AddForceAtPosition(transform.right * GetSteeringAngle() * rb.velocity.magnitude * Time.deltaTime, SteerPoint.position, ForceMode.Acceleration);
+        //transform.RotateAround(SteerPoint.position, Vector3.up, currentSteerAngle * Time.deltaTime * rb.velocity.magnitude);
     }
 
     public float GetSteeringAngle()
@@ -173,24 +233,27 @@ public class baseVehicle : GravityBody
         float minimumCompression = ChamberVolume + PistonCC;
         // Total Volume when piston at lowest Point / Volume when Piston at highest Point
         float ConvertToCC = 16.387f;//cubic inches to Cubic Centimeter ratio
-        RunTimeCompressionRatio = (((Mathf.PI / PistonDiameter) * PistonDiameter * PistonDiameter * ConvertToCC) + minimumCompression) / minimumCompression;
-        
-        RunTimeMeanRPM = (MaxRPMs - IdleRPMs) * 0.5f;
+        float PistonArea = (PistonDiameter * PistonDiameter * 0.25f * Mathf.PI) * (12 * CrankShaftRadius * Mathf.PI) * 0.6f; //Area * Height * Material Coefficient
+        RunTimeCompressionRatio = ((PistonArea * ConvertToCC) + minimumCompression) / minimumCompression; //Switched to a static value for Compression Ratio
+        RunTimeCombustionForce = CompressedAirPressure * EngineCompressionRatio;
 
-        float deviation = MaxRPMs / (CylinderCount * CamShaftRadius);
+        RunTimeMeanRPM = (RedLineRPM - IdleRPMs) * 0.5f;
 
-        RunTimeCurveDeviation_Inverse = 1 / (2 * deviation * deviation);
+        float deviation = RedLineRPM / (CylinderCount * CamShaftRadius);
+
+       RunTimeCurveDeviation_Inverse = 1 / (2 * deviation * deviation);
 
 
     }
 
     private float CalculateCurveExponent()
     {
-        float test = (CurrentRPMs - RunTimeMeanRPM);
-        float test2 = test * test;
-        float test3 = (test2 * RunTimeCurveDeviation_Inverse);
+        float xminusMean = (CurrentRPM - RunTimeMeanRPM);
+        float Squared = xminusMean * xminusMean;
+        float exponent = (Squared * RunTimeCurveDeviation_Inverse);
         //Make Sure to return a negative value to make the bell curve
-        Debug.Log(test3);
-        return -test3;
+        
+        return -exponent;
     }
+
 }

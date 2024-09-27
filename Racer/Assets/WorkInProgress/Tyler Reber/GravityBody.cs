@@ -12,10 +12,10 @@ public class GravityBody : MonoBehaviour
     [SerializeField] Vector3 dragCoefficients = new Vector3(0.5f, 1, 0.3f); //Drag Coefficient of a Car
     [SerializeField] Vector3 BodyAreas = new Vector3(3.0f, 5.0f, 2.2f); //Frontal Area of a Car
 
-    protected Vector3 EnvironmentForces = Vector3.zero;
-    Vector3 freefallResistance_y = Vector3.zero;
-    Vector3 freefallResistance_x = Vector3.zero;
-    Vector3 freefallResistance_z = Vector3.zero;
+    [SerializeField] protected Vector3 EnvironmentForces = Vector3.zero;
+    [SerializeField] Vector3 freefallResistance_y = Vector3.zero;
+    [SerializeField] Vector3 freefallResistance_x = Vector3.zero;
+    [SerializeField] Vector3 freefallResistance_z = Vector3.zero;
 
     protected Vector3 CalculateGravity()
     {
@@ -24,8 +24,8 @@ public class GravityBody : MonoBehaviour
         if (rb.velocity.magnitude > 0.1f)
         {
             freefallResistance_y = CalculateResistance(Vector3.up, rb.velocity.y);
-            freefallResistance_x = CalculateResistance(Vector3.right, rb.velocity.x);
-            freefallResistance_z = CalculateResistance(Vector3.forward, rb.velocity.z);
+            freefallResistance_x = CalculateResistance(transform.right, rb.velocity.magnitude);//I think I can use Angular Velocity for this
+            freefallResistance_z = CalculateResistance(transform.forward, rb.velocity.magnitude);
 
             float sidewayMomentum = rb.mass * (Vector3.Dot(rb.velocity, transform.right) * Time.deltaTime);
             //Debug.Log(sidewayMomentum);
@@ -44,8 +44,9 @@ public class GravityBody : MonoBehaviour
             freefallResistance_z = Vector3.zero;
         }
 
-
-        EnvironmentForces = new Vector3(freefallResistance_x.x, y_force + freefallResistance_y.y, freefallResistance_z.z);
+        //TODO, Figure out forward and side ways wind resistance
+        EnvironmentForces = new Vector3(0, y_force + freefallResistance_y.y, -freefallResistance_z.z);
+        //EnvironmentForces = new Vector3(0, y_force + freefallResistance_y.y, 0);
         return EnvironmentForces;
         //rb.AddForce(freefallResistance_x.x, y_force + freefallResistance_y.y, freefallResistance_z.z);
     }
