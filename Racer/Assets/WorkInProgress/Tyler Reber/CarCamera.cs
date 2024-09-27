@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerCar : baseVehicle
+public class CarCamera : MonoBehaviour
 {
     [Header("----- Camera Settings -----")]
     [Tooltip("This is the Raycast Origin for the Camera")]
-    [SerializeField] GameObject RayCastOrigin;
+    [SerializeField] GameObject CameraAnchor;
+    //[SerializeField] GameObject RayCastOrigin;
+    [SerializeField] baseVehicle VehicleScript;
+
     [Tooltip("Current Euler Angle for Lerping a rotation around the car")]
     [SerializeField] float CameraAngleY = 0;
     [Tooltip("The Speed at which the Camera rates around the car")]
@@ -34,26 +37,12 @@ public class PlayerCar : baseVehicle
     [SerializeField] bool ToggleCameraSwing = false;
     float SwingDirection = 1;
 
-
-    new void Start()
+    private void Start()
     {
-        base.Start();
-    }
 
-    // Update is called once per frame
-    private new void Update()
-    {
-        base.Update();
 
-        float turnInput = Input.GetAxis("Horizontal");
-        UpdateSteeringAngle(turnInput);
-
-        float forwardInput = Input.GetAxis("Vertical");
-        ApplyGasPedal(forwardInput);
-
-        ApplySteerForce();
-
-        HUD.Item.UpdateSpeedometer(rb.velocity.magnitude);
+        CameraAnchor = transform.parent.gameObject;
+        VehicleScript = CameraAnchor.transform.parent.GetComponent<baseVehicle>();
     }
 
     private void LateUpdate()
@@ -63,7 +52,8 @@ public class PlayerCar : baseVehicle
 
     private void UpdateCamera()
     {
-        //Vector3 direction = RayCastOrigin.gameObject.transform.position - Camera.main.transform.position;
+
+        SwingDirection = ToggleCameraSwing ? -1 : 1;
 
         float reverseScalar = 1;
 
@@ -76,33 +66,33 @@ public class PlayerCar : baseVehicle
             forwardInput = 1;
             //Moves Camera to the outside of the turn at the steer angle
             //CameraAngleY = -wheel_FL.steerAngle;
-            CameraAngleY = Mathf.LerpAngle(CameraAngleY, SwingDirection * currentSteerAngle, Time.deltaTime * CameraRatationSpeed);
+            CameraAngleY = Mathf.LerpAngle(CameraAngleY, SwingDirection * VehicleScript.GetSteeringAngle(), Time.deltaTime * CameraRatationSpeed);
         }
         else
         {
             //Calculate the Reverse Camera Angles and Values
             reverseScalar = CameraReverseLookScalar;
             float maxAngle = 180;
-            if (Camera.main.transform.localRotation.y < 0)
+            if (transform.localRotation.y < 0)
             {
                 maxAngle *= -1;
             }
             CameraAngleY = Mathf.LerpAngle(CameraAngleY, maxAngle, Time.deltaTime * CameraRatationSpeed);
         }
-        Vector3 cameraOffset = gameObject.transform.forward * -cameraFollowDistance * reverseScalar;
+        Vector3 cameraOffset = CameraAnchor.transform.parent.forward * -cameraFollowDistance * reverseScalar;
         Quaternion rotation = Quaternion.Euler(0, CameraAngleY, 0);
         cameraOffset = rotation * cameraOffset;
 
         //Step 2: Calculate the Camera Target Position
-        Vector3 cameraTargetPosition = RayCastOrigin.gameObject.transform.position + cameraOffset;
+        Vector3 cameraTargetPosition = CameraAnchor.gameObject.transform.position + cameraOffset;
         cameraTargetPosition.y = cameraTargetPosition.y + cameraExtraHeight;
 
 
         //Step 3: Prevent Camera from clipping other objects - Shoots a Ray out the back and reflects it off an object to prevent camera clipping
-        Vector3 targetDirection = (cameraTargetPosition - RayCastOrigin.transform.position).normalized;
+        Vector3 targetDirection = (cameraTargetPosition - CameraAnchor.transform.position).normalized;
         float remainingDistance = cameraFollowDistance * reverseScalar;
         RaycastHit hit;
-        if (Physics.Raycast(RayCastOrigin.gameObject.transform.position, targetDirection, out hit, remainingDistance))
+        if (Physics.Raycast(CameraAnchor.gameObject.transform.position, targetDirection, out hit, remainingDistance))
         {
             remainingDistance -= hit.distance;
             Vector3 refelctionangle = Vector3.Reflect(targetDirection, hit.normal);
@@ -112,18 +102,18 @@ public class PlayerCar : baseVehicle
         }
 
         //Step 4: Lerp Camera Position - TODO Lerp Around the Car, not through it
-        float destinationDistance = Vector3.Distance(Camera.main.transform.position, cameraTargetPosition) * 0.2f;
-        Vector3 interprolationPosition = Vector3.Lerp(Camera.main.transform.position, cameraTargetPosition, Time.deltaTime * destinationDistance);
-        Camera.main.transform.position = interprolationPosition;
+        float destinationDistance = Vector3.Distance(transform.position, cameraTargetPosition) * 0.2f;
+        Vector3 interprolationPosition = Vector3.Lerp(transform.position, cameraTargetPosition, Time.deltaTime * destinationDistance);
+        transform.position = interprolationPosition;
 
         //Step 5: Lerp Camera Look Point
-        float cameraLookDistance = Vector3.Distance(CurrentCameraLookPoint, gameObject.transform.position + (gameObject.transform.forward * forwardInput * CameraLookOffset)); //Phase out?
-        CurrentCameraLookPoint = Vector3.Lerp(CurrentCameraLookPoint, gameObject.transform.position + (gameObject.transform.forward * forwardInput * CameraLookOffset), Time.deltaTime * cameraLookDistance);
-        Camera.main.transform.LookAt(CurrentCameraLookPoint);
+        float cameraLookDistance = Vector3.Distance(CurrentCameraLookPoint, CameraAnchor.transform.parent.position + (CameraAnchor.transform.parent.forward * forwardInput * CameraLookOffset)); //Phase out?
+        CurrentCameraLookPoint = Vector3.Lerp(CurrentCameraLookPoint, CameraAnchor.transform.parent.position + (CameraAnchor.transform.parent.forward * forwardInput * CameraLookOffset), Time.deltaTime * cameraLookDistance);
+        transform.LookAt(CurrentCameraLookPoint);
         //Camera.main.transform.LookAt(gameObject.transform.position + (gameObject.transform.forward  * 15)); //Static Camera look Position
 
         //Step 6: Give the Camera a little bit of a tilt on turns
-        CameraTiltAngle = Mathf.LerpAngle(CameraTiltAngle, currentSteerAngle * CameraTiltDampener, Time.deltaTime * CameraRatationSpeed);
-        Camera.main.transform.Rotate(Vector3.back, CameraTiltAngle * forwardInput);
+        CameraTiltAngle = Mathf.LerpAngle(CameraTiltAngle, VehicleScript.GetSteeringAngle() * CameraTiltDampener, Time.deltaTime * CameraRatationSpeed);
+        transform.Rotate(Vector3.back, CameraTiltAngle * forwardInput);
     }
 }
