@@ -45,13 +45,13 @@ public class PlayerCar : baseVehicle
     {
         base.Update();
 
-        float turnInput = Input.GetAxis("Horizontal");
+        float turnInput = Input.GetAxis("Horizontal");       
         UpdateSteeringAngle(turnInput);
 
         float forwardInput = Input.GetAxis("Vertical");
         ApplyGasPedal(forwardInput);
 
-        ApplySteerForce();
+        ApplySteerForce(turnInput);
 
         HUD.Item.UpdateSpeedometer(rb.velocity.magnitude);
     }
@@ -75,7 +75,7 @@ public class PlayerCar : baseVehicle
         {
             forwardInput = 1;
             //Moves Camera to the outside of the turn at the steer angle
-            //CameraAngleY = -wheel_FL.steerAngle;
+            
             CameraAngleY = Mathf.LerpAngle(CameraAngleY, SwingDirection * currentSteerAngle, Time.deltaTime * CameraRatationSpeed);
         }
         else
@@ -120,10 +120,10 @@ public class PlayerCar : baseVehicle
         float cameraLookDistance = Vector3.Distance(CurrentCameraLookPoint, gameObject.transform.position + (gameObject.transform.forward * forwardInput * CameraLookOffset)); //Phase out?
         CurrentCameraLookPoint = Vector3.Lerp(CurrentCameraLookPoint, gameObject.transform.position + (gameObject.transform.forward * forwardInput * CameraLookOffset), Time.deltaTime * cameraLookDistance);
         Camera.main.transform.LookAt(CurrentCameraLookPoint);
-        //Camera.main.transform.LookAt(gameObject.transform.position + (gameObject.transform.forward  * 15)); //Static Camera look Position
+        Camera.main.transform.LookAt(gameObject.transform.position + (gameObject.transform.forward * 15)); //Static Camera look Position
 
         //Step 6: Give the Camera a little bit of a tilt on turns
-        CameraTiltAngle = Mathf.LerpAngle(CameraTiltAngle, currentSteerAngle * CameraTiltDampener, Time.deltaTime * CameraRatationSpeed);
-        Camera.main.transform.Rotate(Vector3.back, CameraTiltAngle * forwardInput);
+        //CameraTiltAngle = Mathf.LerpAngle(CameraTiltAngle, currentSteerAngle * CameraTiltDampener, Time.deltaTime * CameraRatationSpeed);
+        //Camera.main.transform.Rotate(Vector3.back, CameraTiltAngle * forwardInput);
     }
 }

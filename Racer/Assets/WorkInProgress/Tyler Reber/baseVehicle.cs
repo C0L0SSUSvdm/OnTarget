@@ -6,15 +6,17 @@ using UnityEngine.UIElements;
 
 public class baseVehicle : GravityBody
 {
+    //[SerializeField] public float TestTurnStrength;
     [Header("----- Vehicle Fields -----")]
     [SerializeField] CharacterController controller;
     [SerializeField] float maximumSteerAngle;
     [SerializeField] protected float currentSteerAngle;
-    [SerializeField] protected float MotorForce = 10.0f;
+    //[SerializeField] protected float MotorForce = 10.0f;
     [SerializeField] bool isClutchEngaged = true;
     [SerializeField] float AeroDynamicDrag = 0.5f;
     //https://www.hagerty.com/media/maintenance-and-tech/10-factors-that-influence-an-engines-character/#:~:text=How%20an%20engine%20breathes%20is,and%20fuel%20into%20the%20cylinders.
     [Header("----- Engine Item Fields -----")]
+    [SerializeField] Engine Engine;
     [Range(0.01f, 1.0f), SerializeField] float EngineEfficiency = 0.3f;
     [Range(0.1f, 1.0f), SerializeField] float CamShaftRadius = 0.75f;// length = pi r
     [Tooltip("Value assumed to be in inches")]
@@ -22,11 +24,9 @@ public class baseVehicle : GravityBody
     [SerializeField] float CylinderCount = 8;
     [SerializeField] float CrankShaftAngle = 45; // 1 / (Number of Cylinders), can be other angles
     [SerializeField] float RedLineRPM = 8000;
-    [SerializeField] float CurrentRPM = 0;
-    //[SerializeField] float CurrentHorsePower = 0;
-    [SerializeField] float PistonDiameter = 4.0f;
-    [Tooltip("Typically 8.0 to 12.0 ")]
     [SerializeField] float EngineCompressionRatio = 10.0f;
+    [SerializeField] float PistonDiameter = 4.0f;
+    [SerializeField] float CurrentRPM = 0;   
     [SerializeField] float RunTimeCompressionRatio;
     [SerializeField] float RunTimeMeanRPM;
     [SerializeField] float RunTimeCurveDeviation_Inverse;
@@ -76,9 +76,10 @@ public class baseVehicle : GravityBody
         rb.useGravity = false;
         rb.mass = 1000;
         rb.drag = 0;// 0.5f;
-        rb.angularDrag = 0;// 0.5f;
+        rb.angularDrag = 0.2f;// 0.5f;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        rb.maxAngularVelocity = 7;
 
         WheelOBJ_FL = transform.Find("Wheel_Left Front").gameObject;
         WheelOBJ_FR = transform.Find("Wheel_Right Front").gameObject;
@@ -123,12 +124,12 @@ public class baseVehicle : GravityBody
         //rb.AddForceAtPosition(wheel_FR.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_FR.transform.position)), WheelOBJ_FR.transform.position, ForceMode.Force);
         //rb.AddForceAtPosition(wheel_BL.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_BL.transform.position)), WheelOBJ_BL.transform.position, ForceMode.Force);
         //rb.AddForceAtPosition(wheel_BR.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_BR.transform.position)), WheelOBJ_BR.transform.position, ForceMode.Force);
-        Vector3 groundForce = wheel_FL.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_FL.transform.position)) +
+        float groundedWeight = wheel_FL.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_FL.transform.position)) +
         wheel_FR.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_FR.transform.position)) +
         wheel_BL.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_BL.transform.position)) +
         wheel_BR.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_BR.transform.position));
-        //Debug.Log(counterweight);
-        rb.AddForce(groundForce - (Vector3.up * rb.velocity.magnitude * AeroDynamicDrag), ForceMode.Force);
+
+        //rb.AddForce(Vector3.up * groundedWeight, ForceMode.Force);
 
         ApplyGravity();
     }
@@ -168,34 +169,31 @@ public class baseVehicle : GravityBody
         {
             float exponent = CalculateCurveExponent();
             float CurveRatio = Mathf.Pow(PistonDiameter, exponent);
-            
+
             //TODO: Add TurboBoose, BackPressure, 
-            float RateOfChange = CurveRatio * RunTimeBackPressure * Torque;
+            float RateOfChange = CurveRatio * RunTimeBackPressure * Torque * CylinderCount;
 
             ///Debug.Log($"Piston: {PistonDiameter}^{CalculateCurveExponent()} = {CurveRatio} : RATE OF CHANGE = {RateOfChange}: TORQUE Multiplier: {TorqueScalar}");
             CurrentRPM += RateOfChange * Time.deltaTime;
-            
+
         }
         else //Linear Reduction of RPM
         {
             //TODO:: Calculate Better RPM Reduction Method
-            CurrentRPM = Mathf.Lerp(CurrentRPM, ShiftDownRPM - IdleRPMs, 200 * Time.deltaTime * Time.deltaTime * 0.5f);
+            CurrentRPM = Mathf.Lerp(CurrentRPM, ShiftDownRPM * 0.5f, 200 * Time.deltaTime * Time.deltaTime * 0.5f);
         }
 
         //CurrentHorsePower = (CurrentRPMs * Torque) / 5252;
-        
+
         float WheelAngularVelocity = CurrentRPM * 2 * Mathf.PI * RearTireRadius / (60 * WheelTrainRatio);
-        float test = WheelAngularVelocity * Torque;
-        
-        
-        wheel_BL.DriveWheel(WheelAngularVelocity);
-        wheel_BR.DriveWheel(WheelAngularVelocity);
+        float acceleration = (WheelAngularVelocity) / Time.fixedDeltaTime + (Torque * input);
 
-        Vector3 acceleration = (transform.forward * WheelAngularVelocity) / Time.fixedDeltaTime + (transform.forward * Torque * input);
+        wheel_FL.DriveWheel(0, WheelAngularVelocity);
+        wheel_FR.DriveWheel(0, WheelAngularVelocity);
+        wheel_BL.DriveWheel(acceleration, WheelAngularVelocity);
+        wheel_BR.DriveWheel(acceleration, WheelAngularVelocity);
 
-        rb.AddForceAtPosition(acceleration, WheelOBJ_BL.transform.position, ForceMode.Force);
-        rb.AddForceAtPosition(acceleration, WheelOBJ_BR.transform.position, ForceMode.Force);
-        
+
     }
 
     protected void UpdateSteeringAngle(float input)
@@ -205,19 +203,16 @@ public class baseVehicle : GravityBody
         WheelOBJ_FR.transform.localRotation = Quaternion.Euler(WheelOBJ_FR.transform.localRotation.x + rb.angularVelocity.magnitude, currentSteerAngle, 0);
     }
 
-    protected void ApplySteerForce()
+    protected void ApplySteerForce(float input)
     {
 
         //transform.RotateAround(SteerPoint.position, Vector3.up, currentSteerAngle * Time.deltaTime * rb.velocity.magnitude);
-        float left = wheel_FL.SteerVehicle();
-        float right = wheel_FR.SteerVehicle();
-       
-        rb.AddForceAtPosition(transform.right * left, WheelOBJ_FL.transform.position, ForceMode.Force);
-        rb.AddForceAtPosition(transform.right * right, WheelOBJ_FR.transform.position, ForceMode.Force);
-        //wheel_FR.SteerVehicle();
-
+        float leftTorque = wheel_FL.SteerVehicle(currentSteerAngle, transform.right);
+        float rightTorque = wheel_FR.SteerVehicle(currentSteerAngle, transform.right);
         
-
+        //rb.AddTorque(transform.up * (leftTorque + rightTorque));
+        //rb.AddForceAtPosition(transform.right * leftTorque * input, WheelOBJ_FL.transform.position, ForceMode.Acceleration);
+        //rb.AddForceAtPosition(transform.right * rightTorque * input, WheelOBJ_FR.transform.position, ForceMode.Acceleration);
         //rb.AddForceAtPosition(transform.right * GetSteeringAngle() * rb.velocity.magnitude * Time.deltaTime, SteerPoint.position, ForceMode.Acceleration);
         //transform.RotateAround(SteerPoint.position, Vector3.up, currentSteerAngle * Time.deltaTime * rb.velocity.magnitude);
     }

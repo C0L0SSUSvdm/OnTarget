@@ -15,6 +15,7 @@ public class Suspension : MonoBehaviour
     float CenterOfMassDistance;
     Rigidbody rb;
     public bool isGrounded;
+    
     [Header("----- Spring Spring Values -----")]
     [SerializeField] float SpringStrength;
     [SerializeField] Vector3 WheelVelocity;   
@@ -23,9 +24,10 @@ public class Suspension : MonoBehaviour
     [SerializeField] float SpringRestPosition;
     [Header("----- Wheel Values -----")]
     [SerializeField] GameObject Wheel;
+    [SerializeField] float WheelFriction = 0.95f;
     //[SerializeField] public float WheelRadius = 1.0f;
     [SerializeField] public float AngularVelocity; //w
-
+    [SerializeField] public Vector3 WheelSlippage = new (0.8f, 0.0f, 0.05f); //Wheel Offset (x, y, z
 
     [Header("----- Visual Components -----")]    
     [SerializeField] LineRenderer SpringHelix;
@@ -55,7 +57,12 @@ public class Suspension : MonoBehaviour
     
     void Update()
     {
+        UpdateSpringGraphic();
 
+    }
+
+    void UpdateSpringGraphic()
+    {
         float segmentLength = (transform.localPosition.y + -SpringMechanicalOffset) / 360;
         Vector3 start = SpringOffsets;// transform.localPosition + SpringOffsets;
         start.y += -SpringMechanicalOffset;
@@ -70,10 +77,9 @@ public class Suspension : MonoBehaviour
             nextpoint.y = segmentLength * (-i * (SpringCurvatureResolution / (2 * Mathf.PI)));
             SpringHelix.SetPosition(i, nextpoint);
             start = nextpoint;
-            
+
         }
     }
-
 
 
     public void InitializeSuspension(Rigidbody rigidBody)
@@ -81,37 +87,49 @@ public class Suspension : MonoBehaviour
         rb = rigidBody;
     }
 
-    public void DriveWheel(float WheelAngularVelocity)
+    public float AddTorque(float EngineForce)
     {
-        AngularVelocity = WheelAngularVelocity;      
-        float theta = AngularVelocity;
-        //if (isGrounded)
-        //{
-
-        //    //Debug.Log($"{torque}, {RPMs}");
-        //    Vector3 force = transform.forward * 100 * Input.GetAxis("Vertical");
-        //    //Debug.Log($"Force: {force}");
-        //    //rb.AddForceAtPosition(force, transform.localPosition, ForceMode.Acceleration);          
-        //}
-        //else
-        //{
-
-        //}
-        Wheel.transform.Rotate(theta, 0, 0);
+        return Vector3.zero.y;
     }
 
-    public float SteerVehicle()
+    public void DriveWheel(float EngineForce, float WheelAngularVelocity)
     {
+        if (isGrounded)
+        {
+            if(rb.velocity.magnitude > 0.3f) {
+                float theta = rb.velocity.magnitude * 2 * Mathf.PI;
+                //Wheel.transform.Rotate(theta, 0, 0);
+            }
+            //Quaternion rotation = Quaternion.Euler(0, transform.localRotation.y, 0);
+            //Transfer weight into forward force to offset the friction from gravity since the wheels don't actually spin.
+            Vector3 groundedFrictionReducer = (transform.forward * (massOnWheel * Mathf.Abs(Physics.gravity.y)) * WheelFriction);
+            Vector3 ForceVector = (transform.forward) * EngineForce + groundedFrictionReducer;
+            rb.AddForceAtPosition(ForceVector, transform.position - new Vector3(0, -EffectiveSpringLength, 0), ForceMode.Force);
+        }
+        else
+        {
+            AngularVelocity = WheelAngularVelocity;
+            float theta = AngularVelocity;
+            
+        }
+
+
+
+    }
+
+    public float SteerVehicle(float input, Vector3 steerDirection)
+    {
+        rb.MoveRotation(rb.rotation * Quaternion.Euler(0, input * Time.deltaTime, 0));
         
-        Vector3 steerDirection = transform.right;
-        Vector3 wheelWorldVelocity = rb.GetPointVelocity(transform.position);
+        Vector3 wheelWorldVelocity = rb.velocity;
 
         float SteerVelocity = Vector3.Dot(steerDirection, wheelWorldVelocity);
-        //Debug.Log($"Steer Velocity: {SteerVelocity}, WheelWorldVelocity: {wheelWorldVelocity}");
-        float desiredSteerVelocity = -SteerVelocity * 0.9f; //Friction or slippage
-        float acceleration = desiredSteerVelocity / Time.deltaTime;
 
+        float desiredSteerVelocity = -SteerVelocity * 0.9f; //Friction or slippage
+        float acceleration = desiredSteerVelocity;
+        //rb.AddTorque(transform.up * force);
         //rb.AddForceAtPosition(steerDirection * acceleration, transform.position, ForceMode.Acceleration);
+        Debug.Log($"Steer Direction: {desiredSteerVelocity}, Acceleration: {acceleration}, force: {acceleration * massOnWheel}");
         return acceleration;
     }
 
@@ -123,6 +141,7 @@ public class Suspension : MonoBehaviour
             CenterOfMassDistance = Vector3.Distance(transform.localPosition, CenterOfMass.localPosition);
         }
         return CenterOfMassDistance;
+        //return Vector3.Distance(transform.localPosition, CenterOfMass.localPosition);
     }
 
     public void SetWeightOnWheel(float sumOfDistances_Inverse, float totalWeight)
@@ -153,19 +172,17 @@ public class Suspension : MonoBehaviour
         }
     }
 
-    public Vector3 UpdateSpringPhysics(Vector3 WheelVelocity)
+    public float UpdateSpringPhysics(Vector3 WheelVelocity)
     {
-        //Vector3 returnedForce = Vector3.zero;
+        //Power is Velocity * Mass
         Vector3 newPhysicalWheelPosition = transform.localPosition;
         float inverseMass = massOnWheel != 0 ? 1 / massOnWheel : WheelMass;
-
 
         //If car is moving up, Spring decompresses the distance
         if (WheelVelocity.y > 0)
         {
             newPhysicalWheelPosition.y -= WheelVelocity.y * Time.deltaTime;
         }
-
 
         SpringRestPosition = isGrounded ? EffectiveSpringLength - (weightOnWheel / SpringStrength) : EffectiveSpringLength;
         SpringRestPosition = Mathf.Clamp(SpringRestPosition, EffectiveSpringLength, 0);
@@ -192,20 +209,39 @@ public class Suspension : MonoBehaviour
         {
             newPhysicalWheelPosition.y = 0;
             //returnedForce.y = (newPhysicalWheelPosition.y + EffectiveSpringLength) * SpringStrength;
-        }
-        
+        }      
         transform.localPosition = newPhysicalWheelPosition;
 
+        if(isGrounded == false && transform.localPosition.y > EffectiveSpringLength){
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position + new Vector3(SpringOffsets.x, 0, 0), -transform.up, out hit, 0.5f))
+            {
+                transform.localPosition += Vector3.up * Mathf.Lerp(transform.localPosition.y, transform.localPosition.y + hit.distance, Time.deltaTime * 2);
+            }
+        }
 
-        float y = WheelMass * Physics.gravity.y;
-        rb.AddForceAtPosition(transform.up * y, transform.position - new Vector3(0, -EffectiveSpringLength, 0), ForceMode.Force);
 
-        return transform.up * -(weightOnWheel + massOnWheel);
+
+        return 0;
     }
 
     public void OnTriggerEnter(Collider other)
     {
         isGrounded = true;
+        if (transform.localPosition.y <= EffectiveSpringLength)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position + transform.forward * 0.25f, -transform.up, out hit, EffectiveSpringLength))
+            {
+                if (other.gameObject != Wheel.gameObject)
+                {
+                    isGrounded = true;
+                    transform.localPosition = new Vector3(transform.localPosition.x, hit.distance, transform.localPosition.z);
+                }
+                
+                
+            }
+        }
     }
 
     public void OnTriggerExit(Collider other)

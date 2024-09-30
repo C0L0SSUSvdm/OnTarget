@@ -91,7 +91,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 57012648096002074}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 371d6601d0fbf614ba81ec9447c58f0c, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -254,7 +254,9 @@ MonoBehaviour:
   massOnWheel: 0
   SpringRestPosition: 0
   Wheel: {fileID: 2162125354338624969}
+  WheelFriction: 0.95
   AngularVelocity: 0
+  WheelSlippage: {x: 0.8, y: 0, z: 0.05}
   SpringHelix: {fileID: 758087184076561277}
   SpringThickness: 0.035
   SpringMechanicalOffset: 0
@@ -432,7 +434,9 @@ MonoBehaviour:
   massOnWheel: 0
   SpringRestPosition: 0
   Wheel: {fileID: 57012648096002074}
+  WheelFriction: 0.95
   AngularVelocity: 0
+  WheelSlippage: {x: 0.8, y: 0, z: 0.05}
   SpringHelix: {fileID: 2001337042841432021}
   SpringThickness: 0.035
   SpringMechanicalOffset: 0
@@ -642,7 +646,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2162125354338624969}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 371d6601d0fbf614ba81ec9447c58f0c, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -771,7 +775,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3534365839533297361}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 371d6601d0fbf614ba81ec9447c58f0c, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -837,7 +841,9 @@ MonoBehaviour:
   massOnWheel: 0
   SpringRestPosition: 0
   Wheel: {fileID: 3534365839533297361}
+  WheelFriction: 0.95
   AngularVelocity: 0
+  WheelSlippage: {x: 0.8, y: 0, z: 0.05}
   SpringHelix: {fileID: 521169789014616070}
   SpringThickness: 0.035
   SpringMechanicalOffset: 0
@@ -1015,7 +1021,9 @@ MonoBehaviour:
   massOnWheel: 0
   SpringRestPosition: 0
   Wheel: {fileID: 7752079403560621325}
+  WheelFriction: 0.95
   AngularVelocity: 0
+  WheelSlippage: {x: 0.8, y: 0, z: 0.05}
   SpringHelix: {fileID: 1249354695317139900}
   SpringThickness: 0.035
   SpringMechanicalOffset: 0
@@ -1297,28 +1305,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   airDensity: 1.838
-  dragCoefficients: {x: 0.5, y: 1, z: 0.3}
-  BodyAreas: {x: 3, y: 5, z: 2.2}
+  BodyAreaCrossSection: {x: 3, y: 5, z: 2.2}
+  ForwardCoefficients: {x: 0.5, y: 1, z: 0.3}
+  DragCoefficients: {x: 0.5, y: 1, z: 0.3}
   EnvironmentForces: {x: 0, y: 0, z: 0}
   freefallResistance_y: {x: 0, y: 0, z: 0}
-  freefallResistance_x: {x: 0, y: 0, z: 0}
-  freefallResistance_z: {x: 0, y: 0, z: 0}
+  forwardAirResistance_z: {x: 0, y: 0, z: 0}
+  dragAirResistance_z: {x: 0, y: 0, z: 0}
+  TestTurnStrength: 0
   controller: {fileID: 0}
   maximumSteerAngle: 15
   currentSteerAngle: 0
   MotorForce: 20000
   isClutchEngaged: 1
   AeroDynamicDrag: 0.5
+  EngineEfficiency: 0.3
   CamShaftRadius: 0.75
+  CrankShaftRadius: 2.2
   CylinderCount: 8
   CrankShaftAngle: 45
-  MaxRPMs: 8000
-  CurrentRPMs: 0
+  RedLineRPM: 8000
+  CurrentRPM: 0
   PistonDiameter: 4.5
+  EngineCompressionRatio: 10
   RunTimeCompressionRatio: 0
   RunTimeMeanRPM: 0
   RunTimeCurveDeviation_Inverse: 0
   RunTimeBackPressure: 0
+  RunTimeCombustionForce: 0
   IdleRPMs: 1000
   PistonCC: 0
   ChamberVolume: 46
@@ -1335,9 +1349,11 @@ MonoBehaviour:
   - 0.72
   - 0.5
   DifferentialRatio: 3.42
-  DriveWheelRadius: 1
+  RearTireRadius: 1
   TurboBoost: 2.3
   ExhaustHeaderBackPressure: 0.5
+  ExhaustPipeBackPressure: 1.3
+  CompressedAirPressure: 14.7
   COM: {fileID: 4556235776714807338}
   SteerPoint: {fileID: 758172352775314430}
   RayCastOrigin: {fileID: 8245888265824781154}
@@ -1442,7 +1458,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7752079403560621325}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 371d6601d0fbf614ba81ec9447c58f0c, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
