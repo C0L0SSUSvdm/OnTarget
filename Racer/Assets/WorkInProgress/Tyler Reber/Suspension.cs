@@ -117,10 +117,10 @@ public class Suspension : MonoBehaviour
 
     }
 
-    public float SteerVehicle(float input, Vector3 steerDirection)
+    public float SteerVehicle(float angleStrength, Vector3 steerDirection)
     {
-        rb.MoveRotation(rb.rotation * Quaternion.Euler(0, input * Time.deltaTime, 0));
-        
+        rb.MoveRotation(rb.rotation * Quaternion.Euler(0, angleStrength * Time.deltaTime, 0));
+
         Vector3 wheelWorldVelocity = rb.velocity;
 
         float SteerVelocity = Vector3.Dot(steerDirection, wheelWorldVelocity);
