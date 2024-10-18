@@ -14,6 +14,7 @@ public class baseVehicle : GravityBody
     //[SerializeField] protected float MotorForce = 10.0f;
     [SerializeField] bool isClutchEngaged = true;
     [SerializeField] float AeroDynamicDrag = 0.5f;
+    [SerializeField] Vector3 ReadAxel_forcePoint;
     //https://www.hagerty.com/media/maintenance-and-tech/10-factors-that-influence-an-engines-character/#:~:text=How%20an%20engine%20breathes%20is,and%20fuel%20into%20the%20cylinders.
     [Header("----- Engine Item Fields -----")]
     [SerializeField] Engine Engine;
@@ -32,6 +33,7 @@ public class baseVehicle : GravityBody
     [SerializeField] float RunTimeCurveDeviation_Inverse;
     [SerializeField] float RunTimeBackPressure;
     [SerializeField] float RunTimeCombustionForce;
+    [SerializeField] float RunTimeMotorPower;
     [Header ("---- Air Control Valve -----")]
     [Range(500, 1500), SerializeField] float IdleRPMs = 1500;
     [Header("----- Piston Fields -----")]
@@ -60,7 +62,12 @@ public class baseVehicle : GravityBody
 
     [Header("----- Collider Fields -----")]
     [SerializeField] Transform COM; //Center of Mass
-    [SerializeField] Transform SteerPoint;
+    Transform FrontAxelCenterPoint;
+    Transform AckermanCenterPoint;
+    float RearWheelOffset;
+    public float AckermanOppositeDistance;
+    public float AckermanAdjacentDistance;
+    //[SerializeField] GameObject Chasis;
     GameObject WheelOBJ_FL;
     GameObject WheelOBJ_FR;
     GameObject WheelOBJ_BL;
@@ -72,8 +79,10 @@ public class baseVehicle : GravityBody
 
     protected void Start()
     {
-        rb = gameObject.AddComponent<Rigidbody>();
-        rb.useGravity = false;
+
+
+        rb = gameObject.GetComponent<Rigidbody>();
+        //rb.useGravity = false;
         rb.mass = 1000;
         rb.drag = 0;// 0.5f;
         rb.angularDrag = 0.2f;// 0.5f;
@@ -90,46 +99,53 @@ public class baseVehicle : GravityBody
         wheel_FR = WheelOBJ_FR.GetComponent<Suspension>();
         wheel_BL = WheelOBJ_BL.GetComponent<Suspension>();
         wheel_BR = WheelOBJ_BR.GetComponent<Suspension>();
+        ReadAxel_forcePoint = new Vector3(0, -0.5f, (WheelOBJ_BL.transform.localPosition.z * 0.5f));
 
         wheel_FL.InitializeSuspension(rb);
         wheel_FR.InitializeSuspension(rb);
         wheel_BL.InitializeSuspension(rb);
         wheel_BR.InitializeSuspension(rb);
 
+        FrontAxelCenterPoint = transform.Find("FrontAxelCenterPoint");
+        AckermanCenterPoint = transform.Find("AckermanCenterPoint");
+        RearWheelOffset = (WheelOBJ_BL.transform.localPosition.x - WheelOBJ_BR.transform.localPosition.x) * 0.5f;
+        AckermanOppositeDistance = FrontAxelCenterPoint.localPosition.z - AckermanCenterPoint.localPosition.z;
+        AckermanAdjacentDistance = AckermanOppositeDistance / Mathf.Sin(Mathf.Deg2Rad * maximumSteerAngle) * Mathf.Cos(Mathf.Deg2Rad * maximumSteerAngle);
+
         CurrentRPM = IdleRPMs;
         //TODO: Current BackPressure is linear, Calculate BackPressure on some kind of bell curve to find optimal value
         RunTimeBackPressure = HeaderBackPressure + ExhaustHeaderBackPressure + ExhaustPipeBackPressure;
         InitializeNormalDistibutionCurve();
+        
     }
 
-    protected new void Update()
+    protected new void FixedUpdate()
     {
         CalculateGravity();
 
         float sumofDistance = wheel_FL.COMDistance(COM) + wheel_FR.COMDistance(COM) + wheel_BL.COMDistance(COM) + wheel_BR.COMDistance(COM);
         float sumOfDistances_Inverse = sumofDistance != 0 ? 1 / sumofDistance : 0;
-        wheel_FL.SetWeightOnWheel(sumOfDistances_Inverse, EnvironmentForces.y);
-        wheel_FR.SetWeightOnWheel(sumOfDistances_Inverse, EnvironmentForces.y);
-        wheel_BL.SetWeightOnWheel(sumOfDistances_Inverse, EnvironmentForces.y);
-        wheel_BR.SetWeightOnWheel(sumOfDistances_Inverse, EnvironmentForces.y);
+        wheel_FL.SetWeightOnWheel(sumOfDistances_Inverse, rb.mass * Physics.gravity.y);
+        wheel_FR.SetWeightOnWheel(sumOfDistances_Inverse, rb.mass * Physics.gravity.y);
+        wheel_BL.SetWeightOnWheel(sumOfDistances_Inverse, rb.mass * Physics.gravity.y);
+        wheel_BR.SetWeightOnWheel(sumOfDistances_Inverse, rb.mass * Physics.gravity.y);
 
-        float sumOfCompression = wheel_FL.SuspensionDistance() + wheel_FR.SuspensionDistance() + wheel_BL.SuspensionDistance() + wheel_BR.SuspensionDistance();
+        float sumOfCompression = wheel_FL.RayCastWheelDistance() + wheel_FR.RayCastWheelDistance() + wheel_BL.RayCastWheelDistance() + wheel_BR.RayCastWheelDistance();
         float sumOfCompression_Inverse = sumOfCompression != 0 ? 1 / sumOfCompression: 0;
         wheel_FL.SetMassOnWheel(sumOfCompression_Inverse, rb.mass);
         wheel_FR.SetMassOnWheel(sumOfCompression_Inverse, rb.mass);
         wheel_BL.SetMassOnWheel(sumOfCompression_Inverse, rb.mass);
         wheel_BR.SetMassOnWheel(sumOfCompression_Inverse, rb.mass);
 
-        //rb.AddForceAtPosition(wheel_FL.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_FL.transform.position)), WheelOBJ_FL.transform.position, ForceMode.Force);
-        //rb.AddForceAtPosition(wheel_FR.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_FR.transform.position)), WheelOBJ_FR.transform.position, ForceMode.Force);
-        //rb.AddForceAtPosition(wheel_BL.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_BL.transform.position)), WheelOBJ_BL.transform.position, ForceMode.Force);
-        //rb.AddForceAtPosition(wheel_BR.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_BR.transform.position)), WheelOBJ_BR.transform.position, ForceMode.Force);
-        float groundedWeight = wheel_FL.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_FL.transform.position)) +
-        wheel_FR.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_FR.transform.position)) +
-        wheel_BL.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_BL.transform.position)) +
-        wheel_BR.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_BR.transform.position));
+        wheel_FL.UpdateSpringPhysics();
+        wheel_FR.UpdateSpringPhysics();
+        wheel_BL.UpdateSpringPhysics();
+        wheel_BR.UpdateSpringPhysics();
 
-        //rb.AddForce(Vector3.up * groundedWeight, ForceMode.Force);
+        //rb.AddForceAtPosition(wheel_FL.UpdateSpringPhysics(), WheelOBJ_FL.transform.position);
+        //rb.AddForceAtPosition(wheel_FR.UpdateSpringPhysics(), WheelOBJ_FR.transform.position);
+        //rb.AddForceAtPosition(wheel_BL.UpdateSpringPhysics(), WheelOBJ_BL.transform.position);
+        //rb.AddForceAtPosition(wheel_BR.UpdateSpringPhysics(), WheelOBJ_BR.transform.position);
 
         ApplyGravity();
     }
@@ -171,7 +187,7 @@ public class baseVehicle : GravityBody
             float CurveRatio = Mathf.Pow(PistonDiameter, exponent);
 
             //TODO: Add TurboBoose, BackPressure, 
-            float RateOfChange = CurveRatio * RunTimeBackPressure * Torque * CylinderCount;
+            float RateOfChange = CurveRatio * Torque * RunTimeBackPressure;
 
             ///Debug.Log($"Piston: {PistonDiameter}^{CalculateCurveExponent()} = {CurveRatio} : RATE OF CHANGE = {RateOfChange}: TORQUE Multiplier: {TorqueScalar}");
             CurrentRPM += RateOfChange * Time.deltaTime;
@@ -186,33 +202,42 @@ public class baseVehicle : GravityBody
         //CurrentHorsePower = (CurrentRPMs * Torque) / 5252;
 
         float WheelAngularVelocity = CurrentRPM * 2 * Mathf.PI * RearTireRadius / (60 * WheelTrainRatio);
-        float acceleration = (WheelAngularVelocity) / Time.fixedDeltaTime + (Torque * input);
+        RunTimeMotorPower = (WheelAngularVelocity) / Time.fixedDeltaTime + (Torque * CylinderCount * input);
 
-        wheel_FL.DriveWheel(0, WheelAngularVelocity);
-        wheel_FR.DriveWheel(0, WheelAngularVelocity);
-        wheel_BL.DriveWheel(acceleration, WheelAngularVelocity);
-        wheel_BR.DriveWheel(acceleration, WheelAngularVelocity);
+        float power = RunTimeMotorPower * 0.25f;
+        wheel_FL.DriveWheel(power, rb.GetPointVelocity(WheelOBJ_FL.transform.position), WheelAngularVelocity);
+        wheel_FR.DriveWheel(power, rb.GetPointVelocity(WheelOBJ_FR.transform.position), WheelAngularVelocity);
+        wheel_BL.DriveWheel(power, rb.GetPointVelocity(WheelOBJ_BL.transform.position), WheelAngularVelocity);
+        wheel_BR.DriveWheel(power, rb.GetPointVelocity(WheelOBJ_BR.transform.position), WheelAngularVelocity);
 
-
+        //ReadAxel_forcePoint.x = -(currentSteerAngle * WheelOBJ_BR.transform.localPosition.x / maximumSteerAngle);
+        //Debug.Log(calculatedForcePosition);
+        //rb.AddForceAtPosition(transform.forward * 20000 * input, transform.TransformPoint(ReadAxel_forcePoint), ForceMode.Force);
+        //rb.AddForce(transform.forward * 20000 * input, ForceMode.Force);
     }
 
     protected void UpdateSteeringAngle(float input)
     {
-        currentSteerAngle = maximumSteerAngle * input;
-        WheelOBJ_FL.transform.localRotation = Quaternion.Euler(WheelOBJ_FL.transform.localRotation.x + rb.angularVelocity.magnitude, currentSteerAngle, 0);
-        WheelOBJ_FR.transform.localRotation = Quaternion.Euler(WheelOBJ_FR.transform.localRotation.x + rb.angularVelocity.magnitude, currentSteerAngle, 0);
+        float FL_AckermanAngle = Mathf.Atan(AckermanOppositeDistance / (AckermanAdjacentDistance - (input * RearWheelOffset))) * Mathf.Rad2Deg * input;
+        float FR_AckermanAngle = Mathf.Atan(AckermanOppositeDistance / (AckermanAdjacentDistance + (input * RearWheelOffset))) * Mathf.Rad2Deg * input;
+
+        //currentSteerAngle = maximumSteerAngle * input;
+        wheel_FL.UpdateWheelAngle(FL_AckermanAngle);
+        wheel_FR.UpdateWheelAngle(FR_AckermanAngle);
+        //WheelOBJ_FL.transform.localRotation = Quaternion.Euler(0, currentSteerAngle, 0);
+        //WheelOBJ_FR.transform.localRotation = Quaternion.Euler(0, currentSteerAngle, 0);
     }
 
     protected void ApplySteerForce(float input)
     {
 
         //transform.RotateAround(SteerPoint.position, Vector3.up, currentSteerAngle * Time.deltaTime * rb.velocity.magnitude);
-        float leftTorque = wheel_FL.SteerVehicle(currentSteerAngle, transform.right);
-        float rightTorque = wheel_FR.SteerVehicle(currentSteerAngle, transform.right);
+        //float leftTorque = wheel_FL.SteerVehicle(rb.GetPointVelocity(WheelOBJ_FL.transform.position));
+        //float rightTorque = wheel_FR.SteerVehicle(rb.GetPointVelocity(WheelOBJ_FR.transform.position));
         
-        //rb.AddTorque(transform.up * (leftTorque + rightTorque));
-        //rb.AddForceAtPosition(transform.right * leftTorque * input, WheelOBJ_FL.transform.position, ForceMode.Acceleration);
-        //rb.AddForceAtPosition(transform.right * rightTorque * input, WheelOBJ_FR.transform.position, ForceMode.Acceleration);
+        //rb.AddTorque(transform.up * currentSteerAngle * 1400);
+        //rb.AddForceAtPosition(transform.right * leftTorque * input, WheelOBJ_BL.transform.position);
+        //rb.AddForceAtPosition(transform.right * rightTorque * input, WheelOBJ_BR.transform.position);
         //rb.AddForceAtPosition(transform.right * GetSteeringAngle() * rb.velocity.magnitude * Time.deltaTime, SteerPoint.position, ForceMode.Acceleration);
         //transform.RotateAround(SteerPoint.position, Vector3.up, currentSteerAngle * Time.deltaTime * rb.velocity.magnitude);
     }

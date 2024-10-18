@@ -36,9 +36,9 @@ public class PlayerCar : baseVehicle
     float SwingDirection = 1;
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        base.Update();
+        base.FixedUpdate();
 
         float turnInput = Input.GetAxis("Horizontal");
         UpdateSteeringAngle(turnInput);

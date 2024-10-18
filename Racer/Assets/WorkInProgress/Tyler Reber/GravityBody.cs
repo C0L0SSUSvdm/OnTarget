@@ -9,7 +9,7 @@ public class GravityBody : MonoBehaviour
 
     [SerializeField] float airDensity = 1.838f; //Sea Level Air Density 1.225 kg/m^3
     [Tooltip("Drag Coefficients for a Car in Cartesian Cooridnates, (xyz) = (Sides, Top/bottom, front/back")]
-    
+
     [SerializeField] Vector3 BodyAreaCrossSection = new Vector3(3.0f, 5.0f, 2.2f); //Frontal Area of a Car
     [SerializeField] Vector3 ForwardCoefficients = new Vector3(0.5f, 1, 0.3f); //Drag Coefficient of a Car
     [SerializeField] Vector3 DragCoefficients = new Vector3(0.5f, 1, 0.3f); //Drag Coefficient of a Car
@@ -30,8 +30,8 @@ public class GravityBody : MonoBehaviour
             freefallResistance_y = CalculateResistance(Vector3.up, rb.velocity.y, ForwardCoefficients);
 
             forwardAirResistance_z = CalculateResistance(transform.forward, rb.velocity.magnitude, ForwardCoefficients).z * -transform.forward;
-            dragAirResistance_z = CalculateResistance(transform.forward, rb.velocity.magnitude, DragCoefficients).z * -transform.forward;
-            AngularResistance_x = CalculateResistance(transform.right, rb.angularVelocity.magnitude, SideCoefficients).x * -transform.right;
+            //dragAirResistance_z = CalculateResistance(transform.forward, rb.velocity.magnitude, DragCoefficients).z * -transform.forward;
+            //AngularResistance_x = CalculateResistance(transform.right, rb.angularVelocity.magnitude, SideCoefficients).x * -transform.right;
         }
         else
         {
@@ -40,10 +40,13 @@ public class GravityBody : MonoBehaviour
         }
 
         //TODO, side ways wind resistance
-        EnvironmentForces = new Vector3(AngularResistance_x.x + forwardAirResistance_z.x + dragAirResistance_z.x,
-            y_force + freefallResistance_y.y + forwardAirResistance_z.y + AngularResistance_x.y + dragAirResistance_z.y,
-            forwardAirResistance_z.z + AngularResistance_x.z + dragAirResistance_z.z);
-        //EnvironmentForces = new Vector3(0, y_force + freefallResistance_y.y, 0);
+        //EnvironmentForces = new Vector3(AngularResistance_x.x + forwardAirResistance_z.x + dragAirResistance_z.x,
+        //    y_force + freefallResistance_y.y + forwardAirResistance_z.y + AngularResistance_x.y + dragAirResistance_z.y,
+        //    forwardAirResistance_z.z + AngularResistance_x.z + dragAirResistance_z.z);
+        //EnvironmentForces = new Vector3(forwardAirResistance_z.x + dragAirResistance_z.x,
+        //freefallResistance_y.y + forwardAirResistance_z.y + dragAirResistance_z.y,
+        //forwardAirResistance_z.z + dragAirResistance_z.z);
+        EnvironmentForces = new Vector3(0, freefallResistance_y.y, 0);
         return EnvironmentForces;
         //rb.AddForce(freefallResistance_x.x, y_force + freefallResistance_y.y, freefallResistance_z.z);
     }
@@ -83,11 +86,11 @@ public class GravityBody : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
-    public void Update()
+    public void FixedUpdate()
     {
         CalculateGravity();
         ApplyGravity();
@@ -102,7 +105,7 @@ public class GravityBody : MonoBehaviour
     ////Find Forces from things acting on the car.
     private void OnCollisionStay(Collision collision)
     {
-        
+
 
 
         //Rigidbody rb = collision.gameObject.GetComponent<Rigidbody>();
@@ -120,7 +123,7 @@ public class GravityBody : MonoBehaviour
         //        Debug.Log($"velocity: {rb.velocity}, this collision: {test}, total collistion: {ActingForces}");
         //    }
         //}
-        
+
 
     }
 

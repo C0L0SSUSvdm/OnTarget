@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7217616745846133505}
-  - component: {fileID: 1977543872362107409}
   - component: {fileID: 5347919595627721419}
   - component: {fileID: 6404765636262500401}
   - component: {fileID: 3862305241206990703}
@@ -35,25 +34,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1977543872362107409
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4168702200620959719}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3379bc260be444643ba0bb5343e469fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WheelCollider: {fileID: 0}
-  MaxTurnAngle: 15
-  CurrentTurnAngle: 0
-  WheelSize: 1
-  GizmoSpringOffset: 0.5
-  GizmoSpringLength: 0
-  GizmoSpringRadius: 0.2
 --- !u!33 &5347919595627721419
 MeshFilter:
   m_ObjectHideFlags: 0
