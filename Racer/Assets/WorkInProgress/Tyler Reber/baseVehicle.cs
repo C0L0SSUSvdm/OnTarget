@@ -80,12 +80,11 @@ public class baseVehicle : GravityBody
     protected void Start()
     {
 
-
         rb = gameObject.GetComponent<Rigidbody>();
         //rb.useGravity = false;
         rb.mass = 1000;
-        rb.drag = 0;// 0.5f;
-        rb.angularDrag = 0.2f;// 0.5f;
+        rb.drag = 0.1f;// 0.5f;
+        rb.angularDrag = 0.5f;// 0.5f;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         rb.maxAngularVelocity = 7;
@@ -141,11 +140,6 @@ public class baseVehicle : GravityBody
         wheel_FR.UpdateSpringPhysics();
         wheel_BL.UpdateSpringPhysics();
         wheel_BR.UpdateSpringPhysics();
-
-        //rb.AddForceAtPosition(wheel_FL.UpdateSpringPhysics(), WheelOBJ_FL.transform.position);
-        //rb.AddForceAtPosition(wheel_FR.UpdateSpringPhysics(), WheelOBJ_FR.transform.position);
-        //rb.AddForceAtPosition(wheel_BL.UpdateSpringPhysics(), WheelOBJ_BL.transform.position);
-        //rb.AddForceAtPosition(wheel_BR.UpdateSpringPhysics(), WheelOBJ_BR.transform.position);
 
         ApplyGravity();
     }
@@ -204,11 +198,11 @@ public class baseVehicle : GravityBody
         float WheelAngularVelocity = CurrentRPM * 2 * Mathf.PI * RearTireRadius / (60 * WheelTrainRatio);
         RunTimeMotorPower = (WheelAngularVelocity) / Time.fixedDeltaTime + (Torque * CylinderCount * input);
 
-        float power = RunTimeMotorPower * 0.25f;
-        wheel_FL.DriveWheel(power, rb.GetPointVelocity(WheelOBJ_FL.transform.position), WheelAngularVelocity);
-        wheel_FR.DriveWheel(power, rb.GetPointVelocity(WheelOBJ_FR.transform.position), WheelAngularVelocity);
-        wheel_BL.DriveWheel(power, rb.GetPointVelocity(WheelOBJ_BL.transform.position), WheelAngularVelocity);
-        wheel_BR.DriveWheel(power, rb.GetPointVelocity(WheelOBJ_BR.transform.position), WheelAngularVelocity);
+        //float power = RunTimeMotorPower * 0.25f;
+        wheel_FL.DriveWheel(0, rb.GetPointVelocity(WheelOBJ_FL.transform.position), WheelAngularVelocity);
+        wheel_FR.DriveWheel(0, rb.GetPointVelocity(WheelOBJ_FR.transform.position), WheelAngularVelocity);
+        wheel_BL.DriveWheel(RunTimeMotorPower, rb.GetPointVelocity(WheelOBJ_BL.transform.position), WheelAngularVelocity);
+        wheel_BR.DriveWheel(RunTimeMotorPower, rb.GetPointVelocity(WheelOBJ_BR.transform.position), WheelAngularVelocity);
 
         //ReadAxel_forcePoint.x = -(currentSteerAngle * WheelOBJ_BR.transform.localPosition.x / maximumSteerAngle);
         //Debug.Log(calculatedForcePosition);
@@ -218,29 +212,32 @@ public class baseVehicle : GravityBody
 
     protected void UpdateSteeringAngle(float input)
     {
+
         float FL_AckermanAngle = Mathf.Atan(AckermanOppositeDistance / (AckermanAdjacentDistance - (input * RearWheelOffset))) * Mathf.Rad2Deg * input;
         float FR_AckermanAngle = Mathf.Atan(AckermanOppositeDistance / (AckermanAdjacentDistance + (input * RearWheelOffset))) * Mathf.Rad2Deg * input;
 
-        //currentSteerAngle = maximumSteerAngle * input;
         wheel_FL.UpdateWheelAngle(FL_AckermanAngle);
         wheel_FR.UpdateWheelAngle(FR_AckermanAngle);
-        //WheelOBJ_FL.transform.localRotation = Quaternion.Euler(0, currentSteerAngle, 0);
-        //WheelOBJ_FR.transform.localRotation = Quaternion.Euler(0, currentSteerAngle, 0);
+
+
+        float xPosition = Mathf.Lerp(COM.transform.localPosition.x, -input * 10, Time.deltaTime * 2);
+        COM.transform.localPosition = new Vector3(xPosition, COM.transform.localPosition.y, COM.transform.localPosition.z);
+
     }
 
-    protected void ApplySteerForce(float input)
-    {
+    //protected void ApplySteerForce(float input)
+    //{
 
-        //transform.RotateAround(SteerPoint.position, Vector3.up, currentSteerAngle * Time.deltaTime * rb.velocity.magnitude);
-        //float leftTorque = wheel_FL.SteerVehicle(rb.GetPointVelocity(WheelOBJ_FL.transform.position));
-        //float rightTorque = wheel_FR.SteerVehicle(rb.GetPointVelocity(WheelOBJ_FR.transform.position));
+    //    //transform.RotateAround(SteerPoint.position, Vector3.up, currentSteerAngle * Time.deltaTime * rb.velocity.magnitude);
+    //    float leftTorque = wheel_FL.SteerVehicle(rb.GetPointVelocity(WheelOBJ_FL.transform.position));
+    //    float rightTorque = wheel_FR.SteerVehicle(rb.GetPointVelocity(WheelOBJ_FR.transform.position));
         
-        //rb.AddTorque(transform.up * currentSteerAngle * 1400);
-        //rb.AddForceAtPosition(transform.right * leftTorque * input, WheelOBJ_BL.transform.position);
-        //rb.AddForceAtPosition(transform.right * rightTorque * input, WheelOBJ_BR.transform.position);
-        //rb.AddForceAtPosition(transform.right * GetSteeringAngle() * rb.velocity.magnitude * Time.deltaTime, SteerPoint.position, ForceMode.Acceleration);
-        //transform.RotateAround(SteerPoint.position, Vector3.up, currentSteerAngle * Time.deltaTime * rb.velocity.magnitude);
-    }
+    //    //rb.AddTorque(transform.up * currentSteerAngle * 1400);
+    //    //rb.AddForceAtPosition(transform.right * leftTorque * input, WheelOBJ_BL.transform.position);
+    //    //rb.AddForceAtPosition(transform.right * rightTorque * input, WheelOBJ_BR.transform.position);
+    //    //rb.AddForceAtPosition(transform.right * GetSteeringAngle() * rb.velocity.magnitude * Time.deltaTime, SteerPoint.position, ForceMode.Acceleration);
+    //    //transform.RotateAround(SteerPoint.position, Vector3.up, currentSteerAngle * Time.deltaTime * rb.velocity.magnitude);
+    //}
 
     public float GetSteeringAngle()
     {

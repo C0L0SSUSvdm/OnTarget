@@ -107,7 +107,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 575469533942102336}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.7, z: -4.75}
+  m_LocalPosition: {x: 0, y: -0.33, z: -4.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -229,14 +229,13 @@ MonoBehaviour:
   DamperForces: {x: 0, y: 0, z: 0}
   SteerForces: {x: 0, y: 0, z: 0}
   MotorForces: {x: 0, y: 0, z: 0}
-  MaximumSpringForce: 5000
+  SpringStrength: 18744
   EffectiveSpringLength: 0.5
   WheelMass: 25
   DampenerResistance: 500
   NumberOfCoils: 4
   isGrounded: 0
   hitDistance: 0
-  SpringStrength: 10000
   weightOnWheel: 0
   massOnWheel: 0
   SpringRestPosition: 0
@@ -682,14 +681,13 @@ MonoBehaviour:
   DamperForces: {x: 0, y: 0, z: 0}
   SteerForces: {x: 0, y: 0, z: 0}
   MotorForces: {x: 0, y: 0, z: 0}
-  MaximumSpringForce: 5000
+  SpringStrength: 18744
   EffectiveSpringLength: 0.5
   WheelMass: 25
   DampenerResistance: 500
   NumberOfCoils: 4
   isGrounded: 0
   hitDistance: 0
-  SpringStrength: 10000
   weightOnWheel: 0
   massOnWheel: 0
   SpringRestPosition: 0
@@ -965,14 +963,13 @@ MonoBehaviour:
   DamperForces: {x: 0, y: 0, z: 0}
   SteerForces: {x: 0, y: 0, z: 0}
   MotorForces: {x: 0, y: 0, z: 0}
-  MaximumSpringForce: 5000
+  SpringStrength: 18744
   EffectiveSpringLength: 0.5
   WheelMass: 25
   DampenerResistance: 500
   NumberOfCoils: 4
   isGrounded: 0
   hitDistance: 0
-  SpringStrength: 10000
   weightOnWheel: 0
   massOnWheel: 0
   SpringRestPosition: 0
@@ -1208,7 +1205,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: -3.19, y: 2.48, z: 13}
+  m_Size: {x: -4.59, y: 2.48, z: 13}
   m_Center: {x: 0, y: 0.88, z: -4.18}
 --- !u!1 &7709936644152223702
 GameObject:
@@ -1345,14 +1342,13 @@ MonoBehaviour:
   DamperForces: {x: 0, y: 0, z: 0}
   SteerForces: {x: 0, y: 0, z: 0}
   MotorForces: {x: 0, y: 0, z: 0}
-  MaximumSpringForce: 5000
+  SpringStrength: 18744
   EffectiveSpringLength: 0.5
   WheelMass: 25
   DampenerResistance: 500
   NumberOfCoils: 4
   isGrounded: 0
   hitDistance: 0
-  SpringStrength: 10000
   weightOnWheel: 0
   massOnWheel: 0
   SpringRestPosition: 0

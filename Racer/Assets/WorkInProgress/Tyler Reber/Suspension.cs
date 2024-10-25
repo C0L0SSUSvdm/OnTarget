@@ -11,7 +11,7 @@ public class Suspension : MonoBehaviour
     [SerializeField] Vector3 SteerForces;
     [SerializeField] Vector3 MotorForces;
     [Header("----- Suspension Fields -----")]
-    [Range(1000, 20000), SerializeField] float MaximumSpringForce;
+    [Range(10000, 50000), SerializeField] float SpringStrength;
     [Range(0, 2), SerializeField] float EffectiveSpringLength;
     [SerializeField] float WheelMass;    
     [SerializeField] float DampenerResistance;
@@ -25,7 +25,7 @@ public class Suspension : MonoBehaviour
     //[SerializeField] float SpringrRestPosition = -0.25f;
     [SerializeField] float hitDistance;
     Vector3 WheelHitPoint;
-    [SerializeField] float SpringStrength;
+    //[SerializeField] float SpringStrength;
     [SerializeField] float weightOnWheel;
     [SerializeField] float massOnWheel;
     [SerializeField] float SpringRestPosition;
@@ -48,7 +48,7 @@ public class Suspension : MonoBehaviour
 
     void Start()
     {
-        SpringStrength = MaximumSpringForce;
+        //SpringStrength = MaximumSpringForce;
         EffectiveSpringLength *= -1;
 
         NumberOfSpringSegements = NumberOfCoils * (360 / SpringCurvatureResolution);
@@ -101,19 +101,20 @@ public class Suspension : MonoBehaviour
 
     public void DriveWheel(float EngineForce, Vector3 wheelVelocity, float WheelAngularVelocity)
     {
-        Vector3 ForceVector = Vector3.zero;
+        //Vector3 ForceVector = Vector3.zero;
         if (isGrounded)
         {
             if(rb.velocity.magnitude > 0.3f) {
                 float theta = rb.velocity.magnitude * 2 * Mathf.PI;
                 Wheel.transform.Rotate(theta, 0, 0);
             }
+            
+            //Vector3 test = transform.InverseTransformDirection(wheelVelocity);
+            //float right = EngineForce * test.x;
 
-            Vector3 test = transform.InverseTransformDirection(wheelVelocity);
-            float right = EngineForce * test.x;
-            ForceVector = (transform.forward * EngineForce) + (-transform.right * right);
+            //ForceVector = (transform.forward * EngineForce);
 
-            rb.AddForceAtPosition(ForceVector, WheelHitPoint, ForceMode.Force);
+            rb.AddForceAtPosition(transform.forward * EngineForce, WheelHitPoint, ForceMode.Force);
             
         }
         else
@@ -122,7 +123,7 @@ public class Suspension : MonoBehaviour
             float theta = AngularVelocity;
             Wheel.transform.Rotate(theta, 0, 0);
         }
-        
+        SteerVehicle(wheelVelocity);
     }
 
     public void UpdateWheelAngle(float eulerAngle_y)
@@ -135,19 +136,22 @@ public class Suspension : MonoBehaviour
     public float SteerVehicle(Vector3 wheelVelocity)
     {
         
-        //rb.MoveRotation(rb.rotation * Quaternion.Euler(0, angleStrength * Time.deltaTime, 0));
+        ////rb.MoveRotation(rb.rotation * Quaternion.Euler(0, angleStrength * Time.deltaTime, 0));
+        Vector3 projection = Vector3.Project(wheelVelocity, transform.right);
+        Debug.DrawRay(transform.position, projection * 100, Color.green);
+        //Vector3 test = transform.InverseTransformDirection(wheelVelocity);
+        //Vector3 right = transform.right * test.x;
 
-        Vector3 test = transform.InverseTransformDirection(wheelVelocity);
-        Vector3 right = transform.right * test.x;
-
-        rb.AddForceAtPosition(right, transform.position, ForceMode.Force);
+        //rb.AddForceAtPosition(right, transform.position, ForceMode.Force);
 
         float SteerVelocity = Vector3.Dot(transform.right, wheelVelocity);
 
-        float desiredSteerVelocity = -SteerVelocity * 0.9f; //Friction or slippage
-        float acceleration = desiredSteerVelocity;
+        float desiredSteerVelocity = -SteerVelocity * 1f; //Friction or slippage
+        float acceleration = desiredSteerVelocity * Time.fixedDeltaTime;
         //rb.AddTorque(transform.up * force);
-        //rb.AddForceAtPosition(steerDirection * acceleration, transform.position, ForceMode.Acceleration);
+        //Debug.Log(transform.right * WheelMass * acceleration);
+        //rb.AddTorque(transform.right * -acceleration);
+        rb.AddForceAtPosition(transform.right * WheelMass * acceleration, transform.position, ForceMode.Acceleration);
         //Debug.Log($"Steer Direction: {desiredSteerVelocity}, Acceleration: {acceleration}, force: {acceleration * massOnWheel}");
         return acceleration;
     }
@@ -182,7 +186,7 @@ public class Suspension : MonoBehaviour
 
 
 
-        return EffectiveSpringLength;// - hitDistance;
+        return EffectiveSpringLength - hitDistance;
     }
 
     public void SetWeightOnWheel(float sumOfDistances_Inverse, float totalWeight)
@@ -190,10 +194,10 @@ public class Suspension : MonoBehaviour
         weightOnWheel = CenterOfMassDistance * sumOfDistances_Inverse * totalWeight;
     }
 
-    public float SuspensionDistance()
-    {
-        return EffectiveSpringLength - hitDistance;
-    }
+    //public float SuspensionDistance()
+    //{
+    //    return EffectiveSpringLength - hitDistance;
+    //}
 
     public void SetMassOnWheel(float sumOfCompression_Inverse, float totalMass)
     {
@@ -209,9 +213,9 @@ public class Suspension : MonoBehaviour
         }
     }
 
-    public Vector3 UpdateSpringPhysics()
+    public void UpdateSpringPhysics()
     {
-        float result = 0;
+        Vector3 result = Vector3.zero;
         
         float deltaSpringVelocity = (hitDistance - transform.localPosition.y) / Time.fixedDeltaTime;
         transform.localPosition = new Vector3(transform.localPosition.x, hitDistance, transform.localPosition.z);
@@ -219,18 +223,24 @@ public class Suspension : MonoBehaviour
         {
             float DamperForce = deltaSpringVelocity * DampenerResistance;
 
-            float averageWeight = (massOnWheel * Physics.gravity.y + weightOnWheel) * 0.5f;
+            float massWeight = massOnWheel * Physics.gravity.y;
+            float deltaMass = (massWeight - weightOnWheel);
+            float averageWeight = (massWeight + weightOnWheel) * 0.5f;
 
-            float restDistance = averageWeight / SpringStrength;
-            float upwardForce = (EffectiveSpringLength - restDistance) * SpringStrength;
-          
-            result = (upwardForce - averageWeight) + DamperForce;
+
+            SpringRestPosition = EffectiveSpringLength - (averageWeight / SpringStrength);
+            float upwardForce = (transform.localPosition.y - SpringRestPosition) * SpringStrength;
+            //float upwardForce = (EffectiveSpringLength - transform.localPosition.y) * -SpringStrength;
+            result = (( -deltaMass - averageWeight + upwardForce) + DamperForce) * transform.up;
+            
+            //Debug.Log($"{transform.gameObject.name}: {averageWeight}, {(upwardForce - averageWeight)}");
+            result.x = 0;
+            result.z = 0;
             SpringForces = transform.up * upwardForce;
             DamperForces = transform.up * DamperForce;
-            rb.AddForceAtPosition(transform.up * result, WheelHitPoint, ForceMode.Force);
+            rb.AddForceAtPosition(result, WheelHitPoint, ForceMode.Force);
         }
 
-        return transform.up * result;
     }
 
     public void OnTriggerEnter(Collider other)

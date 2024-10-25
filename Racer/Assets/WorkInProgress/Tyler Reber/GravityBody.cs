@@ -40,13 +40,13 @@ public class GravityBody : MonoBehaviour
         }
 
         //TODO, side ways wind resistance
-        //EnvironmentForces = new Vector3(AngularResistance_x.x + forwardAirResistance_z.x + dragAirResistance_z.x,
-        //    y_force + freefallResistance_y.y + forwardAirResistance_z.y + AngularResistance_x.y + dragAirResistance_z.y,
-        //    forwardAirResistance_z.z + AngularResistance_x.z + dragAirResistance_z.z);
+        EnvironmentForces = new Vector3(AngularResistance_x.x + forwardAirResistance_z.x + dragAirResistance_z.x,
+            freefallResistance_y.y + forwardAirResistance_z.y + AngularResistance_x.y + dragAirResistance_z.y,
+            forwardAirResistance_z.z + AngularResistance_x.z + dragAirResistance_z.z);
         //EnvironmentForces = new Vector3(forwardAirResistance_z.x + dragAirResistance_z.x,
         //freefallResistance_y.y + forwardAirResistance_z.y + dragAirResistance_z.y,
         //forwardAirResistance_z.z + dragAirResistance_z.z);
-        EnvironmentForces = new Vector3(0, freefallResistance_y.y, 0);
+        //EnvironmentForces = new Vector3(0, freefallResistance_y.y, 0);
         return EnvironmentForces;
         //rb.AddForce(freefallResistance_x.x, y_force + freefallResistance_y.y, freefallResistance_z.z);
     }

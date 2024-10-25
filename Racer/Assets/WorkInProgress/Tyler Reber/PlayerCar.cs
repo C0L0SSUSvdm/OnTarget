@@ -46,7 +46,7 @@ public class PlayerCar : baseVehicle
         float forwardInput = Input.GetAxis("Vertical");
         ApplyGasPedal(forwardInput);
 
-        ApplySteerForce(turnInput);
+        //ApplySteerForce(turnInput);
 
         HUD.Item.UpdateSpeedometer(rb.velocity.magnitude);
        
