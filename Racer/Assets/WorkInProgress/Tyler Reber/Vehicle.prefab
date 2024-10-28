@@ -189,7 +189,6 @@ GameObject:
   - component: {fileID: 8890993301878646385}
   - component: {fileID: 2099828854726402177}
   - component: {fileID: 8890993301878646384}
-  - component: {fileID: 8890993301878646387}
   m_Layer: 0
   m_Name: Wheel_Left Back
   m_TagString: Untagged
@@ -225,10 +224,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 849b12248a8130346b3290f95157fb09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpringForces: {x: 0, y: 0, z: 0}
-  DamperForces: {x: 0, y: 0, z: 0}
-  SteerForces: {x: 0, y: 0, z: 0}
-  MotorForces: {x: 0, y: 0, z: 0}
   SpringStrength: 18744
   EffectiveSpringLength: 0.5
   WheelMass: 25
@@ -362,20 +357,6 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 0
   m_Loop: 0
---- !u!136 &8890993301878646387
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2779622488918569618}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 0.25
-  m_Height: 1.25
-  m_Direction: 2
-  m_Center: {x: 0.12707101, y: -0.82, z: -0.000001013279}
 --- !u!1 &3792868103005670685
 GameObject:
   m_ObjectHideFlags: 0
@@ -641,7 +622,6 @@ GameObject:
   - component: {fileID: 7858270203621359563}
   - component: {fileID: 8704952983124774309}
   - component: {fileID: 7858270203621359562}
-  - component: {fileID: 7858270203621359565}
   m_Layer: 0
   m_Name: Wheel_Right Front
   m_TagString: Untagged
@@ -677,10 +657,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 849b12248a8130346b3290f95157fb09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpringForces: {x: 0, y: 0, z: 0}
-  DamperForces: {x: 0, y: 0, z: 0}
-  SteerForces: {x: 0, y: 0, z: 0}
-  MotorForces: {x: 0, y: 0, z: 0}
   SpringStrength: 18744
   EffectiveSpringLength: 0.5
   WheelMass: 25
@@ -814,20 +790,6 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 0
   m_Loop: 0
---- !u!136 &7858270203621359565
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5930880803038724658}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 0.25
-  m_Height: 1.25
-  m_Direction: 2
-  m_Center: {x: -0.12707101, y: -0.82, z: 0.000001013279}
 --- !u!1 &6573330441916045597
 GameObject:
   m_ObjectHideFlags: 0
@@ -923,7 +885,6 @@ GameObject:
   - component: {fileID: 6967343999357701298}
   - component: {fileID: 1061490133457811232}
   - component: {fileID: 6967343999357701297}
-  - component: {fileID: 6967343999357701300}
   m_Layer: 0
   m_Name: Wheel_Left Front
   m_TagString: Untagged
@@ -959,10 +920,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 849b12248a8130346b3290f95157fb09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpringForces: {x: 0, y: 0, z: 0}
-  DamperForces: {x: 0, y: 0, z: 0}
-  SteerForces: {x: 0, y: 0, z: 0}
-  MotorForces: {x: 0, y: 0, z: 0}
   SpringStrength: 18744
   EffectiveSpringLength: 0.5
   WheelMass: 25
@@ -1096,20 +1053,6 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 0
   m_Loop: 0
---- !u!136 &6967343999357701300
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6967343999357701301}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 0.25
-  m_Height: 1.25
-  m_Direction: 2
-  m_Center: {x: 0.12707101, y: -0.82, z: -0.000001013279}
 --- !u!1 &7632034524714631314
 GameObject:
   m_ObjectHideFlags: 0
@@ -1302,7 +1245,6 @@ GameObject:
   - component: {fileID: 8211068565556983834}
   - component: {fileID: 415027343317204886}
   - component: {fileID: 8211068565556983833}
-  - component: {fileID: 8211068565556983836}
   m_Layer: 0
   m_Name: Wheel_Right Back
   m_TagString: Untagged
@@ -1338,10 +1280,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 849b12248a8130346b3290f95157fb09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpringForces: {x: 0, y: 0, z: 0}
-  DamperForces: {x: 0, y: 0, z: 0}
-  SteerForces: {x: 0, y: 0, z: 0}
-  MotorForces: {x: 0, y: 0, z: 0}
   SpringStrength: 18744
   EffectiveSpringLength: 0.5
   WheelMass: 25
@@ -1475,20 +1413,6 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 0
   m_Loop: 0
---- !u!136 &8211068565556983836
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8211068565556983837}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 0.25
-  m_Height: 1.25
-  m_Direction: 2
-  m_Center: {x: 0, y: -0.82, z: 0}
 --- !u!1 &8373554796878803461
 GameObject:
   m_ObjectHideFlags: 0

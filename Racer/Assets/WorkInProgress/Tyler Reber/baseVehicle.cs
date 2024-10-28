@@ -136,10 +136,10 @@ public class baseVehicle : GravityBody
         wheel_BL.SetMassOnWheel(sumOfCompression_Inverse, rb.mass);
         wheel_BR.SetMassOnWheel(sumOfCompression_Inverse, rb.mass);
 
-        wheel_FL.UpdateSpringPhysics();
-        wheel_FR.UpdateSpringPhysics();
-        wheel_BL.UpdateSpringPhysics();
-        wheel_BR.UpdateSpringPhysics();
+        wheel_FL.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_FL.transform.position));
+        wheel_FR.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_FR.transform.position));
+        wheel_BL.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_BL.transform.position));
+        wheel_BR.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_BR.transform.position));
 
         ApplyGravity();
     }
@@ -147,6 +147,7 @@ public class baseVehicle : GravityBody
     private float ShiftTranmission()
     {
         float WheelTrainRatio = DifferentialRatio * GearRatio[GearIndex] * RearTireRadius;
+        //float wheelAV = CurrentRPM * 2 * Mathf.PI * RearTireRadius / WheelTrainRatio;//Angular Velocity of the Wheel
         if (CurrentRPM < ShiftDownRPM && GearIndex > 0)
         {
             float wheelAV = CurrentRPM * 2 * Mathf.PI * RearTireRadius / WheelTrainRatio;
@@ -166,6 +167,7 @@ public class baseVehicle : GravityBody
         {
             WheelTrainRatio = DifferentialRatio * GearRatio[GearIndex] * RearTireRadius;
         }
+        //CurrentRPM = (wheelAV * WheelTrainRatio) / (2 * Mathf.PI * RearTireRadius);
 
         return WheelTrainRatio;
     }
@@ -175,6 +177,7 @@ public class baseVehicle : GravityBody
         float WheelTrainRatio = ShiftTranmission();
         float Torque = CrankShaftRadius * Mathf.Sin(CrankShaftAngle) * (RunTimeCombustionForce * EngineEfficiency) * WheelTrainRatio;
 
+        //float AdjustedRPM = CurrentRPM;
         if (input != 0) //Exponential Increase of RPM
         {
             float exponent = CalculateCurveExponent();
@@ -182,15 +185,15 @@ public class baseVehicle : GravityBody
 
             //TODO: Add TurboBoose, BackPressure, 
             float RateOfChange = CurveRatio * Torque * RunTimeBackPressure;
-
-            ///Debug.Log($"Piston: {PistonDiameter}^{CalculateCurveExponent()} = {CurveRatio} : RATE OF CHANGE = {RateOfChange}: TORQUE Multiplier: {TorqueScalar}");
+           
             CurrentRPM += RateOfChange * Time.deltaTime;
-
+            //AdjustedRPM += RateOfChange * Time.deltaTime;
         }
         else //Linear Reduction of RPM
         {
             //TODO:: Calculate Better RPM Reduction Method
             CurrentRPM = Mathf.Lerp(CurrentRPM, ShiftDownRPM * 0.5f, 200 * Time.deltaTime * Time.deltaTime * 0.5f);
+            //AdjustedRPM = Mathf.Lerp(CurrentRPM, ShiftDownRPM * 0.5f, 200 * Time.deltaTime * Time.deltaTime * 0.5f);
         }
 
         //CurrentHorsePower = (CurrentRPMs * Torque) / 5252;

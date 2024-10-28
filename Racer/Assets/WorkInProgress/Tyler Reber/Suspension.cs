@@ -6,10 +6,10 @@ using UnityEngine;
 public class Suspension : MonoBehaviour
 {
     
-    [SerializeField] Vector3 SpringForces;
+    //[SerializeField] Vector3 SpringForces;
     [SerializeField] Vector3 DamperForces;
-    [SerializeField] Vector3 SteerForces;
-    [SerializeField] Vector3 MotorForces;
+    //[SerializeField] Vector3 SteerForces;
+    //[SerializeField] Vector3 MotorForces;
     [Header("----- Suspension Fields -----")]
     [Range(10000, 50000), SerializeField] float SpringStrength;
     [Range(0, 2), SerializeField] float EffectiveSpringLength;
@@ -129,8 +129,8 @@ public class Suspension : MonoBehaviour
     public void UpdateWheelAngle(float eulerAngle_y)
     {
         transform.localRotation = Quaternion.Euler(0, eulerAngle_y, 0);
-        Debug.DrawRay(transform.position, transform.right * 25, Color.blue);
-        Debug.DrawRay(transform.position, -transform.right * 25, Color.red);
+        //Debug.DrawRay(transform.position, transform.right * 25, Color.blue);
+        //Debug.DrawRay(transform.position, -transform.right * 25, Color.red);
     }
 
     public float SteerVehicle(Vector3 wheelVelocity)
@@ -138,7 +138,7 @@ public class Suspension : MonoBehaviour
         
         ////rb.MoveRotation(rb.rotation * Quaternion.Euler(0, angleStrength * Time.deltaTime, 0));
         Vector3 projection = Vector3.Project(wheelVelocity, transform.right);
-        Debug.DrawRay(transform.position, projection * 100, Color.green);
+        //Debug.DrawRay(transform.position, projection * 100, Color.green);
         //Vector3 test = transform.InverseTransformDirection(wheelVelocity);
         //Vector3 right = transform.right * test.x;
 
@@ -166,17 +166,24 @@ public class Suspension : MonoBehaviour
 
     public float RayCastWheelDistance()
     {
-        Vector3 RayCastPoint = transform.position + transform.right * SpringOffsets.x + transform.up * -transform.localPosition.y;
+        Vector3 RayCastPoint = transform.position + transform.up * -transform.localPosition.y;
         Debug.DrawRay(RayCastPoint, -transform.up * (WheelRadius + Mathf.Abs(EffectiveSpringLength)), Color.red);
+
         RaycastHit hit;
-        if(Physics.Raycast(RayCastPoint, -transform.up, out hit, WheelRadius + Mathf.Abs(EffectiveSpringLength)))   
+        if (Physics.Raycast(RayCastPoint, -transform.up, out hit, WheelRadius + Mathf.Abs(EffectiveSpringLength)))
         {
-            //Debug.Log($"Name: {transform.name}, HitObj: {hit.transform.gameObject.name}");
-            isGrounded = true;
-            //Debug.Log($"{hit.transform.name}, distance: {hit.distance}, wheel rad: {WheelRadius}");
-            //hitDistance = -(hit.distance - WheelRadius);
-            hitDistance = Mathf.Clamp(-(hit.distance - WheelRadius), EffectiveSpringLength, 0);
-            WheelHitPoint = hit.point;
+
+            //if (hit.collider.gameObject != transform.gameObject)
+            //{
+                //Debug.Log($"Name: {transform.gameObject}, HitObj: {hit.collider.gameObject}");
+                //Debug.Log($"{hit.transform.name}, distance: {hit.distance}, wheel rad: {WheelRadius}");
+                //hitDistance = -(hit.distance - WheelRadius);
+                hitDistance = Mathf.Clamp(-(hit.distance - WheelRadius), EffectiveSpringLength, 0);
+                WheelHitPoint = hit.point;
+                isGrounded = true;
+            //}
+            
+
         }
         else
         {
@@ -213,7 +220,7 @@ public class Suspension : MonoBehaviour
         }
     }
 
-    public void UpdateSpringPhysics()
+    public void UpdateSpringPhysics(Vector3 WheelWorldSpaceVelocity)
     {
         Vector3 result = Vector3.zero;
         
@@ -231,12 +238,11 @@ public class Suspension : MonoBehaviour
             SpringRestPosition = EffectiveSpringLength - (averageWeight / SpringStrength);
             float upwardForce = (transform.localPosition.y - SpringRestPosition) * SpringStrength;
             //float upwardForce = (EffectiveSpringLength - transform.localPosition.y) * -SpringStrength;
-            result = (( -deltaMass - averageWeight + upwardForce) + DamperForce) * transform.up;
-            
-            //Debug.Log($"{transform.gameObject.name}: {averageWeight}, {(upwardForce - averageWeight)}");
-            result.x = 0;
-            result.z = 0;
-            SpringForces = transform.up * upwardForce;
+            result = (-averageWeight + upwardForce + DamperForce) * transform.up;
+
+            //result.x = 0;
+            //result.z = 0;
+            //SpringForces = transform.up * upwardForce;
             DamperForces = transform.up * DamperForce;
             rb.AddForceAtPosition(result, WheelHitPoint, ForceMode.Force);
         }

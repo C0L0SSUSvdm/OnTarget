@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GravityBody : MonoBehaviour
@@ -29,7 +30,7 @@ public class GravityBody : MonoBehaviour
         {
             freefallResistance_y = CalculateResistance(Vector3.up, rb.velocity.y, ForwardCoefficients);
 
-            forwardAirResistance_z = CalculateResistance(transform.forward, rb.velocity.magnitude, ForwardCoefficients).z * -transform.forward;
+            //forwardAirResistance_z = CalculateResistance(transform.forward, rb.velocity.magnitude, ForwardCoefficients).z * -transform.forward;
             //dragAirResistance_z = CalculateResistance(transform.forward, rb.velocity.magnitude, DragCoefficients).z * -transform.forward;
             //AngularResistance_x = CalculateResistance(transform.right, rb.angularVelocity.magnitude, SideCoefficients).x * -transform.right;
         }
@@ -41,7 +42,7 @@ public class GravityBody : MonoBehaviour
 
         //TODO, side ways wind resistance
         EnvironmentForces = new Vector3(AngularResistance_x.x + forwardAirResistance_z.x + dragAirResistance_z.x,
-            freefallResistance_y.y + forwardAirResistance_z.y + AngularResistance_x.y + dragAirResistance_z.y,
+            y_force + freefallResistance_y.y + forwardAirResistance_z.y + AngularResistance_x.y + dragAirResistance_z.y,
             forwardAirResistance_z.z + AngularResistance_x.z + dragAirResistance_z.z);
         //EnvironmentForces = new Vector3(forwardAirResistance_z.x + dragAirResistance_z.x,
         //freefallResistance_y.y + forwardAirResistance_z.y + dragAirResistance_z.y,
