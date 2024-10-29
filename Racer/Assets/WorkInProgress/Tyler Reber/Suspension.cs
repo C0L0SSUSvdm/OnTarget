@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Suspension : MonoBehaviour
 {
-    
+
     //[SerializeField] Vector3 SpringForces;
     [SerializeField] Vector3 DamperForces;
     //[SerializeField] Vector3 SteerForces;
@@ -13,7 +13,7 @@ public class Suspension : MonoBehaviour
     [Header("----- Suspension Fields -----")]
     [Range(10000, 50000), SerializeField] float SpringStrength;
     [Range(0, 2), SerializeField] float EffectiveSpringLength;
-    [SerializeField] float WheelMass;    
+    [SerializeField] float WheelMass;
     [SerializeField] float DampenerResistance;
     [SerializeField] int NumberOfCoils;
     [Header("RunTime Values -----")]
@@ -34,17 +34,17 @@ public class Suspension : MonoBehaviour
     [SerializeField] float WheelFriction = 0.95f;
     [SerializeField] public float WheelRadius = 1.0f;
     [SerializeField] public float AngularVelocity; //w
-    [SerializeField] public Vector3 WheelSlippage = new (0.8f, 0.0f, 0.05f); //Wheel Offset (x, y, z
+    [SerializeField] public Vector3 WheelSlippage = new(0.8f, 0.0f, 0.05f); //Wheel Offset (x, y, z
 
-    [Header("----- Visual Components -----")]    
+    [Header("----- Visual Components -----")]
     [SerializeField] LineRenderer SpringHelix;
-    [SerializeField] float SpringThickness = 0.035f;   
+    [SerializeField] float SpringThickness = 0.035f;
     const int SpringCurvatureResolution = 30; //360 degree / 12 segements
     int NumberOfSpringSegements;
     [SerializeField] float SpringMechanicalOffset;
     [SerializeField] Vector3 SpringOffsets;
     [SerializeField] float SpringRadius;
-    
+
 
     void Start()
     {
@@ -61,7 +61,7 @@ public class Suspension : MonoBehaviour
         SpringMechanicalOffset = NumberOfCoils * 2 * SpringThickness;
 
     }
-    
+
     void Update()
     {
         UpdateSpringGraphic();
@@ -101,44 +101,31 @@ public class Suspension : MonoBehaviour
 
     public void DriveWheel(float EngineForce, Vector3 wheelVelocity, float WheelAngularVelocity)
     {
-        //Vector3 ForceVector = Vector3.zero;
+        AngularVelocity = WheelAngularVelocity;
+        float theta = AngularVelocity;// rb.velocity.magnitude * 2 * Mathf.PI;
+        Wheel.transform.Rotate(theta, 0, 0);
+
         if (isGrounded)
         {
-            if(rb.velocity.magnitude > 0.3f) {
-                float theta = rb.velocity.magnitude * 2 * Mathf.PI;
-                Wheel.transform.Rotate(theta, 0, 0);
-            }
-            
-            //Vector3 test = transform.InverseTransformDirection(wheelVelocity);
-            //float right = EngineForce * test.x;
-
-            //ForceVector = (transform.forward * EngineForce);
-
             rb.AddForceAtPosition(transform.forward * EngineForce, WheelHitPoint, ForceMode.Force);
-            
         }
-        else
-        {
-            AngularVelocity = WheelAngularVelocity;
-            float theta = AngularVelocity;
-            Wheel.transform.Rotate(theta, 0, 0);
-        }
+
         SteerVehicle(wheelVelocity);
     }
 
     public void UpdateWheelAngle(float eulerAngle_y)
     {
         transform.localRotation = Quaternion.Euler(0, eulerAngle_y, 0);
-        //Debug.DrawRay(transform.position, transform.right * 25, Color.blue);
-        //Debug.DrawRay(transform.position, -transform.right * 25, Color.red);
+        Debug.DrawRay(transform.position, transform.right * 25, Color.blue);
+        Debug.DrawRay(transform.position, -transform.right * 25, Color.red);
     }
 
     public float SteerVehicle(Vector3 wheelVelocity)
     {
-        
+
         ////rb.MoveRotation(rb.rotation * Quaternion.Euler(0, angleStrength * Time.deltaTime, 0));
         Vector3 projection = Vector3.Project(wheelVelocity, transform.right);
-        //Debug.DrawRay(transform.position, projection * 100, Color.green);
+        Debug.DrawRay(transform.position, projection * 100, Color.green);
         //Vector3 test = transform.InverseTransformDirection(wheelVelocity);
         //Vector3 right = transform.right * test.x;
 
@@ -158,7 +145,7 @@ public class Suspension : MonoBehaviour
 
     public float COMDistance(Transform CenterOfMass)
     {
-        
+
         CenterOfMassDistance = Vector3.Distance(transform.localPosition, CenterOfMass.localPosition);
         return CenterOfMassDistance;
 
@@ -172,26 +159,15 @@ public class Suspension : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(RayCastPoint, -transform.up, out hit, WheelRadius + Mathf.Abs(EffectiveSpringLength)))
         {
-
-            //if (hit.collider.gameObject != transform.gameObject)
-            //{
-                //Debug.Log($"Name: {transform.gameObject}, HitObj: {hit.collider.gameObject}");
-                //Debug.Log($"{hit.transform.name}, distance: {hit.distance}, wheel rad: {WheelRadius}");
-                //hitDistance = -(hit.distance - WheelRadius);
-                hitDistance = Mathf.Clamp(-(hit.distance - WheelRadius), EffectiveSpringLength, 0);
-                WheelHitPoint = hit.point;
-                isGrounded = true;
-            //}
-            
-
+            hitDistance = Mathf.Clamp(-(hit.distance - WheelRadius), EffectiveSpringLength, 0);
+            WheelHitPoint = hit.point;
+            isGrounded = true;
         }
         else
         {
             isGrounded = false;
             hitDistance = EffectiveSpringLength;
         }
-
-
 
         return EffectiveSpringLength - hitDistance;
     }
@@ -200,11 +176,6 @@ public class Suspension : MonoBehaviour
     {
         weightOnWheel = CenterOfMassDistance * sumOfDistances_Inverse * totalWeight;
     }
-
-    //public float SuspensionDistance()
-    //{
-    //    return EffectiveSpringLength - hitDistance;
-    //}
 
     public void SetMassOnWheel(float sumOfCompression_Inverse, float totalMass)
     {
@@ -223,7 +194,7 @@ public class Suspension : MonoBehaviour
     public void UpdateSpringPhysics(Vector3 WheelWorldSpaceVelocity)
     {
         Vector3 result = Vector3.zero;
-        
+
         float deltaSpringVelocity = (hitDistance - transform.localPosition.y) / Time.fixedDeltaTime;
         transform.localPosition = new Vector3(transform.localPosition.x, hitDistance, transform.localPosition.z);
         if (isGrounded)
@@ -237,11 +208,8 @@ public class Suspension : MonoBehaviour
 
             SpringRestPosition = EffectiveSpringLength - (averageWeight / SpringStrength);
             float upwardForce = (transform.localPosition.y - SpringRestPosition) * SpringStrength;
-            //float upwardForce = (EffectiveSpringLength - transform.localPosition.y) * -SpringStrength;
-            result = (-averageWeight + upwardForce + DamperForce) * transform.up;
 
-            //result.x = 0;
-            //result.z = 0;
+            result = (-averageWeight + upwardForce + DamperForce) * transform.up;
             //SpringForces = transform.up * upwardForce;
             DamperForces = transform.up * DamperForce;
             rb.AddForceAtPosition(result, WheelHitPoint, ForceMode.Force);
@@ -251,7 +219,7 @@ public class Suspension : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        
+
 
     }
 

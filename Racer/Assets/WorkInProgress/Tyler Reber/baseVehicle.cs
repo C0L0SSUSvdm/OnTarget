@@ -144,73 +144,77 @@ public class baseVehicle : GravityBody
         ApplyGravity();
     }
     
-    private float ShiftTranmission()
+    private float ShiftTranmission(float WheelVelocity)
     {
         float WheelTrainRatio = DifferentialRatio * GearRatio[GearIndex] * RearTireRadius;
-        //float wheelAV = CurrentRPM * 2 * Mathf.PI * RearTireRadius / WheelTrainRatio;//Angular Velocity of the Wheel
+
+        
+        CurrentRPM = (WheelVelocity * WheelTrainRatio * 60) / (2 * Mathf.PI * RearTireRadius);
+        
         if (CurrentRPM < ShiftDownRPM && GearIndex > 0)
         {
-            float wheelAV = CurrentRPM * 2 * Mathf.PI * RearTireRadius / WheelTrainRatio;
+            //float wheelAV = CurrentRPM * 2 * Mathf.PI * RearTireRadius / WheelTrainRatio;
             GearIndex--;
             WheelTrainRatio = DifferentialRatio * GearRatio[GearIndex] * RearTireRadius;
-            CurrentRPM = (wheelAV * WheelTrainRatio) / (2 * Mathf.PI * RearTireRadius);
+            //CurrentRPM = (wheelAV * WheelTrainRatio) / (2 * Mathf.PI * RearTireRadius);
+            CurrentRPM = (WheelVelocity * WheelTrainRatio * 60) / (2 * Mathf.PI * RearTireRadius);
         }
         else if (CurrentRPM > ShiftUpRPM && GearIndex < GearRatio.Length - 1)
         {
-            float wheelAV = CurrentRPM * 2 * Mathf.PI * RearTireRadius / WheelTrainRatio;
+            //float wheelAV = CurrentRPM * 2 * Mathf.PI * RearTireRadius / WheelTrainRatio;
             GearIndex++;
             WheelTrainRatio = DifferentialRatio * GearRatio[GearIndex] * RearTireRadius;
-            CurrentRPM = (wheelAV * WheelTrainRatio) / (2 * Mathf.PI * RearTireRadius);
+            //CurrentRPM = (wheelAV * WheelTrainRatio) / (2 * Mathf.PI * RearTireRadius);
+            CurrentRPM = (WheelVelocity * WheelTrainRatio * 60) / (2 * Mathf.PI * RearTireRadius);
+        }
 
-        }
-        else
-        {
-            WheelTrainRatio = DifferentialRatio * GearRatio[GearIndex] * RearTireRadius;
-        }
+
         //CurrentRPM = (wheelAV * WheelTrainRatio) / (2 * Mathf.PI * RearTireRadius);
 
         return WheelTrainRatio;
     }
 
+
     protected void ApplyGasPedal(float input)
     {
-        float WheelTrainRatio = ShiftTranmission();
+        float averageWheelVelocity = (rb.GetPointVelocity(WheelOBJ_BL.transform.position) + rb.GetPointVelocity(WheelOBJ_BR.transform.position)).magnitude * 0.5f;
+        float WheelTrainRatio = ShiftTranmission(averageWheelVelocity);
         float Torque = CrankShaftRadius * Mathf.Sin(CrankShaftAngle) * (RunTimeCombustionForce * EngineEfficiency) * WheelTrainRatio;
 
-        //float AdjustedRPM = CurrentRPM;
-        if (input != 0) //Exponential Increase of RPM
-        {
-            float exponent = CalculateCurveExponent();
-            float CurveRatio = Mathf.Pow(PistonDiameter, exponent);
+        float exponent = CalculateCurveExponent();
+        float CurveRatio = Mathf.Pow(PistonDiameter, exponent);
+        //TODO: Add TurboBoose, BackPressure,
+        float RateOfChange = CurveRatio * Torque * RunTimeBackPressure * input;
 
-            //TODO: Add TurboBoose, BackPressure, 
-            float RateOfChange = CurveRatio * Torque * RunTimeBackPressure;
-           
-            CurrentRPM += RateOfChange * Time.deltaTime;
-            //AdjustedRPM += RateOfChange * Time.deltaTime;
-        }
-        else //Linear Reduction of RPM
-        {
-            //TODO:: Calculate Better RPM Reduction Method
-            CurrentRPM = Mathf.Lerp(CurrentRPM, ShiftDownRPM * 0.5f, 200 * Time.deltaTime * Time.deltaTime * 0.5f);
-            //AdjustedRPM = Mathf.Lerp(CurrentRPM, ShiftDownRPM * 0.5f, 200 * Time.deltaTime * Time.deltaTime * 0.5f);
-        }
+        float AdjustedRPM = CurrentRPM + RateOfChange;
+        //if (input != 0) //Exponential Increase of RPM
+        //{
+        //    float exponent = CalculateCurveExponent();
+        //    float CurveRatio = Mathf.Pow(PistonDiameter, exponent);
+
+        //    //TODO: Add TurboBoose, BackPressure, 
+        //    float RateOfChange = CurveRatio * Torque * RunTimeBackPressure;
+        //    CurrentRPM += RateOfChange * Time.deltaTime;
+
+        //}
+        //else //Linear Reduction of RPM
+        //{
+        //    //TODO:: Calculate Better RPM Reduction Method
+        //    CurrentRPM = Mathf.Lerp(CurrentRPM, ShiftDownRPM * 0.5f, 200 * Time.deltaTime * Time.deltaTime * 0.5f);
+
+        //}
 
         //CurrentHorsePower = (CurrentRPMs * Torque) / 5252;
-
-        float WheelAngularVelocity = CurrentRPM * 2 * Mathf.PI * RearTireRadius / (60 * WheelTrainRatio);
-        RunTimeMotorPower = (WheelAngularVelocity) / Time.fixedDeltaTime + (Torque * CylinderCount * input);
+        float WheelAngularVelocity = averageWheelVelocity;
+        //float WheelAngularVelocity = CurrentRPM * 2 * Mathf.PI * RearTireRadius / (60 * WheelTrainRatio);
+       //Debug.Log($"Torque: {Torque}, VBlock: {CylinderCount}, AdjustRPM: {AdjustedRPM}");
+        RunTimeMotorPower = (WheelAngularVelocity / Time.fixedDeltaTime) + (Torque * CylinderCount * input);
 
         //float power = RunTimeMotorPower * 0.25f;
         wheel_FL.DriveWheel(0, rb.GetPointVelocity(WheelOBJ_FL.transform.position), WheelAngularVelocity);
         wheel_FR.DriveWheel(0, rb.GetPointVelocity(WheelOBJ_FR.transform.position), WheelAngularVelocity);
         wheel_BL.DriveWheel(RunTimeMotorPower, rb.GetPointVelocity(WheelOBJ_BL.transform.position), WheelAngularVelocity);
         wheel_BR.DriveWheel(RunTimeMotorPower, rb.GetPointVelocity(WheelOBJ_BR.transform.position), WheelAngularVelocity);
-
-        //ReadAxel_forcePoint.x = -(currentSteerAngle * WheelOBJ_BR.transform.localPosition.x / maximumSteerAngle);
-        //Debug.Log(calculatedForcePosition);
-        //rb.AddForceAtPosition(transform.forward * 20000 * input, transform.TransformPoint(ReadAxel_forcePoint), ForceMode.Force);
-        //rb.AddForce(transform.forward * 20000 * input, ForceMode.Force);
     }
 
     protected void UpdateSteeringAngle(float input)
