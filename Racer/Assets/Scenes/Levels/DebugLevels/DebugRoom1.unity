@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.83150035, g: 0.8253802, b: 0.9047312, a: 1}
+  m_IndirectSpecularColor: {r: 0.8287107, g: 0.8230978, b: 0.90271056, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7912,7 +7912,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3792868103005670685, guid: 9f330b67d9977fe459f81fc244f7149b, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3998511254697890271, guid: 9f330b67d9977fe459f81fc244f7149b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -7981,6 +7981,10 @@ PrefabInstance:
     - target: {fileID: 6587569820133553007, guid: 9f330b67d9977fe459f81fc244f7149b, type: 3}
       propertyPath: maximumSteerAngle
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6758858520814564513, guid: 9f330b67d9977fe459f81fc244f7149b, type: 3}
+      propertyPath: far clip plane
+      value: 1550
       objectReference: {fileID: 0}
     - target: {fileID: 6967343999357701297, guid: 9f330b67d9977fe459f81fc244f7149b, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -13575,7 +13579,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 1550
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -28969,7 +28973,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4197590361882754322, guid: 990eab723b5f5f5459457dd2dc34755c, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4329541965886684298, guid: 990eab723b5f5f5459457dd2dc34755c, type: 3}
       propertyPath: m_Enabled
