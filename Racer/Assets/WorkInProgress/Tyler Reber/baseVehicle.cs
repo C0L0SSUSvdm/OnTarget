@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 public class baseVehicle : GravityBody
 {
-    
+    [SerializeField] protected GameObject nextNode;
     [Header("----- Vehicle Fields -----")]
     //[SerializeField] CharacterController controller;
     [SerializeField] float maximumSteerAngle;
@@ -30,7 +30,7 @@ public class baseVehicle : GravityBody
     [SerializeField] float EngineCompressionRatio = 10.0f;
     [SerializeField] float PistonDiameter = 4.0f;
     [SerializeField] float CurrentRPM = 0;
-    [SerializeField] float RunTimeSteeringLerpAngle = 0.0f;
+    //[SerializeField] float RunTimeSteeringLerpAngle = 0.0f;
     [SerializeField] float RunTimeCompressionRatio;
     [SerializeField] float RunTimeMeanRPM;
     [SerializeField] float RunTimeCurveDeviation_Inverse;
@@ -82,6 +82,7 @@ public class baseVehicle : GravityBody
 
     protected void Start()
     {
+        nextNode = GameObject.Find("Root");
 
         rb = gameObject.GetComponent<Rigidbody>();
         //rb.useGravity = false;
@@ -225,10 +226,10 @@ public class baseVehicle : GravityBody
 
     protected void UpdateSteeringAngle(float input)
     {
-        RunTimeSteeringLerpAngle = Mathf.Lerp(RunTimeSteeringLerpAngle, input, Time.deltaTime * 5);
+        
 
-        float FL_AckermanAngle = Mathf.Atan(AckermanOppositeDistance / (AckermanAdjacentDistance - (input * RearWheelOffset))) * Mathf.Rad2Deg * RunTimeSteeringLerpAngle;
-        float FR_AckermanAngle = Mathf.Atan(AckermanOppositeDistance / (AckermanAdjacentDistance + (input * RearWheelOffset))) * Mathf.Rad2Deg * RunTimeSteeringLerpAngle;
+        float FL_AckermanAngle = Mathf.Atan(AckermanOppositeDistance / (AckermanAdjacentDistance - (input * RearWheelOffset))) * Mathf.Rad2Deg * input;
+        float FR_AckermanAngle = Mathf.Atan(AckermanOppositeDistance / (AckermanAdjacentDistance + (input * RearWheelOffset))) * Mathf.Rad2Deg * input;
 
         wheel_FL.UpdateWheelAngle(FL_AckermanAngle);
         wheel_FR.UpdateWheelAngle(FR_AckermanAngle);

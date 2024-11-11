@@ -8,7 +8,7 @@ public class AINode : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"Node: {this.gameObject.name}");
+       
         if (other.gameObject.tag == "AI")
         {
             AICar car = other.gameObject.GetComponent<AICar>();

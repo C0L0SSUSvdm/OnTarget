@@ -6,8 +6,8 @@ using UnityEngine;
 public class AICar : baseVehicle
 {
     
-    [SerializeField] GameObject nextNode;
-
+    
+    float RunTimeSteeringLerpAngle = 0;
 
     // Update is called once per frame
     void FixedUpdate()
@@ -16,15 +16,9 @@ public class AICar : baseVehicle
 
         Vector3 targetDirection = Vector3.Cross(transform.forward, nextNode.transform.position - transform.position);
         //Debug.Log($"Forward: {transform.forward}, Delta: {(nextNode.transform.position - transform.position).normalized}, Difference: {targetDirection}");
-        if (targetDirection.y > 0)
-        {
-            UpdateSteeringAngle(1);
-        }
-        else
-        {
-            UpdateSteeringAngle(-1);
-        }
-
+        float aiInput = targetDirection.y > 0 ? 1 : -1;
+        RunTimeSteeringLerpAngle = Mathf.Lerp(RunTimeSteeringLerpAngle, aiInput, Time.deltaTime * 5);
+        UpdateSteeringAngle(RunTimeSteeringLerpAngle);
         ApplyGasPedal(1);
     }
 
@@ -35,7 +29,7 @@ public class AICar : baseVehicle
 
     public void SetNextNode(GameObject _nextNode)
     {
-        Debug.Log($"Setting Node to {_nextNode}");
+        
         nextNode = _nextNode;
     }
 }
