@@ -9,6 +9,6 @@ public class HUD_Speedometer_Default : MonoBehaviour, HUD_Speedometer_Director
 
     public void UpdateSpeedometer(float speed)
     {
-        speedometerText.text = speed.ToString("F0");
+        speedometerText.text = (speed * 0.625f).ToString("F0");
     }
 }
