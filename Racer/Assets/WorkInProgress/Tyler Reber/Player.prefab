@@ -81,14 +81,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5786e4b2c653c544ac9a897da9d2e53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Chasis: {fileID: 8003404041378083612}
   rb: {fileID: 0}
-  ForwardForce: 20000
-  SpringLength: 0.97
-  wheelFL: {fileID: 1356404660799079352}
-  wheelFR: {fileID: 4730926152689679008}
-  wheelBL: {fileID: 6120712147339771295}
-  wheelBR: {fileID: 7069116173803356303}
+  airDensity: 1.838
+  BodyAreaCrossSection: {x: 3, y: 5, z: 2.2}
+  ForwardCoefficients: {x: 0.5, y: 1, z: 0.3}
+  DragCoefficients: {x: 0.5, y: 1, z: 0.3}
+  SideCoefficients: {x: 0.8, y: 1, z: 0.6}
+  EnvironmentForces: {x: 0, y: 0, z: 0}
+  freefallResistance_y: {x: 0, y: 0, z: 0}
+  forwardAirResistance_z: {x: 0, y: 0, z: 0}
+  dragAirResistance_z: {x: 0, y: 0, z: 0}
+  AngularResistance_x: {x: 0, y: 0, z: 0}
+  controller: {fileID: 0}
+  maximumSteerAngle: 0
+  currentSteerAngle: 0
+  isClutchEngaged: 1
+  AeroDynamicDrag: 0.5
+  ReadAxel_forcePoint: {x: 0, y: 0, z: 0}
+  Engine: {fileID: 0}
+  EngineEfficiency: 0.3
+  CamShaftRadius: 0.75
+  CrankShaftRadius: 2.2
+  CylinderCount: 8
+  CrankShaftAngle: 45
+  RedLineRPM: 8000
+  EngineCompressionRatio: 10
+  PistonDiameter: 4
+  CurrentRPM: 0
+  RunTimeCompressionRatio: 0
+  RunTimeMeanRPM: 0
+  RunTimeCurveDeviation_Inverse: 0
+  RunTimeBackPressure: 0
+  RunTimeCombustionForce: 0
+  RunTimeMotorPower: 0
+  IdleRPMs: 1500
+  PistonCC: 0
+  ChamberVolume: 59
+  HeaderBackPressure: 0.1
+  GearIndex: 0
+  ShiftUpRPM: 6000
+  ShiftDownRPM: 2000
+  ShiftTime: 0.1
+  GearRatio:
+  - 3.82
+  - 2.2
+  - 1.4
+  - 1
+  - 0.8
+  - 0.6
+  DifferentialRatio: 3.42
+  RearTireRadius: 1
+  TurboBoost: 2.3
+  ExhaustHeaderBackPressure: 0.5
+  ExhaustPipeBackPressure: 1.3
+  CompressedAirPressure: 14.7
+  COM: {fileID: 0}
+  AckermanOppositeDistance: 0
+  AckermanAdjacentDistance: 0
   RayCastOrigin: {fileID: 2207145211168614176}
   CameraAngleY: 0
   CameraRatationSpeed: 10
@@ -162,7 +211,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -271,17 +320,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 438837995200403438, guid: f379aa4e4cc38574aaa0bb85ff8c9c12, type: 3}
   m_PrefabInstance: {fileID: 1453546179978121104}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7069116173803356303 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8518140023466118943, guid: f379aa4e4cc38574aaa0bb85ff8c9c12, type: 3}
-  m_PrefabInstance: {fileID: 1453546179978121104}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3379bc260be444643ba0bb5343e469fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1851722824095188731
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -351,17 +389,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0f0e6694655e0d4695af7638a6baccc, type: 3}
---- !u!114 &6120712147339771295 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5567442401657076580, guid: e0f0e6694655e0d4695af7638a6baccc, type: 3}
-  m_PrefabInstance: {fileID: 1851722824095188731}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3379bc260be444643ba0bb5343e469fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &9050128765341701626 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7217616745846133505, guid: e0f0e6694655e0d4695af7638a6baccc, type: 3}
@@ -437,17 +464,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 438837995200403438, guid: f379aa4e4cc38574aaa0bb85ff8c9c12, type: 3}
   m_PrefabInstance: {fileID: 4004020564830205375}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4730926152689679008 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8518140023466118943, guid: f379aa4e4cc38574aaa0bb85ff8c9c12, type: 3}
-  m_PrefabInstance: {fileID: 4004020564830205375}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3379bc260be444643ba0bb5343e469fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &6886405735449278684
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -513,17 +529,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0f0e6694655e0d4695af7638a6baccc, type: 3}
---- !u!114 &1356404660799079352 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5567442401657076580, guid: e0f0e6694655e0d4695af7638a6baccc, type: 3}
-  m_PrefabInstance: {fileID: 6886405735449278684}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3379bc260be444643ba0bb5343e469fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &4304119318561123293 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7217616745846133505, guid: e0f0e6694655e0d4695af7638a6baccc, type: 3}
