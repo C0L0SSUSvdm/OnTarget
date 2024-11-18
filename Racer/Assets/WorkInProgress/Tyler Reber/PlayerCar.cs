@@ -46,6 +46,7 @@ public class PlayerCar : baseVehicle
         float forwardInput = Input.GetAxis("Vertical");
         ApplyGasPedal(forwardInput);
 
+
         //ApplySteerForce(turnInput);
 
         HUD.Item.UpdateSpeedometer(rb.velocity.magnitude);
@@ -72,6 +73,7 @@ public class PlayerCar : baseVehicle
             forwardInput = 1;
             //Moves Camera to the outside of the turn at the steer angle
             //CameraAngleY = -wheel_FL.steerAngle;
+            
             CameraAngleY = Mathf.LerpAngle(CameraAngleY, SwingDirection * currentSteerAngle, Time.deltaTime * CameraRatationSpeed);
         }
         else

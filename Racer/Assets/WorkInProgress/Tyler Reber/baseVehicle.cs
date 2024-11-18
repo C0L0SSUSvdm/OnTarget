@@ -184,9 +184,16 @@ public class baseVehicle : GravityBody
         float averageWheelVelocity = (rb.GetPointVelocity(WheelOBJ_BL.transform.position) + rb.GetPointVelocity(WheelOBJ_BR.transform.position)).magnitude * 0.5f;
         float WheelTrainRatio = ShiftTranmission(averageWheelVelocity);
         float Torque = CrankShaftRadius * Mathf.Sin(CrankShaftAngle) * (RunTimeCombustionForce) * WheelTrainRatio;
+        float Torque = CrankShaftRadius * Mathf.Sin(CrankShaftAngle) * (RunTimeCom'bustionForce) * WheelTrainRatio;
         //Debug.Log($"Torque: {Torque}, input: {CrankShaftRadius * Mathf.Sin(CrankShaftAngle) * WheelTrainRatio}");
         float exponent = CalculateCurveExponent();
         float NormalCurveRatio = Mathf.Pow(PistonDiameter, exponent);
+        
+        //*****Put the engineVroom = Vehicle.GetComponent<AudioSource>(true); unless that goes back at the top in theprotected void  Start()
+        //*** Idk where make the variable but this is definitely where AudioSource.Play; or AudioSource(active) or maybe it's just GameObject.Instantiate and we can just...
+        //* put the AudioSource in an an empty GameObject with no mesh just a transform, then instantiate it on Input.GetAxis(Verticle). Or right here under ApplyGasPedal...
+        //Idk, something. In Full Sail when I would just copy from the instructions they gave us cuz I tried using the Unity Lab once and they were sooo flickin RUDE af
+
         //TODO: Add TurboBoose, BackPressure,
         
         float RateOfChange = NormalCurveRatio * Torque * RunTimeBackPressure * CylinderCount * input;
