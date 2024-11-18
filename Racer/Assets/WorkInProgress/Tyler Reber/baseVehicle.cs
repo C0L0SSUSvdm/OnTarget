@@ -185,7 +185,7 @@ public class baseVehicle : MonoBehaviour
         float averageWheelVelocity = (rb.GetPointVelocity(WheelOBJ_BL.transform.position) + rb.GetPointVelocity(WheelOBJ_BR.transform.position)).magnitude * 0.5f;
         float WheelTrainRatio = ShiftTranmission(averageWheelVelocity);
         float Torque = CrankShaftRadius * Mathf.Sin(CrankShaftAngle) * (RunTimeCombustionForce) * WheelTrainRatio;
-        float Torque = CrankShaftRadius * Mathf.Sin(CrankShaftAngle) * (RunTimeCom'bustionForce) * WheelTrainRatio;
+        //float Torque = CrankShaftRadius * Mathf.Sin(CrankShaftAngle) * (RunTimeCom'bustionForce) * WheelTrainRatio;
         //Debug.Log($"Torque: {Torque}, input: {CrankShaftRadius * Mathf.Sin(CrankShaftAngle) * WheelTrainRatio}");
         float exponent = CalculateCurveExponent();
         float NormalCurveRatio = Mathf.Pow(PistonDiameter, exponent);

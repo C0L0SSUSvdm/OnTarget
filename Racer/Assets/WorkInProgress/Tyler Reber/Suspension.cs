@@ -126,7 +126,7 @@ public class Suspension : MonoBehaviour
         ////rb.MoveRotation(rb.rotation * Quaternion.Euler(0, angleStrength * Time.deltaTime, 0));
         
         Vector3 test = transform.InverseTransformDirection(wheelVelocity);
-        Debug.Log($"{test.x * -transform.right * massOnWheel * 2}, {test.x * -transform.right * weightOnWheel}");
+        //Debug.Log($"{test.x * -transform.right * massOnWheel * 2}, {test.x * -transform.right * weightOnWheel}");
 
         Debug.DrawRay(transform.position, (test.x * -transform.right * massOnWheel * 2) * 0.1f, Color.cyan);
         Debug.DrawRay(transform.position, (test.x * -transform.right * weightOnWheel) * 0.1f, Color.red);
