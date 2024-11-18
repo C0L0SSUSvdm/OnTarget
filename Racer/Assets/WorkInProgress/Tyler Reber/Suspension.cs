@@ -11,7 +11,7 @@ public class Suspension : MonoBehaviour
     //[SerializeField] Vector3 SteerForces;
     //[SerializeField] Vector3 MotorForces;
     [Header("----- Suspension Fields -----")]
-    [Range(10000, 50000), SerializeField] float SpringStrength;
+    [Range(2000, 30000), SerializeField] float SpringStrength;
     [Range(0, 2), SerializeField] float EffectiveSpringLength;
     [SerializeField] float WheelMass;
     [SerializeField] float DampenerResistance;
@@ -116,31 +116,35 @@ public class Suspension : MonoBehaviour
     public void UpdateWheelAngle(float eulerAngle_y)
     {
         transform.localRotation = Quaternion.Euler(0, eulerAngle_y, 0);
-        Debug.DrawRay(transform.position, transform.right * 25, Color.blue);
-        Debug.DrawRay(transform.position, -transform.right * 25, Color.red);
+        //Debug.DrawRay(transform.position, transform.right * 25, Color.blue);
+        //Debug.DrawRay(transform.position, -transform.right * 25, Color.red);
     }
 
     public float SteerVehicle(Vector3 wheelVelocity)
     {
 
         ////rb.MoveRotation(rb.rotation * Quaternion.Euler(0, angleStrength * Time.deltaTime, 0));
-        Vector3 projection = Vector3.Project(wheelVelocity, transform.right);
-        Debug.DrawRay(transform.position, projection * 100, Color.green);
+        
+        Vector3 test = transform.InverseTransformDirection(wheelVelocity);
+        Debug.Log($"{test.x * -transform.right * massOnWheel * 2}, {test.x * -transform.right * weightOnWheel}");
+
+        Debug.DrawRay(transform.position, (test.x * -transform.right * massOnWheel * 2) * 0.1f, Color.cyan);
+        Debug.DrawRay(transform.position, (test.x * -transform.right * weightOnWheel) * 0.1f, Color.red);
         //Vector3 test = transform.InverseTransformDirection(wheelVelocity);
         //Vector3 right = transform.right * test.x;
-
+        rb.AddForceAtPosition(test.x * -transform.right * massOnWheel * 2, transform.position);
         //rb.AddForceAtPosition(right, transform.position, ForceMode.Force);
 
-        float SteerVelocity = Vector3.Dot(transform.right, wheelVelocity);
+        //float SteerVelocity = Vector3.Dot(transform.right, wheelVelocity);
 
-        float desiredSteerVelocity = -SteerVelocity * 1f; //Friction or slippage
-        float acceleration = desiredSteerVelocity * Time.fixedDeltaTime;
+        //float desiredSteerVelocity = -SteerVelocity * 1f; //Friction or slippage
+        //float acceleration = desiredSteerVelocity * Time.fixedDeltaTime;
         //rb.AddTorque(transform.up * force);
         //Debug.Log(transform.right * WheelMass * acceleration);
         //rb.AddTorque(transform.right * -acceleration);
-        rb.AddForceAtPosition(transform.right * WheelMass * acceleration, transform.position, ForceMode.Acceleration);
+        //rb.AddForceAtPosition(transform.right * massOnWheel * acceleration, transform.position);
         //Debug.Log($"Steer Direction: {desiredSteerVelocity}, Acceleration: {acceleration}, force: {acceleration * massOnWheel}");
-        return acceleration;
+        return 0;
     }
 
     public float COMDistance(Transform CenterOfMass)

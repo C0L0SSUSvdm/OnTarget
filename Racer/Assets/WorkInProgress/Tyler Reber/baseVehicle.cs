@@ -4,12 +4,13 @@ using System.Globalization;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class baseVehicle : GravityBody
+public class baseVehicle : MonoBehaviour
 {
+    [SerializeField] protected Rigidbody rb;
     [SerializeField] protected GameObject nextNode;
     [Header("----- Vehicle Fields -----")]
     //[SerializeField] CharacterController controller;
-    [SerializeField] float maximumSteerAngle;
+    [SerializeField] protected float maximumSteerAngle;
     [SerializeField] protected float currentSteerAngle;
     //[SerializeField] protected float MotorForce = 10.0f;
     [SerializeField] bool isClutchEngaged = true;
@@ -85,7 +86,7 @@ public class baseVehicle : GravityBody
         nextNode = GameObject.Find("Root");
 
         rb = gameObject.GetComponent<Rigidbody>();
-        //rb.useGravity = false;
+        rb.useGravity = true;
         rb.mass = 1000;
         rb.drag = 0.1f;// 0.5f;
         rb.angularDrag = 0.5f;// 0.5f;
@@ -124,7 +125,7 @@ public class baseVehicle : GravityBody
 
     protected new void FixedUpdate()
     {
-        CalculateGravity();
+        //CalculateGravity();
 
         float sumofDistance = wheel_FL.COMDistance(COM) + wheel_FR.COMDistance(COM) + wheel_BL.COMDistance(COM) + wheel_BR.COMDistance(COM);
         float sumOfDistances_Inverse = sumofDistance != 0 ? 1 / sumofDistance : 0;
@@ -145,7 +146,7 @@ public class baseVehicle : GravityBody
         wheel_BL.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_BL.transform.position));
         wheel_BR.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_BR.transform.position));
 
-        ApplyGravity();
+        //ApplyGravity();
     }
     
     private float ShiftTranmission(float WheelVelocity)

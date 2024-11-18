@@ -65,6 +65,7 @@ MonoBehaviour:
   forwardAirResistance_z: {x: 0, y: 0, z: 0}
   dragAirResistance_z: {x: 0, y: 0, z: 0}
   AngularResistance_x: {x: 0, y: 0, z: 0}
+  nextNode: {fileID: 0}
   maximumSteerAngle: 20
   currentSteerAngle: 0
   isClutchEngaged: 1
@@ -111,7 +112,6 @@ MonoBehaviour:
   COM: {fileID: 4030455906359154636}
   AckermanOppositeDistance: 0
   AckermanAdjacentDistance: 0
-  nextNode: {fileID: 0}
 --- !u!54 &901434446245657340
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -151,8 +151,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4917183237460146100}
   - component: {fileID: 4917183237460146097}
-  - component: {fileID: 2484412909625454913}
   - component: {fileID: 4917183237460146096}
+  - component: {fileID: 2950916234363971018}
   m_Layer: 0
   m_Name: Wheel_Left Back
   m_TagString: Untagged
@@ -209,20 +209,6 @@ MonoBehaviour:
   SpringMechanicalOffset: 0
   SpringOffsets: {x: 0.53, y: 0, z: 0}
   SpringRadius: 0.1
---- !u!64 &2484412909625454913
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1859226583511212882}
-  m_Material: {fileID: 13400000, guid: 371d6601d0fbf614ba81ec9447c58f0c, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -6016325409915301873, guid: 4a5826dc4e955804f86d0b12fdc6d2ad, type: 3}
 --- !u!120 &4917183237460146096
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -322,6 +308,19 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 0
   m_Loop: 0
+--- !u!65 &2950916234363971018
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1859226583511212882}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.25, y: 1, z: 1.5}
+  m_Center: {x: -0.2, y: 0, z: 0}
 --- !u!1 &4012324644205704504
 GameObject:
   m_ObjectHideFlags: 0
@@ -560,8 +559,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3143165557986572848}
   - component: {fileID: 5669447042799102426}
-  - component: {fileID: 4223257682040417878}
   - component: {fileID: 5669447042799102425}
+  - component: {fileID: 8360306247655473990}
   m_Layer: 0
   m_Name: Wheel_Right Back
   m_TagString: Untagged
@@ -618,20 +617,6 @@ MonoBehaviour:
   SpringMechanicalOffset: 0
   SpringOffsets: {x: -0.9, y: 0, z: 0}
   SpringRadius: 0.1
---- !u!64 &4223257682040417878
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5669447042799102429}
-  m_Material: {fileID: 13400000, guid: 371d6601d0fbf614ba81ec9447c58f0c, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -937226228880852356, guid: 8daf64b54120f3842a4ea495ec3822cf, type: 3}
 --- !u!120 &5669447042799102425
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -731,6 +716,19 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 0
   m_Loop: 0
+--- !u!65 &8360306247655473990
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5669447042799102429}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.25, y: 1, z: 1.5}
+  m_Center: {x: 0.2, y: 0, z: 0}
 --- !u!1 &6170298522202437142
 GameObject:
   m_ObjectHideFlags: 0
@@ -825,7 +823,7 @@ GameObject:
   - component: {fileID: 5129175368540471947}
   - component: {fileID: 1251302600352526776}
   - component: {fileID: 8315808343283724809}
-  - component: {fileID: 8301471337231527432}
+  - component: {fileID: 8799842327352503275}
   m_Layer: 0
   m_Name: Chasis
   m_TagString: Untagged
@@ -898,8 +896,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8301471337231527432
-BoxCollider:
+--- !u!64 &8799842327352503275
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -908,9 +906,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: -4.59, y: 2.48, z: 13}
-  m_Center: {x: 0, y: 0.88, z: -4.18}
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -3758619089015220360, guid: 745d58eb8d5ee9246b4433254c81302d, type: 3}
 --- !u!1 &6912608871938907509
 GameObject:
   m_ObjectHideFlags: 0
@@ -921,8 +920,8 @@ GameObject:
   m_Component:
   - component: {fileID: 152719437732432275}
   - component: {fileID: 6912608871938907506}
-  - component: {fileID: 3595373267694528224}
   - component: {fileID: 6912608871938907505}
+  - component: {fileID: 4213704151919004870}
   m_Layer: 0
   m_Name: Wheel_Left Front
   m_TagString: Untagged
@@ -979,20 +978,6 @@ MonoBehaviour:
   SpringMechanicalOffset: 0
   SpringOffsets: {x: 0.53, y: 0, z: 0}
   SpringRadius: 0.1
---- !u!64 &3595373267694528224
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6912608871938907509}
-  m_Material: {fileID: 13400000, guid: 371d6601d0fbf614ba81ec9447c58f0c, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -6016325409915301873, guid: 4a5826dc4e955804f86d0b12fdc6d2ad, type: 3}
 --- !u!120 &6912608871938907505
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -1092,6 +1077,19 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 0
   m_Loop: 0
+--- !u!65 &4213704151919004870
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6912608871938907509}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.25, y: 1, z: 1.5}
+  m_Center: {x: -0.2, y: 0, z: 0}
 --- !u!1 &7234846308171860189
 GameObject:
   m_ObjectHideFlags: 0
@@ -1185,8 +1183,8 @@ GameObject:
   m_Component:
   - component: {fileID: 586575821194444831}
   - component: {fileID: 5931328990511410699}
-  - component: {fileID: 5156704900522613861}
   - component: {fileID: 5931328990511410698}
+  - component: {fileID: 2574960582303142323}
   m_Layer: 0
   m_Name: Wheel_Right Front
   m_TagString: Untagged
@@ -1243,20 +1241,6 @@ MonoBehaviour:
   SpringMechanicalOffset: 0
   SpringOffsets: {x: -0.9, y: 0, z: 0}
   SpringRadius: 0.1
---- !u!64 &5156704900522613861
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7859001242838963186}
-  m_Material: {fileID: 13400000, guid: 371d6601d0fbf614ba81ec9447c58f0c, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -937226228880852356, guid: 8daf64b54120f3842a4ea495ec3822cf, type: 3}
 --- !u!120 &5931328990511410698
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -1356,6 +1340,19 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 0
   m_Loop: 0
+--- !u!65 &2574960582303142323
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7859001242838963186}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.25, y: 1, z: 1.5}
+  m_Center: {x: 0.2, y: 0, z: 0}
 --- !u!1 &8440560767017855631
 GameObject:
   m_ObjectHideFlags: 0
