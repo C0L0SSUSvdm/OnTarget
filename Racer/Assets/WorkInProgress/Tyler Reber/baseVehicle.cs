@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 
 public class baseVehicle : MonoBehaviour
 {
+    [SerializeField] protected AudioClip engineSound;
     [SerializeField] protected Rigidbody rb;
     [SerializeField] protected GameObject nextNode;
     [Header("----- Vehicle Fields -----")]
@@ -182,6 +183,11 @@ public class baseVehicle : MonoBehaviour
 
     protected void ApplyGasPedal(float input)
     {
+        if(engineSound != null)
+        {
+            gameManager.instance.SFXOneShot(engineSound);
+        }
+        
         float averageWheelVelocity = (rb.GetPointVelocity(WheelOBJ_BL.transform.position) + rb.GetPointVelocity(WheelOBJ_BR.transform.position)).magnitude * 0.5f;
         float WheelTrainRatio = ShiftTranmission(averageWheelVelocity);
         float Torque = CrankShaftRadius * Mathf.Sin(CrankShaftAngle) * (RunTimeCombustionForce) * WheelTrainRatio;

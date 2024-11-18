@@ -111,6 +111,7 @@ public class gameManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             Time.timeScale = 0;
+            SFX.Pause();
         }
     }
 
@@ -121,6 +122,7 @@ public class gameManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             Time.timeScale = 1;
+            SFX.Play();
         }
     }
     // Had to look up how to hand scene changes, this is the resource I reffered to
@@ -205,6 +207,17 @@ public class gameManager : MonoBehaviour
     {
         MusicSource.Stop();
     }
+    public void SetSFXClip(AudioClip sound)
+    {
+        SFX.clip = sound;
+        SFX.Play();
+    }
+    public void SFXOneShot(AudioClip sound)
+    {
+        SFX.PlayOneShot(sound);
+    }
+
+
     #endregion
 
     #region ----------------- Save Load Methods -----------------
