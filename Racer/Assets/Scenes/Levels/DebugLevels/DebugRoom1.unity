@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.5908202, g: 0.6371348, b: 0.72911495, a: 1}
+  m_IndirectSpecularColor: {r: 0.5858134, g: 0.6320645, b: 0.7251375, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6018,6 +6018,22 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 24320acaeb878b744998ecb0fa3ca317, type: 2}
+    - target: {fileID: 4917183237460146097, guid: 4c73cf3cdf937e744849ab459ca46f3b, type: 3}
+      propertyPath: DampenerResistance
+      value: 5000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5669447042799102426, guid: 4c73cf3cdf937e744849ab459ca46f3b, type: 3}
+      propertyPath: DampenerResistance
+      value: 5000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931328990511410699, guid: 4c73cf3cdf937e744849ab459ca46f3b, type: 3}
+      propertyPath: DampenerResistance
+      value: 5000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6912608871938907506, guid: 4c73cf3cdf937e744849ab459ca46f3b, type: 3}
+      propertyPath: DampenerResistance
+      value: 5000
+      objectReference: {fileID: 0}
     - target: {fileID: 7220889294761583264, guid: 4c73cf3cdf937e744849ab459ca46f3b, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -8655,7 +8671,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: ffdff5dcba4fe6c4a9f11733e7d3123c, type: 2}
     - target: {fileID: 6967343999357701298, guid: 9f330b67d9977fe459f81fc244f7149b, type: 3}
       propertyPath: SpringStrength
-      value: 17939
+      value: 30000
       objectReference: {fileID: 0}
     - target: {fileID: 6967343999357701298, guid: 9f330b67d9977fe459f81fc244f7149b, type: 3}
       propertyPath: SpringOffsets.x
@@ -8663,7 +8679,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6967343999357701298, guid: 9f330b67d9977fe459f81fc244f7149b, type: 3}
       propertyPath: DampenerResistance
-      value: 100
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 7858270203621359562, guid: 9f330b67d9977fe459f81fc244f7149b, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -8671,11 +8687,11 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: ffdff5dcba4fe6c4a9f11733e7d3123c, type: 2}
     - target: {fileID: 7858270203621359563, guid: 9f330b67d9977fe459f81fc244f7149b, type: 3}
       propertyPath: SpringStrength
-      value: 17939
+      value: 30000
       objectReference: {fileID: 0}
     - target: {fileID: 7858270203621359563, guid: 9f330b67d9977fe459f81fc244f7149b, type: 3}
       propertyPath: DampenerResistance
-      value: 100
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 8211068565556983833, guid: 9f330b67d9977fe459f81fc244f7149b, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -8683,11 +8699,11 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: ffdff5dcba4fe6c4a9f11733e7d3123c, type: 2}
     - target: {fileID: 8211068565556983834, guid: 9f330b67d9977fe459f81fc244f7149b, type: 3}
       propertyPath: SpringStrength
-      value: 17939
+      value: 30000
       objectReference: {fileID: 0}
     - target: {fileID: 8211068565556983834, guid: 9f330b67d9977fe459f81fc244f7149b, type: 3}
       propertyPath: DampenerResistance
-      value: 100
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 8704952983124774309, guid: 9f330b67d9977fe459f81fc244f7149b, type: 3}
       propertyPath: m_Enabled
@@ -8699,7 +8715,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: ffdff5dcba4fe6c4a9f11733e7d3123c, type: 2}
     - target: {fileID: 8890993301878646385, guid: 9f330b67d9977fe459f81fc244f7149b, type: 3}
       propertyPath: SpringStrength
-      value: 17939
+      value: 30000
       objectReference: {fileID: 0}
     - target: {fileID: 8890993301878646385, guid: 9f330b67d9977fe459f81fc244f7149b, type: 3}
       propertyPath: SpringOffsets.x
@@ -8707,7 +8723,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8890993301878646385, guid: 9f330b67d9977fe459f81fc244f7149b, type: 3}
       propertyPath: DampenerResistance
-      value: 100
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 8890993301878646388, guid: 9f330b67d9977fe459f81fc244f7149b, type: 3}
       propertyPath: m_LocalPosition.y
