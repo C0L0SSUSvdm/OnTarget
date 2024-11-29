@@ -7,7 +7,7 @@ public class PlayerCar : baseVehicle
     [Header("----- Camera Settings -----")]
     [Tooltip("This is the Raycast Origin for the Camera")]
     [SerializeField] GameObject RayCastOrigin;
-
+    Vector3 CameraVelocity = Vector3.zero;
     [Tooltip("Current Euler Angle for Lerping a rotation around the car")]
     [SerializeField] float CameraAngleY = 0;
     [Tooltip("The Speed at which the Camera rates around the car")]
@@ -53,6 +53,11 @@ public class PlayerCar : baseVehicle
        
     }
 
+    private void Update()
+    {
+        
+    }
+
     private void LateUpdate()
     {
         UpdateCamera();
@@ -65,7 +70,6 @@ public class PlayerCar : baseVehicle
         float reverseScalar = 1;
 
         //Step 1: Calculate rotation angle for the cameras local offset position
-
         float forwardInput = Input.GetAxisRaw("Vertical");
 
         if (forwardInput >= 0)
@@ -73,7 +77,7 @@ public class PlayerCar : baseVehicle
             forwardInput = 1;
             //Moves Camera to the outside of the turn at the steer angle
             //CameraAngleY = -wheel_FL.steerAngle;
-            
+
             CameraAngleY = Mathf.LerpAngle(CameraAngleY, SwingDirection * currentSteerAngle, Time.deltaTime * CameraRatationSpeed);
         }
         else
@@ -96,6 +100,7 @@ public class PlayerCar : baseVehicle
         cameraTargetPosition.y = cameraTargetPosition.y + cameraExtraHeight;
 
 
+
         //Step 3: Prevent Camera from clipping other objects - Shoots a Ray out the back and reflects it off an object to prevent camera clipping
         Vector3 targetDirection = (cameraTargetPosition - RayCastOrigin.transform.position).normalized;
         float remainingDistance = cameraFollowDistance * reverseScalar;
@@ -109,15 +114,14 @@ public class PlayerCar : baseVehicle
             cameraTargetPosition = ray.GetPoint(remainingDistance);
         }
 
-        //Step 4: Lerp Camera Position - TODO Lerp Around the Car, not through it
-        float destinationDistance = Vector3.Distance(Camera.main.transform.position, cameraTargetPosition) * 0.2f;
-        Vector3 interprolationPosition = Vector3.Lerp(Camera.main.transform.position, cameraTargetPosition, Time.deltaTime * destinationDistance);
-        Camera.main.transform.position = interprolationPosition;
+        //Step 4: Lerp Camera Position - TODO Lerp Around the Car, not through it      
+        Camera.main.transform.position = Vector3.SmoothDamp(Camera.main.transform.position, cameraTargetPosition, ref CameraVelocity, 0.2f);
 
         //Step 5: Lerp Camera Look Point
         float cameraLookDistance = Vector3.Distance(CurrentCameraLookPoint, gameObject.transform.position + (gameObject.transform.forward * forwardInput * CameraLookOffset)); //Phase out?
         CurrentCameraLookPoint = Vector3.Lerp(CurrentCameraLookPoint, gameObject.transform.position + (gameObject.transform.forward * forwardInput * CameraLookOffset), Time.deltaTime * cameraLookDistance);
         Camera.main.transform.LookAt(CurrentCameraLookPoint);
+
         //Camera.main.transform.LookAt(gameObject.transform.position + (gameObject.transform.forward  * 15)); //Static Camera look Position
 
         //Step 6: Give the Camera a little bit of a tilt on turns

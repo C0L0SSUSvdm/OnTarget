@@ -11,7 +11,7 @@ public class Suspension : MonoBehaviour
     //[SerializeField] Vector3 SteerForces;
     //[SerializeField] Vector3 MotorForces;
     [Header("----- Suspension Fields -----")]
-    [Range(2000, 30000), SerializeField] float SpringStrength;
+    [Range(2000, 60000), SerializeField] float SpringStrength;
     [Range(0, 2), SerializeField] float EffectiveSpringLength;
     [SerializeField] float WheelMass;
     [SerializeField] float DampenerResistance;
