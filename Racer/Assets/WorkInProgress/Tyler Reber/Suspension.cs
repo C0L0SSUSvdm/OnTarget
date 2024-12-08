@@ -94,10 +94,6 @@ public class Suspension : MonoBehaviour
         rb = rigidBody;
     }
 
-    //public float AddTorque(float EngineForce)
-    //{
-    //    return Vector3.zero.y;
-    //}
 
     public void DriveWheel(float EngineForce, Vector3 wheelVelocity, float WheelAngularVelocity)
     {

@@ -100,7 +100,7 @@ public class Utility_Mesh : MonoBehaviour
             filter.mesh = mesh;
 
             string path = "Assets/Models/" + gameObject.name + ".asset";
-            Debug.Log("Saving mesh to: " + path);
+            Debug.Log("Saving Centered mesh to: " + path);
             AssetDatabase.CreateAsset(mesh, path);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -108,21 +108,65 @@ public class Utility_Mesh : MonoBehaviour
     }
 
 #endif
-//#if UNITY_EDITOR
-//    [ContextMenu("Simplify_Mesh")]
-//    void SimplifyMesh()
-//    {
-//        MeshFilter filter = GetComponent<MeshFilter>();
-//        if (filter != null)
-//        {
-//            DisplayMeshDate();
-//            Mesh mesh = filter.sharedMesh;         
-//            mesh.Optimize();
 
-//            DisplayMeshDate();
-//        }
-//    }
-//#endif
+#if UNITY_EDITOR
+    [ContextMenu("Rotate Vertices X90")]
+
+    void RotateVerticesX90()
+    {
+        MeshFilter filter = GetComponent<MeshFilter>();
+        if (filter != null)
+        {
+
+            Mesh Original = filter.sharedMesh;
+            Mesh mesh = Instantiate(Original);
+            Vector3[] vertices = mesh.vertices;
+
+            Quaternion rotation = Quaternion.Euler(0, 0, 90);
+
+            for(int i = 0; i < vertices.Length; i++)
+            {
+                vertices[i].x *= 1.5f;
+                vertices[i].z *= 1.5f;  
+
+
+                vertices[i].y *= 0.05f;
+                
+                vertices[i] = rotation * vertices[i];
+               vertices[i].x -= 0.25f;
+            }
+            
+            mesh.vertices = vertices;
+            mesh.RecalculateBounds();
+            mesh.RecalculateNormals();
+            mesh.RecalculateTangents();
+
+            filter.mesh = mesh;
+
+            string path = "Assets/Models/" + gameObject.name + ".asset";
+            Debug.Log("Saving Rotated mesh to: " + path);
+            AssetDatabase.CreateAsset(mesh, path);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+    }
+
+#endif
+    //#if UNITY_EDITOR
+    //    [ContextMenu("Simplify_Mesh")]
+    //    void SimplifyMesh()
+    //    {
+    //        MeshFilter filter = GetComponent<MeshFilter>();
+    //        if (filter != null)
+    //        {
+    //            DisplayMeshDate();
+    //            Mesh mesh = filter.sharedMesh;         
+    //            mesh.Optimize();
+
+    //            DisplayMeshDate();
+    //        }
+    //    }
+    //#endif
 #if UNITY_EDITOR
     [CustomEditor(typeof(Utility_Mesh))]
     [ContextMenu("Log Mesh Data")]

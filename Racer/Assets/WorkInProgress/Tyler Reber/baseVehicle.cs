@@ -19,7 +19,7 @@ public class baseVehicle : MonoBehaviour
     //[SerializeField] Vector3 ReadAxel_forcePoint;
     //https://www.hagerty.com/media/maintenance-and-tech/10-factors-that-influence-an-engines-character/#:~:text=How%20an%20engine%20breathes%20is,and%20fuel%20into%20the%20cylinders.
     [Header("----- Engine Item Fields -----")]
-    [Range(5000, 15000), SerializeField] float TempEnginePower = 10000; //Temporary Variable until Transmission scales properly
+    [Range(0, 15000), SerializeField] float TempEnginePower = 10000; //Temporary Variable until Transmission scales properly
     [SerializeField] Engine Engine;
     [Range(0.01f, 1.0f), SerializeField] float EngineEfficiency = 0.3f;
     [Range(0.1f, 1.0f), SerializeField] float CamShaftRadius = 0.75f;// length = pi r
@@ -82,6 +82,7 @@ public class baseVehicle : MonoBehaviour
     Suspension wheel_BL;
     Suspension wheel_BR;
 
+
     protected void Start()
     {
         nextNode = GameObject.Find("Root");
@@ -95,10 +96,10 @@ public class baseVehicle : MonoBehaviour
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         rb.maxAngularVelocity = 7;
 
-        WheelOBJ_FL = transform.Find("Wheel_Left Front").gameObject;
-        WheelOBJ_FR = transform.Find("Wheel_Right Front").gameObject;
-        WheelOBJ_BL = transform.Find("Wheel_Left Back").gameObject;
-        WheelOBJ_BR = transform.Find("Wheel_Right Back").gameObject;
+        WheelOBJ_FL = transform.Find("Suspension_Left_Front").gameObject;
+        WheelOBJ_FR = transform.Find("Suspension_Right_Front").gameObject;
+        WheelOBJ_BL = transform.Find("Suspension_Left_Back").gameObject;
+        WheelOBJ_BR = transform.Find("Suspension_Right_Back").gameObject;
 
         wheel_FL = WheelOBJ_FL.GetComponent<Suspension>();
         wheel_FR = WheelOBJ_FR.GetComponent<Suspension>();
@@ -124,7 +125,7 @@ public class baseVehicle : MonoBehaviour
         
     }
 
-    protected new void FixedUpdate()
+    protected void FixedUpdate()
     {
         //CalculateGravity();
 
