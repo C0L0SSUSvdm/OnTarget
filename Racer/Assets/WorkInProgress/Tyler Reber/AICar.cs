@@ -52,7 +52,6 @@ public class AICar : baseVehicle
         }
         steerStrength = targetDirection > 0 ? -steerStrength : steerStrength;
 
-
         //Debug.Log($"Ratio: {steerStrength}, Angle: {targetDirection}");
         RunTimeSteeringLerpAngle = Mathf.Lerp(RunTimeSteeringLerpAngle, steerStrength, Time.deltaTime * 5);
         UpdateSteeringAngle(RunTimeSteeringLerpAngle);

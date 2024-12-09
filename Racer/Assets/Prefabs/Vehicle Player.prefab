@@ -273,7 +273,7 @@ MonoBehaviour:
   currentSteerAngle: 0
   isClutchEngaged: 1
   AeroDynamicDrag: 0.5
-  TempEnginePower: 0
+  TempEnginePower: 10000
   Engine: {fileID: 0}
   EngineEfficiency: 0.3
   CamShaftRadius: 0.75
@@ -315,14 +315,6 @@ MonoBehaviour:
   COM: {fileID: 6884452469396089950}
   AckermanOppositeDistance: 0
   AckermanAdjacentDistance: 0
-  WheelOBJ_FL: {fileID: 0}
-  WheelOBJ_FR: {fileID: 0}
-  WheelOBJ_BL: {fileID: 0}
-  WheelOBJ_BR: {fileID: 0}
-  wheel_FL: {fileID: 0}
-  wheel_FR: {fileID: 0}
-  wheel_BL: {fileID: 0}
-  wheel_BR: {fileID: 0}
   RayCastOrigin: {fileID: 1359588971140970262}
   CameraAngleY: 0
   CameraRatationSpeed: 10
@@ -526,7 +518,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6654492311172011737, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.4
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 6654492311172011737, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
       propertyPath: m_LocalPosition.z
