@@ -380,14 +380,6 @@ MonoBehaviour:
   COM: {fileID: 3907437956909096125}
   AckermanOppositeDistance: 0
   AckermanAdjacentDistance: 0
-  WheelOBJ_FL: {fileID: 0}
-  WheelOBJ_FR: {fileID: 0}
-  WheelOBJ_BL: {fileID: 0}
-  WheelOBJ_BR: {fileID: 0}
-  wheel_FL: {fileID: 0}
-  wheel_FR: {fileID: 0}
-  wheel_BL: {fileID: 0}
-  wheel_BR: {fileID: 0}
   RunTimeSteeringLerpAngle: 0
   FlockObjects: []
 --- !u!114 &2041786640294769542
@@ -729,6 +721,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5952943221187588616, guid: 94864f516a362e34c8533034dfdbb5a5, type: 3}
+      propertyPath: SpringStrength
+      value: 38000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5952943221187588616, guid: 94864f516a362e34c8533034dfdbb5a5, type: 3}
+      propertyPath: DampenerResistance
+      value: 3800
+      objectReference: {fileID: 0}
     - target: {fileID: 5981537893960809414, guid: 94864f516a362e34c8533034dfdbb5a5, type: 3}
       propertyPath: m_Name
       value: Suspension_Left_Front
@@ -790,6 +790,14 @@ PrefabInstance:
     - target: {fileID: 978015264969533425, guid: f15c49fdff2f0c54abdb2c89dc2987b4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4218093719417828118, guid: f15c49fdff2f0c54abdb2c89dc2987b4, type: 3}
+      propertyPath: SpringStrength
+      value: 38000
+      objectReference: {fileID: 0}
+    - target: {fileID: 4218093719417828118, guid: f15c49fdff2f0c54abdb2c89dc2987b4, type: 3}
+      propertyPath: DampenerResistance
+      value: 3800
       objectReference: {fileID: 0}
     - target: {fileID: 6137685735735099561, guid: f15c49fdff2f0c54abdb2c89dc2987b4, type: 3}
       propertyPath: m_Name
@@ -915,6 +923,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4218093719417828118, guid: f15c49fdff2f0c54abdb2c89dc2987b4, type: 3}
+      propertyPath: SpringStrength
+      value: 38000
+      objectReference: {fileID: 0}
+    - target: {fileID: 4218093719417828118, guid: f15c49fdff2f0c54abdb2c89dc2987b4, type: 3}
+      propertyPath: DampenerResistance
+      value: 3800
+      objectReference: {fileID: 0}
     - target: {fileID: 6137685735735099561, guid: f15c49fdff2f0c54abdb2c89dc2987b4, type: 3}
       propertyPath: m_Name
       value: Suspension_Right_Back
@@ -1038,6 +1054,14 @@ PrefabInstance:
     - target: {fileID: 3503726590295678003, guid: 94864f516a362e34c8533034dfdbb5a5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5952943221187588616, guid: 94864f516a362e34c8533034dfdbb5a5, type: 3}
+      propertyPath: SpringStrength
+      value: 38000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5952943221187588616, guid: 94864f516a362e34c8533034dfdbb5a5, type: 3}
+      propertyPath: DampenerResistance
+      value: 3800
       objectReference: {fileID: 0}
     - target: {fileID: 5981537893960809414, guid: 94864f516a362e34c8533034dfdbb5a5, type: 3}
       propertyPath: m_Name
