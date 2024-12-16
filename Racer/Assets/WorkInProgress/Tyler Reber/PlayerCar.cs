@@ -32,7 +32,7 @@ public class PlayerCar : baseVehicle
 
     [Header("----- Car On Start Options -----")]
     [Tooltip("Change Swing Direction, (false = swings to inside), (true = swings to outside)")]
-    [SerializeField] bool ToggleCameraSwing = false;
+    //[SerializeField] bool ToggleCameraSwing = false;
     float SwingDirection = 1;
 
     // Update is called once per frame

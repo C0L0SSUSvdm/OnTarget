@@ -284,12 +284,11 @@ GameObject:
   m_Component:
   - component: {fileID: 8481106540591060677}
   - component: {fileID: 493049123154754518}
-  - component: {fileID: 2041786640294769542}
   - component: {fileID: 1348126092942004166}
   - component: {fileID: 8836008697523088874}
   m_Layer: 0
   m_Name: Vehicle AI
-  m_TagString: Untagged
+  m_TagString: Vehicle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -333,8 +332,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   engineSound: {fileID: 8300000, guid: 62f8d8dfbbea74b9da5ff7b990843ddd, type: 3}
   rb: {fileID: 1348126092942004166}
-  nextNode: {fileID: 0}
-  maximumSteerAngle: 0
+  myFlockObject: {fileID: 4038166198946191522}
+  maximumSteerAngle: 35
   currentSteerAngle: 0
   isClutchEngaged: 1
   AeroDynamicDrag: 0.5
@@ -380,20 +379,14 @@ MonoBehaviour:
   COM: {fileID: 3907437956909096125}
   AckermanOppositeDistance: 0
   AckermanAdjacentDistance: 0
+  lineRenderer: {fileID: 0}
   RunTimeSteeringLerpAngle: 0
-  FlockObjects: []
---- !u!114 &2041786640294769542
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9149381338780683391}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 656eaaa7dc48f384788b90f95734a8f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  RadarDistance: 100
+  otherFlockObjects: []
+  averageForward: {x: 0, y: 0, z: 0}
+  averagePosition: {x: 0, y: 0, z: 0}
+  trackAveragePosition: {x: 0, y: 0, z: 0}
+  TestLogicPosition: {x: 0, y: 0, z: 0}
 --- !u!54 &1348126092942004166
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -611,6 +604,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8481106540591060677}
     m_Modifications:
+    - target: {fileID: 2605758971624785286, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
+      propertyPath: SafeRadius
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2605758971624785286, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
+      propertyPath: SafeDistance
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5603582998631515392, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
       propertyPath: m_Name
       value: Chasis
@@ -665,6 +666,17 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: a55a99c700f62446baf3514fdc04f3e5, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
+--- !u!114 &4038166198946191522 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2605758971624785286, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
+  m_PrefabInstance: {fileID: 2027729488017022244}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 656eaaa7dc48f384788b90f95734a8f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &4646149412176727037 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6654492311172011737, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}

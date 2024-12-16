@@ -202,6 +202,7 @@ public class gameManager : MonoBehaviour
     {
         MusicSource.clip = source;
         MusicSource.Play();
+        MusicSource.loop = true;
     }
     public void StopMusic()
     {

@@ -268,7 +268,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   engineSound: {fileID: 0}
   rb: {fileID: 4132112025350686852}
-  nextNode: {fileID: 0}
+  myFlockObject: {fileID: 0}
   maximumSteerAngle: 20
   currentSteerAngle: 0
   isClutchEngaged: 1
@@ -325,7 +325,6 @@ MonoBehaviour:
   CameraReverseLookScalar: 2
   CameraTiltDampener: 0.2
   CameraTiltAngle: 0
-  ToggleCameraSwing: 0
 --- !u!54 &4132112025350686852
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -520,6 +519,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5904074708630851800}
     m_Modifications:
+    - target: {fileID: 2605758971624785286, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
+      propertyPath: SafeRadius
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2605758971624785286, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
+      propertyPath: SafeDistance
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5603582998631515392, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
       propertyPath: m_Name
       value: Chasis

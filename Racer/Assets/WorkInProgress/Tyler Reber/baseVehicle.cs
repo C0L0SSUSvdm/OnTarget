@@ -8,7 +8,7 @@ public class baseVehicle : MonoBehaviour
 {
     [SerializeField] protected AudioClip engineSound;
     [SerializeField] protected Rigidbody rb;
-    [SerializeField] protected GameObject nextNode;
+    [SerializeField] protected FlockObject myFlockObject;
     [Header("----- Vehicle Fields -----")]
     //[SerializeField] CharacterController controller;
     [SerializeField] protected float maximumSteerAngle;
@@ -85,7 +85,7 @@ public class baseVehicle : MonoBehaviour
 
     protected void Start()
     {
-        nextNode = GameObject.Find("Root");
+        myFlockObject = gameObject.transform.Find("Chasis").gameObject.GetComponent<FlockObject>();
 
         rb = gameObject.GetComponent<Rigidbody>();
         rb.useGravity = true;
@@ -242,7 +242,6 @@ public class baseVehicle : MonoBehaviour
     protected void UpdateSteeringAngle(float input)
     {
         
-
         float FL_AckermanAngle = Mathf.Atan(AckermanOppositeDistance / (AckermanAdjacentDistance - (input * RearWheelOffset))) * Mathf.Rad2Deg * input;
         float FR_AckermanAngle = Mathf.Atan(AckermanOppositeDistance / (AckermanAdjacentDistance + (input * RearWheelOffset))) * Mathf.Rad2Deg * input;
 

@@ -2,20 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class AICar : baseVehicle
 {   
     SphereCollider radarCollider;
+    [SerializeField] LineRenderer lineRenderer;
+
+
     [SerializeField] float RunTimeSteeringLerpAngle = 0;
 
-    [Range(5, 25)] float RadarDistance = 15.0f;
+    [Range(20, 150), SerializeField] float RadarDistance;
 
-    public List<GameObject> FlockObjects;
-    Vector3 averageForward;
-    Vector3 AveragePosition;
-    float AlignmentStrength = 0.5f;
-    float CohesionStrength = 0.5f;
-    float SeperationStrength = 0.5f;
+    
+    public List<FlockObject> otherFlockObjects;
+    [SerializeField] Vector3 averageForward;
+    [SerializeField] Vector3 averagePosition;
+    [SerializeField] Vector3 trackAveragePosition;
+    float AlignmentStrength = 5f;
+    float CohesionStrength = 5f;
+    float SeperationStrength = 50f;
+
+    public Vector3 TestLogicPosition;
 
     public new void Start()
     {
@@ -23,6 +31,9 @@ public class AICar : baseVehicle
         radarCollider = gameObject.GetComponent<SphereCollider>();
         radarCollider.radius = RadarDistance;
         radarCollider.isTrigger = true;
+
+        if (lineRenderer != null)
+            InitializeFieldOfView();
     }
 
     // Update is called once per frame
@@ -31,62 +42,133 @@ public class AICar : baseVehicle
         base.FixedUpdate();
         CalculateAverages();
 
-        Vector3 nodeDistance = nextNode.transform.position - transform.position;
-        float targetDirection = Vector3.SignedAngle(nodeDistance, transform.forward, Vector3.up);
+        Vector3 seperation = CalculateSeperation();
+        TestLogicPosition = seperation;
 
+        float angle = Vector3.SignedAngle(transform.forward,trackAveragePosition - transform.position, Vector3.up);
+        RunTimeSteeringLerpAngle = Mathf.Lerp(RunTimeSteeringLerpAngle, angle, Time.deltaTime * 2);
+        float turnInput = Mathf.Clamp(angle, -maximumSteerAngle, maximumSteerAngle) / maximumSteerAngle;
+        RunTimeSteeringLerpAngle = turnInput;
+        
 
-        float steerStrength = 0;
-
-        if (Mathf.Abs(targetDirection) < maximumSteerAngle)
-        {
-            if (targetDirection > 2.0f)
-            {
-
-                steerStrength = targetDirection / maximumSteerAngle;
-            }
-
-        }
-        else
-        {
-            steerStrength = 1;
-        }
-        steerStrength = targetDirection > 0 ? -steerStrength : steerStrength;
-
-        //Debug.Log($"Ratio: {steerStrength}, Angle: {targetDirection}");
-        RunTimeSteeringLerpAngle = Mathf.Lerp(RunTimeSteeringLerpAngle, steerStrength, Time.deltaTime * 5);
-        UpdateSteeringAngle(RunTimeSteeringLerpAngle);
+        UpdateSteeringAngle(turnInput);
         ApplyGasPedal(1);
-        FlockObjects.Clear();
+        otherFlockObjects.Clear();
+
+        if(lineRenderer != null)
+        {
+            UpdateFieldOfView();
+        }
+    }
+
+    void CalculateAcceleration() {
+
+    }
+
+    Vector3 CalculateSeperation()
+    {
+        Vector3 sum = Vector3.zero;
+
+        foreach(FlockObject flockObject in otherFlockObjects)
+        {
+            Vector3 direction = flockObject.transform.position - transform.position;
+            float totalSafeDistance = myFlockObject.GetSafeRadius() + flockObject.GetSafeRadius();
+            //Debug.Log($"distance: {direction.magnitude}, safe distance: {totalSafeDistance}");
+            if(direction.magnitude < totalSafeDistance)
+            {
+                //Debug.Log("In Safe Distance");
+                if(IsInFieldOfView(direction.normalized))
+                { 
+                    //Debug.Log("In Field of View");
+                    float ratio = (totalSafeDistance - direction.magnitude) / totalSafeDistance;
+                    
+                    sum += (direction.normalized * ratio);
+                }
+                
+            }
+        }
+        return sum * SeperationStrength;
+    }
+
+    void InitializeFieldOfView()
+    {
+        lineRenderer.startWidth = 0.2f;
+        lineRenderer.endWidth = 0.2f;
+        lineRenderer.positionCount = 12;
+        lineRenderer.useWorldSpace = true;
+        lineRenderer.loop = true;
+
+        UpdateFieldOfView();
+
+    }
+
+    private void UpdateFieldOfView()
+    {
+        
+        lineRenderer.SetPosition(0, transform.position);
+        for (int i = 1, j = -100; i != lineRenderer.positionCount; i++, j += 20)
+        {
+            Vector3 rotation = Quaternion.Euler(0, j, 0) * (transform.forward * RadarDistance);
+            lineRenderer.SetPosition(i, rotation + transform.position);
+        }
+
     }
 
     void  CalculateAverages()
     {
-        int vehicleCount = 0;
+        int vehicleCount = 1;
+        int raceTrackNodeCount = 0;
         averageForward = transform.forward;
-        AveragePosition = transform.position; 
-        foreach (GameObject flockObject in FlockObjects)
+        averagePosition = transform.position;
+        trackAveragePosition = Vector3.zero;
+        foreach (FlockObject flockObject in otherFlockObjects)
         {
             
-            if(flockObject.tag == "Vehicle")
+            if(flockObject.tag == "TrackNode")
             {
+                trackAveragePosition += flockObject.GetTrackCenterPoint();
+                raceTrackNodeCount++;
+            }
+            else
+            {
+                averagePosition += flockObject.transform.position;
                 averageForward += flockObject.transform.forward;
                 vehicleCount++;
             }
-            AveragePosition += flockObject.transform.position;
+            
         }
         averageForward /= vehicleCount;
-        AveragePosition /= FlockObjects.Count;
-    }
-
-    public void OnTriggerEnter(Collider other)
-    {
-        //Debug.Log("Triggered");
-    }
-
-    public void SetNextNode(GameObject _nextNode)
-    {
+        averagePosition /= vehicleCount;
+        if(raceTrackNodeCount > 0)
+        {
+            trackAveragePosition = ((trackAveragePosition / raceTrackNodeCount) + transform.position) * 0.5f;
+        }
+        else
+        {
+            Debug.Log("Fix 0 Node Case");
+        }
         
-        nextNode = _nextNode;
+
+        
+    }
+
+    private void OnDrawGizmos()
+    {
+        DrawLocationSphere();
+    }
+
+    void DrawLocationSphere()
+    {
+        Gizmos.color = Color.white;
+        Gizmos.DrawSphere(trackAveragePosition, 1.0f);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(averagePosition, 1.0f);
+
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(TestLogicPosition + averagePosition, 2.0f);
+
     }
 
     public void OnTriggerStay(Collider other)
@@ -94,8 +176,19 @@ public class AICar : baseVehicle
        
         FlockObject flockObject = other.gameObject.GetComponent<FlockObject>();
         if (flockObject != null)
-        {           
-            FlockObjects.Add(other.gameObject);
+        {   
+            Vector3 direction = (other.transform.position - transform.position).normalized;
+            if (IsInFieldOfView(direction))
+            {
+                otherFlockObjects.Add(flockObject);
+            }
+            
         }
+    }
+
+    bool IsInFieldOfView(Vector3 direction)
+    {
+        float angle = Vector3.Angle(transform.forward, direction);
+        return angle <= 100;
     }
 }
