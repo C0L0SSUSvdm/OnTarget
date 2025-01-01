@@ -9,6 +9,7 @@ public class FlockObject : MonoBehaviour
     [SerializeField] FlockObject AdjacentFlockObj = null;
     Vector3 TrackCenterPosition = Vector3.zero;
     [SerializeField] float SafeRadius;
+    [Range(-1, 1), SerializeField] float AggressionFactor;
     Vector3 GetPosition { get; }
 
     private void Start()
@@ -48,6 +49,11 @@ public class FlockObject : MonoBehaviour
     public float GetSafeRadius()
     {
         return SafeRadius;
+    }
+
+    public float GetAggressionFactor()
+    {
+        return AggressionFactor;
     }
 
 #if UNITY_EDITOR

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 public class AICar : baseVehicle
-{   
+{
     SphereCollider radarCollider;
     [SerializeField] LineRenderer lineRenderer;
 
@@ -14,14 +14,11 @@ public class AICar : baseVehicle
 
     [Range(20, 150), SerializeField] float RadarDistance;
 
-    
+
     public List<FlockObject> otherFlockObjects;
     [SerializeField] Vector3 averageForward;
     [SerializeField] Vector3 averagePosition;
     [SerializeField] Vector3 trackAveragePosition;
-    float AlignmentStrength = 5f;
-    float CohesionStrength = 5f;
-    float SeperationStrength = 50f;
 
     public Vector3 TestLogicPosition;
 
@@ -42,52 +39,94 @@ public class AICar : baseVehicle
         base.FixedUpdate();
         CalculateAverages();
 
-        Vector3 seperation = CalculateSeperation();
-        TestLogicPosition = seperation;
+        float cohesion = 0;
+        float seperation = 0;
 
-        float angle = Vector3.SignedAngle(transform.forward,trackAveragePosition - transform.position, Vector3.up);
-        RunTimeSteeringLerpAngle = Mathf.Lerp(RunTimeSteeringLerpAngle, angle, Time.deltaTime * 2);
-        float turnInput = Mathf.Clamp(angle, -maximumSteerAngle, maximumSteerAngle) / maximumSteerAngle;
-        RunTimeSteeringLerpAngle = turnInput;
+        foreach (FlockObject flockObject in otherFlockObjects)
+        {
+            cohesion += CalculateCohesion(flockObject);
+            seperation += CalculateSeperation(flockObject);
+        }
+
+
+
+        //TestLogicPosition = seperation;
+
+        Vector3 averageOffset = transform.position - averagePosition;
+        float angle = Vector3.SignedAngle(transform.forward, (trackAveragePosition + averageOffset) - transform.position, Vector3.up);
         
+        float adjustedAngle = angle + seperation + cohesion;
+        
+        RunTimeSteeringLerpAngle = Mathf.Lerp(RunTimeSteeringLerpAngle, adjustedAngle, Time.deltaTime * 2);
+        float turnInput = Mathf.Clamp(adjustedAngle, -maximumSteerAngle, maximumSteerAngle) / maximumSteerAngle;
+        RunTimeSteeringLerpAngle = turnInput;
+
 
         UpdateSteeringAngle(turnInput);
         ApplyGasPedal(1);
         otherFlockObjects.Clear();
 
-        if(lineRenderer != null)
+        if (lineRenderer != null)
         {
             UpdateFieldOfView();
         }
     }
 
-    void CalculateAcceleration() {
+    void CalculateAcceleration()
+    {
 
     }
 
-    Vector3 CalculateSeperation()
+    float CalculateCohesion(FlockObject flockobject)
     {
-        Vector3 sum = Vector3.zero;
 
-        foreach(FlockObject flockObject in otherFlockObjects)
+        float result = 0;
+        Vector3 vector = averagePosition - flockobject.transform.position;
+        float distance = vector.magnitude;
+        float flockObjectAngle = IsInFieldOfView(vector.normalized);
+        if(Mathf.Abs(flockObjectAngle) < 25 && distance < 12)
         {
-            Vector3 direction = flockObject.transform.position - transform.position;
-            float totalSafeDistance = myFlockObject.GetSafeRadius() + flockObject.GetSafeRadius();
-            //Debug.Log($"distance: {direction.magnitude}, safe distance: {totalSafeDistance}");
-            if(direction.magnitude < totalSafeDistance)
-            {
-                //Debug.Log("In Safe Distance");
-                if(IsInFieldOfView(direction.normalized))
-                { 
-                    //Debug.Log("In Field of View");
-                    float ratio = (totalSafeDistance - direction.magnitude) / totalSafeDistance;
-                    
-                    sum += (direction.normalized * ratio);
-                }
-                
-            }
+            result = 2 * Mathf.Sign(flockObjectAngle);
         }
-        return sum * SeperationStrength;
+
+        return result;
+    }
+
+    float CalculateSeperation(FlockObject flockObject)
+    {
+        float signedAngle = 0;
+
+        Vector3 direction = flockObject.transform.position - transform.position;
+        float totalSafeDistance = myFlockObject.GetSafeRadius() + flockObject.GetSafeRadius();
+
+
+        if (direction.magnitude < totalSafeDistance)
+        {
+            signedAngle = IsInFieldOfView(direction.normalized);
+            float angle = Mathf.Abs(signedAngle);
+            if (angle >= 45 && angle <= 135)
+            {
+
+                if(flockObject.tag == "TrackNode")
+                {
+                    float angleDifference = Vector3.SignedAngle(transform.forward, direction.normalized, Vector3.up);
+                    signedAngle = Mathf.Clamp(angleDifference, 0, Mathf.Abs(angleDifference)) * -Mathf.Sign(angleDifference);
+                    //Debug.Log(signedAngle);
+                }
+                else
+                {
+                    float ratio = (totalSafeDistance - direction.magnitude) / totalSafeDistance;
+                    float angleDifference = Vector3.SignedAngle(transform.forward, flockObject.transform.forward, Vector3.up);
+                    angleDifference = (Mathf.Clamp(signedAngle, 0, Mathf.Abs(angleDifference))) * Mathf.Sign(angleDifference);
+                    
+                    signedAngle = angleDifference * ratio;
+                }
+
+            }
+
+        }
+
+        return signedAngle;
     }
 
     void InitializeFieldOfView()
@@ -104,7 +143,7 @@ public class AICar : baseVehicle
 
     private void UpdateFieldOfView()
     {
-        
+
         lineRenderer.SetPosition(0, transform.position);
         for (int i = 1, j = -100; i != lineRenderer.positionCount; i++, j += 20)
         {
@@ -114,7 +153,7 @@ public class AICar : baseVehicle
 
     }
 
-    void  CalculateAverages()
+    void CalculateAverages()
     {
         int vehicleCount = 1;
         int raceTrackNodeCount = 0;
@@ -123,23 +162,29 @@ public class AICar : baseVehicle
         trackAveragePosition = Vector3.zero;
         foreach (FlockObject flockObject in otherFlockObjects)
         {
-            
-            if(flockObject.tag == "TrackNode")
+
+            if (flockObject.tag == "TrackNode")
             {
                 trackAveragePosition += flockObject.GetTrackCenterPoint();
                 raceTrackNodeCount++;
             }
             else
             {
-                averagePosition += flockObject.transform.position;
-                averageForward += flockObject.transform.forward;
-                vehicleCount++;
+                float safeDistance = (myFlockObject.GetSafeRadius() + flockObject.GetSafeRadius()) * 2;
+                Vector3 direction = flockObject.transform.position - transform.position;
+                if (direction.magnitude < safeDistance)
+                {
+                    averagePosition += flockObject.transform.position;
+                    averageForward += flockObject.transform.forward;
+                    vehicleCount++;
+                }
+
             }
-            
+
         }
         averageForward /= vehicleCount;
         averagePosition /= vehicleCount;
-        if(raceTrackNodeCount > 0)
+        if (raceTrackNodeCount > 0)
         {
             trackAveragePosition = ((trackAveragePosition / raceTrackNodeCount) + transform.position) * 0.5f;
         }
@@ -147,12 +192,11 @@ public class AICar : baseVehicle
         {
             Debug.Log("Fix 0 Node Case");
         }
-        
 
-        
+
+
     }
-
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
         DrawLocationSphere();
     }
@@ -162,33 +206,39 @@ public class AICar : baseVehicle
         Gizmos.color = Color.white;
         Gizmos.DrawSphere(trackAveragePosition, 1.0f);
 
+
+        Vector3 offset = transform.position - averagePosition;
         Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(averagePosition, 1.0f);
+        Gizmos.DrawSphere(trackAveragePosition + offset, 1.0f);
 
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(TestLogicPosition + averagePosition, 2.0f);
 
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(transform.position, transform.position + TestLogicPosition * 5);
+
     }
 
     public void OnTriggerStay(Collider other)
     {
-       
+
         FlockObject flockObject = other.gameObject.GetComponent<FlockObject>();
         if (flockObject != null)
-        {   
+        {
             Vector3 direction = (other.transform.position - transform.position).normalized;
-            if (IsInFieldOfView(direction))
+
+            if (IsInFieldOfView(direction) <= 130)
             {
                 otherFlockObjects.Add(flockObject);
             }
-            
+
         }
     }
 
-    bool IsInFieldOfView(Vector3 direction)
+    float IsInFieldOfView(Vector3 direction)
     {
         float angle = Vector3.Angle(transform.forward, direction);
-        return angle <= 100;
+        return angle;
     }
 }
