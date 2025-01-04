@@ -13,12 +13,14 @@ public class AICar : baseVehicle
     [SerializeField] float RunTimeSteeringLerpAngle = 0;
 
     [Range(20, 150), SerializeField] float RadarDistance;
-
+    [Range(90, 150), SerializeField] float spatialAwarenessAngle = 130;
+    [Range(20, 100), SerializeField] float perifialVisionAngle = 100;
 
     public List<FlockObject> otherFlockObjects;
-    [SerializeField] Vector3 averageForward;
-    [SerializeField] Vector3 averagePosition;
-    [SerializeField] Vector3 trackAveragePosition;
+    Vector3 averageForward;
+    Vector3 averagePosition;
+    Vector3 trackAveragePosition;
+
 
     public Vector3 TestLogicPosition;
 
@@ -40,22 +42,22 @@ public class AICar : baseVehicle
         CalculateAverages();
 
         float cohesion = 0;
-        float seperation = 0;
+        Vector3 seperation = Vector3.zero;
 
         foreach (FlockObject flockObject in otherFlockObjects)
         {
             cohesion += CalculateCohesion(flockObject);
-            seperation += CalculateSeperation(flockObject);
+            seperation += CalculateSwidewaysSeperation(flockObject);
         }
 
 
 
         //TestLogicPosition = seperation;
 
-        Vector3 averageOffset = transform.position - averagePosition;
-        float angle = Vector3.SignedAngle(transform.forward, (trackAveragePosition + averageOffset) - transform.position, Vector3.up);
-        
-        float adjustedAngle = angle + seperation + cohesion;
+        Vector3 averageOffset = (transform.position - averagePosition);
+        float angle = Vector3.SignedAngle(transform.forward, (trackAveragePosition + averageOffset - seperation) - transform.position, Vector3.up);
+
+        float adjustedAngle = angle;// + (cohesion * 0.5f) + (seperation * 0.5f);// + seperation;// + cohesion;
         
         RunTimeSteeringLerpAngle = Mathf.Lerp(RunTimeSteeringLerpAngle, adjustedAngle, Time.deltaTime * 2);
         float turnInput = Mathf.Clamp(adjustedAngle, -maximumSteerAngle, maximumSteerAngle) / maximumSteerAngle;
@@ -92,10 +94,11 @@ public class AICar : baseVehicle
         return result;
     }
 
-    float CalculateSeperation(FlockObject flockObject)
+    Vector3 CalculateSwidewaysSeperation(FlockObject flockObject)
     {
-        float signedAngle = 0;
+        Vector3 signedoffset = Vector3.zero;
 
+        float signedAngle = 0;
         Vector3 direction = flockObject.transform.position - transform.position;
         float totalSafeDistance = myFlockObject.GetSafeRadius() + flockObject.GetSafeRadius();
 
@@ -104,29 +107,29 @@ public class AICar : baseVehicle
         {
             signedAngle = IsInFieldOfView(direction.normalized);
             float angle = Mathf.Abs(signedAngle);
-            if (angle >= 45 && angle <= 135)
+            if (angle >= 45 && angle <= spatialAwarenessAngle)
             {
 
                 if(flockObject.tag == "TrackNode")
                 {
+                    //TODO: Implement TrackNode avoidance
                     float angleDifference = Vector3.SignedAngle(transform.forward, direction.normalized, Vector3.up);
-                    signedAngle = Mathf.Clamp(angleDifference, 0, Mathf.Abs(angleDifference)) * -Mathf.Sign(angleDifference);
+                    //signedAngle = Mathf.Clamp(angleDifference, 0, Mathf.Abs(angleDifference)) * -Mathf.Sign(angleDifference);
                     //Debug.Log(signedAngle);
                 }
                 else
                 {
                     float ratio = (totalSafeDistance - direction.magnitude) / totalSafeDistance;
                     float angleDifference = Vector3.SignedAngle(transform.forward, flockObject.transform.forward, Vector3.up);
-                    angleDifference = (Mathf.Clamp(signedAngle, 0, Mathf.Abs(angleDifference))) * Mathf.Sign(angleDifference);
-                    
-                    signedAngle = angleDifference * ratio;
+                    Vector3 directinoalDifference = transform.forward - flockObject.transform.forward;
+                    signedoffset = directinoalDifference * myFlockObject.GetSafeRadius() * ratio * Mathf.Sign(angleDifference);
                 }
 
             }
 
         }
 
-        return signedAngle;
+        return signedoffset;
     }
 
     void InitializeFieldOfView()
@@ -227,11 +230,21 @@ public class AICar : baseVehicle
         if (flockObject != null)
         {
             Vector3 direction = (other.transform.position - transform.position).normalized;
-
-            if (IsInFieldOfView(direction) <= 130)
+            if(other.tag == "TrackNode")
             {
+                if(IsInFieldOfView(direction) <= perifialVisionAngle)
                 otherFlockObjects.Add(flockObject);
             }
+            else
+            {
+                if (IsInFieldOfView(direction) <= spatialAwarenessAngle)
+                {
+                    otherFlockObjects.Add(flockObject);
+                }
+            }
+
+
+
 
         }
     }
