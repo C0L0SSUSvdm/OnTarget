@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -134,6 +134,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 104
       objectReference: {fileID: 0}
+    - target: {fileID: 2570509728859758249, guid: 28fd84312e702af4680af57775adbd5a, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 2570509728859758249, guid: 28fd84312e702af4680af57775adbd5a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 750.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2570509728859758249, guid: 28fd84312e702af4680af57775adbd5a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -330.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2677053988954900429, guid: 28fd84312e702af4680af57775adbd5a, type: 3}
+      propertyPath: defaultSpeedometer
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2750027467833459034, guid: 28fd84312e702af4680af57775adbd5a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -142,14 +158,50 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ToggleVolumeTab
       objectReference: {fileID: 0}
+    - target: {fileID: 4154713816371219836, guid: 28fd84312e702af4680af57775adbd5a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5328558612123289255, guid: 28fd84312e702af4680af57775adbd5a, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 97
+      objectReference: {fileID: 0}
+    - target: {fileID: 5734142959687992671, guid: 28fd84312e702af4680af57775adbd5a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.99580497
+      objectReference: {fileID: 0}
+    - target: {fileID: 5734142959687992671, guid: 28fd84312e702af4680af57775adbd5a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5734142959687992671, guid: 28fd84312e702af4680af57775adbd5a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.09150162
+      objectReference: {fileID: 0}
+    - target: {fileID: 5734142959687992671, guid: 28fd84312e702af4680af57775adbd5a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5734142959687992671, guid: 28fd84312e702af4680af57775adbd5a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -101.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5734142959687992671, guid: 28fd84312e702af4680af57775adbd5a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 10.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5963241606837440078, guid: 28fd84312e702af4680af57775adbd5a, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7072652523436041304, guid: 28fd84312e702af4680af57775adbd5a, type: 3}
       propertyPath: m_Name
       value: UI
       objectReference: {fileID: 0}
+    - target: {fileID: 7319288668971026732, guid: 28fd84312e702af4680af57775adbd5a, type: 3}
+      propertyPath: needle
+      value: 
+      objectReference: {fileID: 1943091784}
     - target: {fileID: 7657752193868841470, guid: 28fd84312e702af4680af57775adbd5a, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -268,3 +320,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8ce8b50d05c0454d9165853e6e36751, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1943091784 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8826107806826712982, guid: 28fd84312e702af4680af57775adbd5a, type: 3}
+  m_PrefabInstance: {fileID: 1943091781}
+  m_PrefabAsset: {fileID: 0}

@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 6654492311172011737}
   - component: {fileID: 732531722192217578}
   - component: {fileID: 7498584693107320411}
-  - component: {fileID: 6651651917879105296}
   - component: {fileID: 2605758971624785294}
   - component: {fileID: 2605758971624785286}
+  - component: {fileID: 1771894626972801053}
   m_Layer: 0
   m_Name: Chasis
   m_TagString: Untagged
@@ -86,20 +86,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6651651917879105296
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5603582998631515392}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 6448672cf1a2a5648a95334c88368095, type: 2}
 --- !u!82 &2605758971624785294
 AudioSource:
   m_ObjectHideFlags: 0
@@ -208,3 +194,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 656eaaa7dc48f384788b90f95734a8f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AdjacentFlockObj: {fileID: 0}
+  SafeRadius: 0
+  AggressionFactor: 0
+--- !u!136 &1771894626972801053
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5603582998631515392}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 1.76
+  m_Height: 14.36
+  m_Direction: 2
+  m_Center: {x: 0, y: 0.52, z: 0.97}
