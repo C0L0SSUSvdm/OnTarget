@@ -128,11 +128,11 @@ public class Suspension : MonoBehaviour
         Vector3 lateralForce = transform.right * lateralForceMagnitude;
 
 
-        rb.AddForceAtPosition(lateralForce, transform.position);
+        //rb.AddForceAtPosition(lateralForce, transform.position);
 
 
 
-        //rb.AddForceAtPosition(localVelocity.x * -transform.right * massOnWheel, transform.position);
+        rb.AddForceAtPosition(localVelocity.x * -transform.right * massOnWheel, transform.position);
         Debug.DrawRay(transform.position, (localVelocity.x * -transform.right * massOnWheel) * 0.1f, Color.cyan);
         Debug.DrawRay(transform.position, (localVelocity.x * -transform.right * massOnWheel) * 0.1f, Color.red);
 
