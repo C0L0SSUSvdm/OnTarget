@@ -136,7 +136,7 @@ public class baseVehicle : MonoBehaviour
         wheel_BL.SetWeightOnWheel(sumOfDistances_Inverse, rb.mass * Physics.gravity.y);
         wheel_BR.SetWeightOnWheel(sumOfDistances_Inverse, rb.mass * Physics.gravity.y);
 
-        float sumOfCompression = wheel_FL.RayCastWheelDistance() + wheel_FR.RayCastWheelDistance() + wheel_BL.RayCastWheelDistance() + wheel_BR.RayCastWheelDistance();
+        float sumOfCompression = wheel_FL.SphereCastWheelDistance() + wheel_FR.SphereCastWheelDistance() + wheel_BL.SphereCastWheelDistance() + wheel_BR.SphereCastWheelDistance();
         float sumOfCompression_Inverse = sumOfCompression != 0 ? 1 / sumOfCompression: 0;
         wheel_FL.SetMassOnWheel(sumOfCompression_Inverse, rb.mass);
         wheel_FR.SetMassOnWheel(sumOfCompression_Inverse, rb.mass);

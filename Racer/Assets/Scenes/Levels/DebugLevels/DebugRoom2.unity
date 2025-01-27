@@ -333,7 +333,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9149381338780683391, guid: c57fed942f7bf7947a1850a28f96da79, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c57fed942f7bf7947a1850a28f96da79, type: 3}
@@ -788,7 +788,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9149381338780683391, guid: c57fed942f7bf7947a1850a28f96da79, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c57fed942f7bf7947a1850a28f96da79, type: 3}
@@ -1306,6 +1306,14 @@ PrefabInstance:
       propertyPath: DampenerResistance
       value: 3500
       objectReference: {fileID: 0}
+    - target: {fileID: 4132112025350686852, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: m_Drag
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4132112025350686852, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: m_AngularDrag
+      value: 0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 4478330661727088293, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: m_Name
       value: Vehicle Player
@@ -1317,6 +1325,10 @@ PrefabInstance:
     - target: {fileID: 5904074708630851799, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: TempEnginePower
       value: 13000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5904074708630851799, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: maximumSteerAngle
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 5904074708630851800, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: m_RootOrder
@@ -1647,6 +1659,10 @@ PrefabInstance:
     - target: {fileID: 9149381338780683391, guid: c57fed942f7bf7947a1850a28f96da79, type: 3}
       propertyPath: m_Name
       value: Vehicle AI
+      objectReference: {fileID: 0}
+    - target: {fileID: 9149381338780683391, guid: c57fed942f7bf7947a1850a28f96da79, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c57fed942f7bf7947a1850a28f96da79, type: 3}
@@ -4361,6 +4377,10 @@ PrefabInstance:
     - target: {fileID: 9149381338780683391, guid: c57fed942f7bf7947a1850a28f96da79, type: 3}
       propertyPath: m_Name
       value: Vehicle AI (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 9149381338780683391, guid: c57fed942f7bf7947a1850a28f96da79, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c57fed942f7bf7947a1850a28f96da79, type: 3}

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Suspension : MonoBehaviour
 {
-
+    public float test = 0;
     //[SerializeField] Vector3 SpringForces;
     [SerializeField] Vector3 DamperForces;
     //[SerializeField] Vector3 SteerForces;
@@ -94,11 +94,17 @@ public class Suspension : MonoBehaviour
         rb = rigidBody;
     }
 
+    public void UpdateWheelAngle(float eulerAngle_y)
+    {
+        transform.localRotation = Quaternion.Euler(0, eulerAngle_y, 0);
+        //Debug.DrawRay(transform.position, transform.right * 25, Color.blue);
+        //Debug.DrawRay(transform.position, -transform.right * 25, Color.red);
+    }
 
     public void DriveWheel(float EngineForce, Vector3 wheelVelocity, float WheelAngularVelocity)
     {
-        AngularVelocity = WheelAngularVelocity;
-        float theta = AngularVelocity;// rb.velocity.magnitude * 2 * Mathf.PI;
+        AngularVelocity = WheelAngularVelocity;// / wheelradius
+        float theta = (AngularVelocity / (2 * Mathf.PI)) * 360 * Time.deltaTime;
         Wheel.transform.Rotate(theta, 0, 0);
 
         if (isGrounded)
@@ -109,39 +115,43 @@ public class Suspension : MonoBehaviour
         SteerVehicle(wheelVelocity);
     }
 
-    public void UpdateWheelAngle(float eulerAngle_y)
-    {
-        transform.localRotation = Quaternion.Euler(0, eulerAngle_y, 0);
-        //Debug.DrawRay(transform.position, transform.right * 25, Color.blue);
-        //Debug.DrawRay(transform.position, -transform.right * 25, Color.red);
-    }
-
     public float SteerVehicle(Vector3 wheelVelocity)
     {
+        float angle = transform.transform.eulerAngles.y;
 
-        ////rb.MoveRotation(rb.rotation * Quaternion.Euler(0, angleStrength * Time.deltaTime, 0));
-        
-        Vector3 test = transform.InverseTransformDirection(wheelVelocity);
-        //Debug.Log($"{test.x * -transform.right * massOnWheel * 2}, {test.x * -transform.right * weightOnWheel}");
+        Vector3 localVelocity = transform.InverseTransformDirection(wheelVelocity);
 
-        Debug.DrawRay(transform.position, (test.x * -transform.right * massOnWheel * 2) * 0.1f, Color.cyan);
-        Debug.DrawRay(transform.position, (test.x * -transform.right * weightOnWheel) * 0.1f, Color.red);
-        //Vector3 test = transform.InverseTransformDirection(wheelVelocity);
-        //Vector3 right = transform.right * test.x;
-        rb.AddForceAtPosition(test.x * -transform.right * massOnWheel * 2, transform.position);
-        //rb.AddForceAtPosition(right, transform.position, ForceMode.Force);
+        float slipAngle = Mathf.Atan2(localVelocity.x, Mathf.Abs(localVelocity.z)) * Mathf.Rad2Deg;
 
-        //float SteerVelocity = Vector3.Dot(transform.right, wheelVelocity);
+        float tireCoefficient = 1.0f;
+        float lateralForceMagnitude = weightOnWheel * tireCoefficient * slipAngle * Time.deltaTime;
+        Vector3 lateralForce = transform.right * lateralForceMagnitude;
 
-        //float desiredSteerVelocity = -SteerVelocity * 1f; //Friction or slippage
-        //float acceleration = desiredSteerVelocity * Time.fixedDeltaTime;
-        //rb.AddTorque(transform.up * force);
-        //Debug.Log(transform.right * WheelMass * acceleration);
-        //rb.AddTorque(transform.right * -acceleration);
-        //rb.AddForceAtPosition(transform.right * massOnWheel * acceleration, transform.position);
-        //Debug.Log($"Steer Direction: {desiredSteerVelocity}, Acceleration: {acceleration}, force: {acceleration * massOnWheel}");
-        return 0;
+
+        rb.AddForceAtPosition(lateralForce, transform.position);
+
+
+
+        //rb.AddForceAtPosition(localVelocity.x * -transform.right * massOnWheel, transform.position);
+        Debug.DrawRay(transform.position, (localVelocity.x * -transform.right * massOnWheel) * 0.1f, Color.cyan);
+        Debug.DrawRay(transform.position, (localVelocity.x * -transform.right * massOnWheel) * 0.1f, Color.red);
+
+        Debug.Log(slipAngle);
+        return slipAngle;
     }
+
+    public float CalculateLateralForce(float SlipAngle)
+    {
+        float tireCoefficient = 1.0f;
+        float maxforce = weightOnWheel * tireCoefficient;
+
+        float slipRatio = SlipAngle / 15.0f;
+        slipRatio = Mathf.Clamp(slipRatio, -1, 1);
+        float lateralForce = maxforce * (1f - Mathf.Pow(slipRatio, 2f)) * Time.deltaTime;
+
+        return lateralForce;
+    }
+
 
     public float COMDistance(Transform CenterOfMass)
     {
@@ -157,6 +167,7 @@ public class Suspension : MonoBehaviour
         Debug.DrawRay(RayCastPoint, -transform.up * (WheelRadius + Mathf.Abs(EffectiveSpringLength)), Color.red);
 
         RaycastHit hit;
+        
         if (Physics.Raycast(RayCastPoint, -transform.up, out hit, WheelRadius + Mathf.Abs(EffectiveSpringLength)))
         {
             hitDistance = Mathf.Clamp(-(hit.distance - WheelRadius), EffectiveSpringLength, 0);
@@ -171,6 +182,39 @@ public class Suspension : MonoBehaviour
 
         return EffectiveSpringLength - hitDistance;
     }
+
+    public float SphereCastWheelDistance()
+    {
+        Vector3 sphereCastOrigin = transform.position + transform.up * -transform.localPosition.y;
+        float sphereRadius = WheelRadius * 0.5f;
+        float maxDistance = WheelRadius + Mathf.Abs(EffectiveSpringLength);
+        
+        Debug.DrawRay(sphereCastOrigin, -transform.up * maxDistance, Color.red);
+
+        RaycastHit hit;
+
+        if (Physics.SphereCast(sphereCastOrigin, sphereRadius, -transform.up, out hit, maxDistance))
+        {
+            //Debug.Log(hit.transform.name);
+            //if (hit.collider.CompareTag("Ground"))
+            //{
+
+            //}
+
+            hitDistance = Mathf.Clamp(-(hit.distance - sphereRadius), EffectiveSpringLength, 0);
+            WheelHitPoint = hit.point;
+            isGrounded = true;
+        }
+        else
+        {
+            isGrounded = false;
+            hitDistance = EffectiveSpringLength;
+        }
+
+        return EffectiveSpringLength - hitDistance;
+    }
+
+
 
     public void SetWeightOnWheel(float sumOfDistances_Inverse, float totalWeight)
     {
@@ -216,6 +260,8 @@ public class Suspension : MonoBehaviour
         }
 
     }
+
+
 
     public void OnTriggerEnter(Collider other)
     {
