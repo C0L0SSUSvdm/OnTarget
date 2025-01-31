@@ -112,6 +112,7 @@ public class Suspension : MonoBehaviour
             rb.AddForceAtPosition(transform.forward * EngineForce, WheelHitPoint, ForceMode.Force);
         }
 
+
         SteerVehicle(wheelVelocity);
     }
 
@@ -122,35 +123,24 @@ public class Suspension : MonoBehaviour
         Vector3 localVelocity = transform.InverseTransformDirection(wheelVelocity);
 
         float slipAngle = Mathf.Atan2(localVelocity.x, Mathf.Abs(localVelocity.z)) * Mathf.Rad2Deg;
-
-        float tireCoefficient = 1.0f;
+        
+        float tireCoefficient = 0.3f;
         float lateralForceMagnitude = weightOnWheel * tireCoefficient * slipAngle * Time.deltaTime;
-        Vector3 lateralForce = transform.right * lateralForceMagnitude;
+
+        Vector3 lateralSlipForce = transform.right * lateralForceMagnitude;
+
+        Vector3 tireGripForce = -transform.right * (localVelocity.x * massOnWheel * 0.7f);
+
+        rb.AddForceAtPosition(lateralSlipForce + tireGripForce, transform.position);
 
 
-        //rb.AddForceAtPosition(lateralForce, transform.position);
+        //rb.AddForceAtPosition(localVelocity.x * -transform.right * massOnWheel, transform.position);
+        //Debug.DrawRay(transform.position, (localVelocity.x * -transform.right * massOnWheel) * 0.1f, Color.cyan);
+        //Debug.DrawRay(transform.position, (localVelocity.x * -transform.right * massOnWheel) * 0.1f, Color.red);
 
-
-
-        rb.AddForceAtPosition(localVelocity.x * -transform.right * massOnWheel, transform.position);
-        Debug.DrawRay(transform.position, (localVelocity.x * -transform.right * massOnWheel) * 0.1f, Color.cyan);
-        Debug.DrawRay(transform.position, (localVelocity.x * -transform.right * massOnWheel) * 0.1f, Color.red);
-
-        Debug.Log(slipAngle);
         return slipAngle;
     }
 
-    public float CalculateLateralForce(float SlipAngle)
-    {
-        float tireCoefficient = 1.0f;
-        float maxforce = weightOnWheel * tireCoefficient;
-
-        float slipRatio = SlipAngle / 15.0f;
-        slipRatio = Mathf.Clamp(slipRatio, -1, 1);
-        float lateralForce = maxforce * (1f - Mathf.Pow(slipRatio, 2f)) * Time.deltaTime;
-
-        return lateralForce;
-    }
 
 
     public float COMDistance(Transform CenterOfMass)

@@ -19242,6 +19242,10 @@ PrefabInstance:
       value: Vehicle AI
       objectReference: {fileID: 0}
     - target: {fileID: 9149381338780683391, guid: c57fed942f7bf7947a1850a28f96da79, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9149381338780683391, guid: c57fed942f7bf7947a1850a28f96da79, type: 3}
       propertyPath: m_TagString
       value: AI
       objectReference: {fileID: 0}
@@ -29720,8 +29724,20 @@ PrefabInstance:
       value: Vehicle Player
       objectReference: {fileID: 0}
     - target: {fileID: 5904074708630851799, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: RedLineRPM
+      value: 6000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5904074708630851799, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: ShiftUpRPM
+      value: 3500
+      objectReference: {fileID: 0}
+    - target: {fileID: 5904074708630851799, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: ShiftDownRPM
+      value: 1500
+      objectReference: {fileID: 0}
+    - target: {fileID: 5904074708630851799, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: TempEnginePower
-      value: 10000
+      value: 19658
       objectReference: {fileID: 0}
     - target: {fileID: 5904074708630851800, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: m_RootOrder
@@ -29737,7 +29753,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5904074708630851800, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 10.4
+      value: -1.15
       objectReference: {fileID: 0}
     - target: {fileID: 5904074708630851800, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: m_LocalRotation.w
