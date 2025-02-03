@@ -167,8 +167,6 @@ public class baseVehicle : MonoBehaviour
 
     protected void FixedUpdate()
     {
-        //CalculateGravity();
-
         float sumofDistance = wheel_FL.COMDistance(COM) + wheel_FR.COMDistance(COM) + wheel_BL.COMDistance(COM) + wheel_BR.COMDistance(COM);
         float sumOfDistances_Inverse = sumofDistance != 0 ? 1 / sumofDistance : 0;
         wheel_FL.SetWeightOnWheel(sumOfDistances_Inverse, rb.mass * Physics.gravity.y);
@@ -188,7 +186,6 @@ public class baseVehicle : MonoBehaviour
         wheel_BL.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_BL.transform.position));
         wheel_BR.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_BR.transform.position));
 
-        //ApplyGravity();
     }
 
    
@@ -256,6 +253,13 @@ public class baseVehicle : MonoBehaviour
         wheel_FR.DriveWheel(0, rb.GetPointVelocity(WheelOBJ_FR.transform.position), WheelAngularVelocity);
         wheel_BL.DriveWheel(input * RunTimeMotorPower, rb.GetPointVelocity(WheelOBJ_BL.transform.position), WheelAngularVelocity);
         wheel_BR.DriveWheel(input * RunTimeMotorPower, rb.GetPointVelocity(WheelOBJ_BR.transform.position), WheelAngularVelocity);
+    }
+
+    protected void ApplyBrake(float input)
+    {
+        Vector3 forward = -transform.forward * 1000 * rb.velocity.magnitude;
+
+        rb.AddForce(forward);
     }
 
     protected void UpdateSteeringAngle(float input)

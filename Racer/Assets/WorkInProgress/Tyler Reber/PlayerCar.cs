@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerCar : baseVehicle
@@ -45,6 +46,13 @@ public class PlayerCar : baseVehicle
 
         float forwardInput = Input.GetAxis("Vertical");
         ApplyGasPedal(forwardInput);
+
+        float brakeInput = Input.GetAxis("Brake");
+        if(brakeInput != 0)
+        {
+            ApplyBrake(brakeInput);
+        }
+        
 
 
         //ApplySteerForce(turnInput);
