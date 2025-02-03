@@ -272,28 +272,31 @@ MonoBehaviour:
   maximumSteerAngle: 20
   currentSteerAngle: 0
   isClutchEngaged: 1
-  AeroDynamicDrag: 0.5
-  TempEnginePower: 10000
-  Engine: {fileID: 0}
-  EngineEfficiency: 0.3
-  CamShaftRadius: 0.75
-  CrankShaftRadius: 2.2
-  CylinderCount: 8
-  CylinderVolume: 0
-  CrankShaftAngle: 45
-  RedLineRPM: 8000
-  EngineCompressionRatio: 10
-  PistonDiameter: 4.5
   CurrentRPM: 0
-  RunTimeCompressionRatio: 0
   RunTimeMeanRPM: 0
   RunTimeCurveDeviation_Inverse: 0
   RunTimeBackPressure: 0
   RunTimeCombustionForce: 0
   RunTimeMotorPower: 0
+  Engine: {fileID: 0}
+  CylinderStrokeLength: 2.2
+  CylinderCount: 8
+  CylinderDiameter: 4
+  NumberOfStrokes: 4
+  RedLineRPM: 8000
+  IgnitionsPerSecond: 200
+  CamShaftRadius: 0.75
+  CrankShaftAngle: 45
+  CamShaftProfileEfficiency: 0.9
+  EngineCompressionRatio: 10
   IdleRPMs: 1000
-  PistonCC: 0
-  ChamberVolume: 46
+  AirFlowRate: 450
+  ValveMass: 0.1
+  SpringStiffness: 28000
+  PistonMass: 0
+  PistonCompressionOffset: 0
+  PistonSpeed: 2500
+  ChamberCompressionArea: 59
   HeaderBackPressure: 0.1
   GearIndex: 0
   ShiftUpRPM: 6000
@@ -308,6 +311,7 @@ MonoBehaviour:
   - 0.5
   DifferentialRatio: 3.42
   RearTireRadius: 1
+  WheelLoadFactor: 0.1
   TurboBoost: 2.3
   ExhaustHeaderBackPressure: 0.5
   ExhaustPipeBackPressure: 1.3

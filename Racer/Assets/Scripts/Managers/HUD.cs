@@ -10,6 +10,8 @@ public class HUD : MonoBehaviour
     [SerializeField] public HUD_Interface_Speedometer speedometerInterface;
     [SerializeField] public HUD_Interface_HealthBar healthBarInterface;
     [SerializeField] public HUD_Interface_Timer timerInterface;
+    [SerializeField] public HUD_Interface_Transmission transmissionInterface;
+    [SerializeField] public HUD_Interface_RPMGuage rpmGuageInterface;
 
     private void Awake()
     {
@@ -42,6 +44,16 @@ public class HUD : MonoBehaviour
         timerInterface.UpdateTimer(time);
     }
 
+    public void UpdateTransmissionGuage(int gearIndex)
+    {
+        transmissionInterface.UpdateTransmissionDisplay(gearIndex);
+    }
+
+    public void UpdateRPMGuage(int rpmValue)
+    {
+        rpmGuageInterface.UpdateRPMGuage(rpmValue);
+    }
+
     /********** SETTERS *********/
     public void SetSpeedometerInterface(GameObject gameobject)
     {
@@ -54,6 +66,16 @@ public class HUD : MonoBehaviour
     public void SetTimerInterface(GameObject gameobject)
     {
         timerInterface = gameobject.GetComponentInChildren<HUD_Interface_Timer>();
+    }
+
+    public void SetRPMGuageInterface(GameObject gameobject)
+    {
+        rpmGuageInterface = gameObject.GetComponentInChildren<HUD_Interface_RPMGuage>();
+    }
+
+    public void SetTransmissionGuageInterface(GameObject gameObject)
+    {
+        transmissionInterface = gameObject.GetComponent<HUD_Interface_Transmission>();
     }
 
 }

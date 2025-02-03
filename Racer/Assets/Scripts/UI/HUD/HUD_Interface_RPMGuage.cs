@@ -18,7 +18,7 @@ public class HUD_Interface_RPMGuage : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        HUD.Item.SetSpeedometerInterface(gameObject);
+        HUD.Item.SetRPMGuageInterface(gameObject);
         activeRPMGuage = gameObject.transform.GetChild(childIndex).gameObject;
         activeRPMGuage.SetActive(true);
 
@@ -33,7 +33,7 @@ public class HUD_Interface_RPMGuage : MonoBehaviour
     
     public void UpdateRPMGuage(int value)
     {
-        activeRPMGuage.GetComponent<HUD_Speedometer_Director>().UpdateSpeedometer(value);
+        activeRPMGuage.GetComponent<HUD_RPMGuage_Director>().UpdateRPMGuage(value);
     }
 }
 
