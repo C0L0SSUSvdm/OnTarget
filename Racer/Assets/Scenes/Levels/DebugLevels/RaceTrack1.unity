@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.5908202, g: 0.6371348, b: 0.72911495, a: 1}
+  m_IndirectSpecularColor: {r: 0.5858134, g: 0.6320645, b: 0.7251375, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -29824,6 +29824,10 @@ PrefabInstance:
       propertyPath: m_Volume
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 1379436782900319541, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4b90d89d4f7dce348a4f76306f4bae8a, type: 2}
     - target: {fileID: 1661884371245211199, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: DampenerResistance
       value: 3500
@@ -29836,10 +29840,22 @@ PrefabInstance:
       propertyPath: DampenerResistance
       value: 3500
       objectReference: {fileID: 0}
+    - target: {fileID: 3085733476269055878, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4b90d89d4f7dce348a4f76306f4bae8a, type: 2}
+    - target: {fileID: 3952188399516039502, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4b90d89d4f7dce348a4f76306f4bae8a, type: 2}
     - target: {fileID: 4478330661727088293, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: m_Name
       value: Vehicle Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5629888783201110983, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4b90d89d4f7dce348a4f76306f4bae8a, type: 2}
     - target: {fileID: 5904074708630851799, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: RedLineRPM
       value: 6000
@@ -29870,7 +29886,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5904074708630851800, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 143.97
+      value: 0.49
       objectReference: {fileID: 0}
     - target: {fileID: 5904074708630851800, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: m_LocalPosition.z
