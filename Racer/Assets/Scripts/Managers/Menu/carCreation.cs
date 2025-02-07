@@ -72,12 +72,12 @@ public class carCreation : MonoBehaviour, ISerializationCallbackReceiver
 
     public void OnAfterDeserialize()
     {
-        PurchasedChasis = gameManager.instance.DataManager().Chasies().GetItem(PurchasedChasisID) as Chasis;        
-        PurchasedEngine = gameManager.instance.DataManager().Engines().GetItem(PurchasedEngineID) as Engine;       
-        PurchasedTires = gameManager.instance.DataManager().Tires().GetItem(PurchasedTiresID) as Tires;
-        PurchasedPowerSteering = gameManager.instance.DataManager().PowerSteering().GetItem(PurchasedPowerSteeringID) as PowerSteering;
-        PurchasedShockAbsorbers = gameManager.instance.DataManager().ShockAbsorbers().GetItem(PurchasedShockAbsorbersID) as ShockAbsorbers;
-        PurchasedBrakes = gameManager.instance.DataManager().Brakes().GetItem(PurchasedBrakesID) as Brakes;
+        //PurchasedChasis = gameManager.instance.DataManager().Chasies().GetItem(PurchasedChasisID) as Chasis;        
+        //PurchasedEngine = gameManager.instance.DataManager().Engines().GetItem(PurchasedEngineID) as Engine;       
+        //PurchasedTires = gameManager.instance.DataManager().Tires().GetItem(PurchasedTiresID) as Tires;
+        //PurchasedPowerSteering = gameManager.instance.DataManager().PowerSteering().GetItem(PurchasedPowerSteeringID) as PowerSteering;
+        //PurchasedShockAbsorbers = gameManager.instance.DataManager().ShockAbsorbers().GetItem(PurchasedShockAbsorbersID) as ShockAbsorbers;
+        //PurchasedBrakes = gameManager.instance.DataManager().Brakes().GetItem(PurchasedBrakesID) as Brakes;
     }
 
 

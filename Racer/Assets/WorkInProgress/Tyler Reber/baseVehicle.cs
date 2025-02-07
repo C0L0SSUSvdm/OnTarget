@@ -257,6 +257,7 @@ public class baseVehicle : MonoBehaviour
 
     protected void ApplyBrake(float input)
     {
+        float brakePower = 40000.0f;
         Vector3 forward = -transform.forward * 1000 * rb.velocity.magnitude;
 
         rb.AddForce(forward);
