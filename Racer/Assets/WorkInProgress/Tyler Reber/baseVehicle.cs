@@ -162,17 +162,20 @@ public class baseVehicle : MonoBehaviour
        
         RunTimeBackPressure = ExhaustHeaderBackPressure + ExhaustPipeBackPressure + HeaderBackPressure;
         InitializeNormalDistibutionCurve();
-        
-    }
 
-    protected void FixedUpdate()
-    {
+
         float sumofDistance = wheel_FL.COMDistance(COM) + wheel_FR.COMDistance(COM) + wheel_BL.COMDistance(COM) + wheel_BR.COMDistance(COM);
         float sumOfDistances_Inverse = sumofDistance != 0 ? 1 / sumofDistance : 0;
         wheel_FL.SetWeightOnWheel(sumOfDistances_Inverse, rb.mass * Physics.gravity.y);
         wheel_FR.SetWeightOnWheel(sumOfDistances_Inverse, rb.mass * Physics.gravity.y);
         wheel_BL.SetWeightOnWheel(sumOfDistances_Inverse, rb.mass * Physics.gravity.y);
         wheel_BR.SetWeightOnWheel(sumOfDistances_Inverse, rb.mass * Physics.gravity.y);
+
+    }
+
+    protected void FixedUpdate()
+    {
+
 
         float sumOfCompression = wheel_FL.SphereCastWheelDistance() + wheel_FR.SphereCastWheelDistance() + wheel_BL.SphereCastWheelDistance() + wheel_BR.SphereCastWheelDistance();
         float sumOfCompression_Inverse = sumOfCompression != 0 ? 1 / sumOfCompression: 0;
