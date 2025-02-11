@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class Suspension : MonoBehaviour
 {
-    public float test = 0;
+    public float weightForce = 0;
+    public float compressedStrength;
     //[SerializeField] Vector3 SpringForces;
     [SerializeField] Vector3 DamperForces;
     //[SerializeField] Vector3 SteerForces;
@@ -27,10 +28,11 @@ public class Suspension : MonoBehaviour
 
     Vector3 WheelHitPoint;
     //[SerializeField] float SpringStrength;
-    [SerializeField] float RestPosition;
+    [SerializeField] float SpringRestPosition;
+    [SerializeField] float SpringRestMass;
     [SerializeField] float weightOnWheel;
     [SerializeField] float massOnWheel;
-    [SerializeField] float SpringRestPosition;
+
     [Header("----- Wheel Values -----")]
     [SerializeField] GameObject Wheel;
     [SerializeField] float WheelFriction = 0.95f;
@@ -211,6 +213,8 @@ public class Suspension : MonoBehaviour
     public void SetWeightOnWheel(float sumOfDistances_Inverse, float totalWeight)
     {
         weightOnWheel = CenterOfMassDistance * sumOfDistances_Inverse * totalWeight;
+        SpringRestPosition = EffectiveSpringLength - (weightOnWheel / SpringStrength);
+        SpringRestMass = weightOnWheel / Physics.gravity.y;
     }
 
     public void SetMassOnWheel(float sumOfCompression_Inverse, float totalMass)
@@ -229,58 +233,53 @@ public class Suspension : MonoBehaviour
 
     public void UpdateSpringPhysics(Vector3 WheelWorldSpaceVelocity)
     {
-        //Vector3 result = Vector3.zero;
-
-        //float deltaSpringVelocity = (hitDistance - transform.localPosition.y) / Time.fixedDeltaTime;
-        //transform.localPosition = new Vector3(transform.localPosition.x, hitDistance, transform.localPosition.z);
-        //if (isGrounded)
-        //{
-        //    float DamperForce = deltaSpringVelocity * DampenerResistance;
-
-        //    float massWeight = massOnWheel * Physics.gravity.y;
-        //    //float deltaMass = (massWeight - weightOnWheel);
-        //    float averageWeight = (massWeight + weightOnWheel) * 0.5f;
-
-
-        //    SpringRestPosition = EffectiveSpringLength - (averageWeight / SpringStrength);
-        //    float upwardForce = (transform.localPosition.y - SpringRestPosition) * SpringStrength;
-
-        //    result = (-averageWeight + upwardForce + DamperForce) * transform.up;
-        //    //SpringForces = transform.up * upwardForce;
-        //    //DamperForces = transform.up * DamperForce;
-        //    rb.AddForceAtPosition(result, WheelHitPoint, ForceMode.Force);
-        //}
         Vector3 result = Vector3.zero;
 
-        // Calculate the change in spring length over time
         float deltaSpringVelocity = (hitDistance - transform.localPosition.y) / Time.fixedDeltaTime;
         transform.localPosition = new Vector3(transform.localPosition.x, hitDistance, transform.localPosition.z);
-
         if (isGrounded)
         {
-            // Calculate damping force
             float DamperForce = deltaSpringVelocity * DampenerResistance;
 
-            // Calculate weight and mass forces
             float massWeight = massOnWheel * Physics.gravity.y;
+            //float deltaMass = (massWeight - weightOnWheel);
             float averageWeight = (massWeight + weightOnWheel) * 0.5f;
 
-            // Calculate the additional displacement from the pre-compressed rest position
-            float additionalDisplacement = transform.localPosition.y - EffectiveSpringLength;
 
-            // Calculate spring force based on additional displacement
-            float upwardForce = additionalDisplacement * SpringStrength;
+            SpringRestPosition = EffectiveSpringLength - (averageWeight / SpringStrength);
+            float upwardForce = (transform.localPosition.y - SpringRestPosition) * SpringStrength;
 
-            // Calculate the impact force based on the rigidbody's velocity
-            float velocityAlongSpring = Vector3.Dot(WheelWorldSpaceVelocity, transform.up);
-            float impactForce = velocityAlongSpring * massOnWheel; // F = m * v
-
-            // Combine all forces (spring, damping, and impact)
-            result = (-averageWeight + upwardForce + DamperForce + impactForce) * transform.up;
-
-            // Apply the force to the rigidbody at the wheel's contact point
+            result = (-averageWeight + upwardForce + DamperForce) * transform.up;
+            //SpringForces = transform.up * upwardForce;
+            //DamperForces = transform.up * DamperForce;
             rb.AddForceAtPosition(result, WheelHitPoint, ForceMode.Force);
         }
+        //Vector3 result = Vector3.zero;
+
+        //// Calculate the change in spring length over time
+        //float deltaDistance = hitDistance - transform.localPosition.y;
+        //float deltaSpringVelocity = deltaDistance / Time.fixedDeltaTime;
+        //transform.localPosition = new Vector3(transform.localPosition.x, hitDistance, transform.localPosition.z);
+
+        //if (isGrounded)
+        //{
+        //    // Calculate damping force
+        //    float DamperForce = deltaSpringVelocity * DampenerResistance;
+
+        //    compressedStrength = deltaDistance * SpringStrength;
+        //    weightForce = weightOnWheel - compressedStrength;
+        //    // Spring has to overcome the weigh on the spring,
+
+        //    // Calculate the impact force based on the rigidbody's velocity
+        //    //float velocityAlongSpring = Vector3.Dot(WheelWorldSpaceVelocity, transform.up);
+        //    //float impactForce = velocityAlongSpring * massOnWheel; // F = m * v
+
+        //    // Combine all forces (spring, damping, and impact)
+        //    result = (-weightForce + DamperForce) * transform.up;
+
+        //    // Apply the force to the rigidbody at the wheel's contact point
+        //    rb.AddForceAtPosition(result, WheelHitPoint, ForceMode.Force);
+        //}
     }
 
 }
