@@ -47,17 +47,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 849b12248a8130346b3290f95157fb09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weightForce: 0
+  compressedStrength: 0
   DamperForces: {x: 0, y: 0, z: 0}
   SpringStrength: 35000
+  DampenerRate: 0
+  Runtime_SpringStrength: 0
   EffectiveSpringLength: 0.5
   WheelMass: 25
-  DampenerResistance: 5000
   NumberOfCoils: 4
   isGrounded: 0
   hitDistance: 0
+  SpringRestPosition: 0
+  SpringRestMass: 0
+  tiltDelta: 0
+  deltaMass: 0
   weightOnWheel: 0
   massOnWheel: 0
-  SpringRestPosition: 0
   Wheel: {fileID: 4289165429413701359}
   WheelFriction: 0.95
   WheelRadius: 1

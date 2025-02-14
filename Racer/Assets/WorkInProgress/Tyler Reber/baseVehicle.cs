@@ -175,14 +175,33 @@ public class baseVehicle : MonoBehaviour
 
     protected void FixedUpdate()
     {
-
-
         float sumOfCompression = wheel_FL.SphereCastWheelDistance() + wheel_FR.SphereCastWheelDistance() + wheel_BL.SphereCastWheelDistance() + wheel_BR.SphereCastWheelDistance();
-        float sumOfCompression_Inverse = sumOfCompression != 0 ? 1 / sumOfCompression: 0;
-        wheel_FL.SetMassOnWheel(sumOfCompression_Inverse, rb.mass);
-        wheel_FR.SetMassOnWheel(sumOfCompression_Inverse, rb.mass);
-        wheel_BL.SetMassOnWheel(sumOfCompression_Inverse, rb.mass);
-        wheel_BR.SetMassOnWheel(sumOfCompression_Inverse, rb.mass);
+        float sumOfCompression_Inverse = sumOfCompression != 0 ? 1 / sumOfCompression : 0;
+
+        Vector3 carUp = transform.up;
+        float rollAngle = Vector3.SignedAngle(carUp, Vector3.up, transform.forward);
+        float pitchAngle = Vector3.SignedAngle(carUp, Vector3.up, transform.right);
+
+        // Calculate weight shift factors
+        float rollFactor = Mathf.Sin(rollAngle * Mathf.Deg2Rad);
+        float pitchFactor = Mathf.Sin(pitchAngle * Mathf.Deg2Rad);
+
+        float leftWeightFactor = 0.5f - rollFactor * 0.5f;
+        float rightWeightFactor = 0.5f + rollFactor * 0.5f;
+        float frontWeightFactor = 0.5f - pitchFactor * 0.5f;
+        float rearWeightFactor = 0.5f + pitchFactor * 0.5f;
+
+        // Distribute mass
+        float FL = (frontWeightFactor * leftWeightFactor) * rb.mass;
+        float FR = (frontWeightFactor * rightWeightFactor) * rb.mass;
+        float BL = (rearWeightFactor * leftWeightFactor) * rb.mass;
+        float BR = (rearWeightFactor * rightWeightFactor) * rb.mass;
+
+        float depressionmass = sumOfCompression_Inverse * rb.mass;
+        wheel_FL.SetMassOnWheel(depressionmass, FL);
+        wheel_FR.SetMassOnWheel(depressionmass, FR);
+        wheel_BL.SetMassOnWheel(depressionmass, BL);
+        wheel_BR.SetMassOnWheel(depressionmass, BR);
 
         wheel_FL.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_FL.transform.position));
         wheel_FR.UpdateSpringPhysics(rb.GetPointVelocity(WheelOBJ_FR.transform.position));
@@ -260,10 +279,11 @@ public class baseVehicle : MonoBehaviour
 
     protected void ApplyBrake(float input)
     {
-        float brakePower = 40000.0f;
-        Vector3 forward = -transform.forward * 1000 * rb.velocity.magnitude;
-
-        rb.AddForce(forward);
+        if(input != 0)
+        {
+            wheel_BL.ApplyBrakesWheel(input);
+            wheel_BR.ApplyBrakesWheel(input);
+        }
     }
 
     protected void UpdateSteeringAngle(float input)

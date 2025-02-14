@@ -277,18 +277,23 @@ MonoBehaviour:
   RunTimeCurveDeviation_Inverse: 0
   RunTimeBackPressure: 0
   RunTimeCombustionForce: 0
+  RunTimeCrankTorque: 0
+  RunTimeHorsePower: 0
   RunTimeMotorPower: 0
+  RedLineRPM: 8000
   Engine: {fileID: 0}
   CylinderStrokeLength: 2.2
   CylinderCount: 8
   CylinderDiameter: 4
   NumberOfStrokes: 4
-  RedLineRPM: 8000
   IgnitionsPerSecond: 200
   CamShaftRadius: 0.75
+  PerformanceEfficiency: 0.7
   CrankShaftAngle: 45
   CamShaftProfileEfficiency: 0.9
-  EngineCompressionRatio: 10
+  FlyWheelMass: 25
+  FlyWheelRadius: 4
+  FlyWheelInertia: 0
   IdleRPMs: 1000
   AirFlowRate: 450
   ValveMass: 0.1
@@ -299,8 +304,6 @@ MonoBehaviour:
   ChamberCompressionArea: 59
   HeaderBackPressure: 0.1
   GearIndex: 0
-  ShiftUpRPM: 6000
-  ShiftDownRPM: 2000
   ShiftTime: 0.1
   GearRatio:
   - 3.82
@@ -309,6 +312,8 @@ MonoBehaviour:
   - 1
   - 0.72
   - 0.5
+  ShiftDownRPM: 2000
+  ShiftUpRPM: 6000
   DifferentialRatio: 3.42
   RearTireRadius: 1
   WheelLoadFactor: 0.1
@@ -427,9 +432,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1273125244147943133, guid: f15c49fdff2f0c54abdb2c89dc2987b4, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4218093719417828118, guid: f15c49fdff2f0c54abdb2c89dc2987b4, type: 3}
+      propertyPath: DampenerRate
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 4218093719417828118, guid: f15c49fdff2f0c54abdb2c89dc2987b4, type: 3}
       propertyPath: SpringStrength
-      value: 38000
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 4218093719417828118, guid: f15c49fdff2f0c54abdb2c89dc2987b4, type: 3}
       propertyPath: DampenerResistance
@@ -497,9 +510,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1273125244147943133, guid: f15c49fdff2f0c54abdb2c89dc2987b4, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4218093719417828118, guid: f15c49fdff2f0c54abdb2c89dc2987b4, type: 3}
+      propertyPath: DampenerRate
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 4218093719417828118, guid: f15c49fdff2f0c54abdb2c89dc2987b4, type: 3}
       propertyPath: SpringStrength
-      value: 38000
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 4218093719417828118, guid: f15c49fdff2f0c54abdb2c89dc2987b4, type: 3}
       propertyPath: DampenerResistance
@@ -523,6 +544,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5904074708630851800}
     m_Modifications:
+    - target: {fileID: 1771894626972801053, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1771894626972801053, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
+      propertyPath: m_Center.y
+      value: 0.6
+      objectReference: {fileID: 0}
     - target: {fileID: 2605758971624785286, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
       propertyPath: SafeRadius
       value: 4
@@ -549,7 +578,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6654492311172011737, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.15
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 6654492311172011737, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -585,6 +614,25 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
+--- !u!1 &7164854844040782634 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5603582998631515392, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
+  m_PrefabInstance: {fileID: 3363415455221949994}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1983208730802324545
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7164854844040782634}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: 6448672cf1a2a5648a95334c88368095, type: 2}
 --- !u!4 &8283458879890256115 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6654492311172011737, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
@@ -642,8 +690,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5952943221187588616, guid: 94864f516a362e34c8533034dfdbb5a5, type: 3}
+      propertyPath: DampenerRate
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5952943221187588616, guid: 94864f516a362e34c8533034dfdbb5a5, type: 3}
       propertyPath: SpringStrength
-      value: 38000
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 5952943221187588616, guid: 94864f516a362e34c8533034dfdbb5a5, type: 3}
       propertyPath: DampenerResistance
@@ -652,6 +704,10 @@ PrefabInstance:
     - target: {fileID: 5981537893960809414, guid: 94864f516a362e34c8533034dfdbb5a5, type: 3}
       propertyPath: m_Name
       value: Suspension_Left_Front
+      objectReference: {fileID: 0}
+    - target: {fileID: 8244720516795744407, guid: 94864f516a362e34c8533034dfdbb5a5, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 94864f516a362e34c8533034dfdbb5a5, type: 3}
@@ -712,8 +768,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5952943221187588616, guid: 94864f516a362e34c8533034dfdbb5a5, type: 3}
+      propertyPath: DampenerRate
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5952943221187588616, guid: 94864f516a362e34c8533034dfdbb5a5, type: 3}
       propertyPath: SpringStrength
-      value: 38000
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 5952943221187588616, guid: 94864f516a362e34c8533034dfdbb5a5, type: 3}
       propertyPath: DampenerResistance
@@ -722,6 +782,10 @@ PrefabInstance:
     - target: {fileID: 5981537893960809414, guid: 94864f516a362e34c8533034dfdbb5a5, type: 3}
       propertyPath: m_Name
       value: Suspension_Left_Back
+      objectReference: {fileID: 0}
+    - target: {fileID: 8244720516795744407, guid: 94864f516a362e34c8533034dfdbb5a5, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 94864f516a362e34c8533034dfdbb5a5, type: 3}

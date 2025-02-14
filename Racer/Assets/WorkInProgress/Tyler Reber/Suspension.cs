@@ -12,10 +12,11 @@ public class Suspension : MonoBehaviour
     //[SerializeField] Vector3 SteerForces;
     //[SerializeField] Vector3 MotorForces;
     [Header("----- Suspension Fields -----")]
-    [Range(2000, 60000), SerializeField] float SpringStrength;
+    [Range(500, 10000), SerializeField] float SpringStrength;
+    [Range(0, 1), SerializeField] float DampenerRate;
+    [SerializeField] float Runtime_SpringStrength;
     [Range(0, 2), SerializeField] float EffectiveSpringLength;
-    [SerializeField] float WheelMass;
-    [SerializeField] float DampenerResistance;
+    [SerializeField] float WheelMass;   
     [SerializeField] int NumberOfCoils;
     [Header("RunTime Values -----")]
     float CenterOfMassDistance;
@@ -28,8 +29,10 @@ public class Suspension : MonoBehaviour
 
     Vector3 WheelHitPoint;
     //[SerializeField] float SpringStrength;
-    [SerializeField] float SpringRestPosition;
+    [SerializeField] float SpringRestPosition; //phaseout
     [SerializeField] float SpringRestMass;
+    [SerializeField] float tiltDelta;
+    [SerializeField] float deltaMass;
     [SerializeField] float weightOnWheel;
     [SerializeField] float massOnWheel;
 
@@ -64,6 +67,7 @@ public class Suspension : MonoBehaviour
 
         SpringMechanicalOffset = NumberOfCoils * 2 * SpringThickness;
 
+        Runtime_SpringStrength = Mathf.Abs(SpringStrength * Physics.gravity.y);
     }
 
     void Update()
@@ -120,9 +124,40 @@ public class Suspension : MonoBehaviour
         SteerVehicle(wheelVelocity);
     }
 
+    public void ApplyBrakesWheel(float brakeInput)
+    {
+        if (isGrounded)
+        {
+            float maxBrakeForce = 20000;
+            
+            //float forwardVelocity = Vector3.Dot(rb.velocity.normalized, transform.right);
+
+            // Calculate the brake force magnitude based on brake input and velocity
+            float brakeForceMagnitude = brakeInput * maxBrakeForce;
+
+            // Reduce rear wheel traction during braking to simulate weight transfer
+            float rearTraction = Mathf.Clamp(1.0f - brakeInput, 0.5f, 1.0f); // Adjust as needed
+            brakeForceMagnitude *= rearTraction;
+
+            // Calculate the brake force vector (opposite to the wheel's velocity)
+            Vector3 brakeForce = -rb.velocity.normalized * brakeForceMagnitude;
+
+            // Apply the brake force at the wheel's contact point
+            rb.AddForceAtPosition(brakeForce, WheelHitPoint, ForceMode.Force);
+
+
+            if (rearTraction < 0.6f)
+            {
+
+                Vector3 lateralForce = transform.right * (rb.velocity.magnitude * 0.1f);
+                rb.AddForceAtPosition(lateralForce, WheelHitPoint, ForceMode.Force);
+            }
+        }
+    }
+
     public float SteerVehicle(Vector3 wheelVelocity)
     {
-        float angle = transform.transform.eulerAngles.y;
+        //float angle = transform.transform.eulerAngles.y;
 
         Vector3 localVelocity = transform.InverseTransformDirection(wheelVelocity);
 
@@ -153,28 +188,6 @@ public class Suspension : MonoBehaviour
         CenterOfMassDistance = Vector3.Distance(transform.localPosition, CenterOfMass.localPosition);
         return CenterOfMassDistance;
 
-    }
-
-    public float RayCastWheelDistance()
-    {
-        Vector3 RayCastPoint = transform.position + transform.up * -transform.localPosition.y;
-        Debug.DrawRay(RayCastPoint, -transform.up * (WheelRadius + Mathf.Abs(EffectiveSpringLength)), Color.red);
-
-        RaycastHit hit;
-        
-        if (Physics.Raycast(RayCastPoint, -transform.up, out hit, WheelRadius + Mathf.Abs(EffectiveSpringLength)))
-        {
-            hitDistance = Mathf.Clamp(-(hit.distance - WheelRadius), EffectiveSpringLength, 0);
-            WheelHitPoint = hit.point;
-            isGrounded = true;
-        }
-        else
-        {
-            isGrounded = false;
-            hitDistance = EffectiveSpringLength;
-        }
-
-        return EffectiveSpringLength - hitDistance;
     }
 
     public float SphereCastWheelDistance()
@@ -217,13 +230,16 @@ public class Suspension : MonoBehaviour
         SpringRestMass = weightOnWheel / Physics.gravity.y;
     }
 
-    public void SetMassOnWheel(float sumOfCompression_Inverse, float totalMass)
+    public void SetMassOnWheel(float sumOfCompression_Inverse_Mass, float ShiftedMass)
     {
 
         float delta = EffectiveSpringLength - hitDistance;
         if (isGrounded)
         {
-            massOnWheel = delta * sumOfCompression_Inverse * totalMass;
+            //tiltDelta = SpringRestMass - delta;
+            massOnWheel = (delta * sumOfCompression_Inverse_Mass);
+            
+            //Debug.Log(ShiftedMass);
         }
         else
         {
@@ -233,53 +249,60 @@ public class Suspension : MonoBehaviour
 
     public void UpdateSpringPhysics(Vector3 WheelWorldSpaceVelocity)
     {
-        Vector3 result = Vector3.zero;
-
-        float deltaSpringVelocity = (hitDistance - transform.localPosition.y) / Time.fixedDeltaTime;
-        transform.localPosition = new Vector3(transform.localPosition.x, hitDistance, transform.localPosition.z);
-        if (isGrounded)
-        {
-            float DamperForce = deltaSpringVelocity * DampenerResistance;
-
-            float massWeight = massOnWheel * Physics.gravity.y;
-            //float deltaMass = (massWeight - weightOnWheel);
-            float averageWeight = (massWeight + weightOnWheel) * 0.5f;
-
-
-            SpringRestPosition = EffectiveSpringLength - (averageWeight / SpringStrength);
-            float upwardForce = (transform.localPosition.y - SpringRestPosition) * SpringStrength;
-
-            result = (-averageWeight + upwardForce + DamperForce) * transform.up;
-            //SpringForces = transform.up * upwardForce;
-            //DamperForces = transform.up * DamperForce;
-            rb.AddForceAtPosition(result, WheelHitPoint, ForceMode.Force);
-        }
         //Vector3 result = Vector3.zero;
 
-        //// Calculate the change in spring length over time
-        //float deltaDistance = hitDistance - transform.localPosition.y;
-        //float deltaSpringVelocity = deltaDistance / Time.fixedDeltaTime;
+        //float deltaSpringVelocity = (hitDistance - transform.localPosition.y) / Time.fixedDeltaTime;
         //transform.localPosition = new Vector3(transform.localPosition.x, hitDistance, transform.localPosition.z);
-
         //if (isGrounded)
         //{
-        //    // Calculate damping force
         //    float DamperForce = deltaSpringVelocity * DampenerResistance;
 
-        //    compressedStrength = deltaDistance * SpringStrength;
-        //    weightForce = weightOnWheel - compressedStrength;
-        //    // Spring has to overcome the weigh on the spring,
+        //    float massWeight = massOnWheel * Physics.gravity.y;
+        //    //float deltaMass = (massWeight - weightOnWheel);
+        //    float averageWeight = (massWeight + weightOnWheel) * 0.5f;
 
-        //    // Calculate the impact force based on the rigidbody's velocity
-        //    //float velocityAlongSpring = Vector3.Dot(WheelWorldSpaceVelocity, transform.up);
-        //    //float impactForce = velocityAlongSpring * massOnWheel; // F = m * v
 
-        //    // Combine all forces (spring, damping, and impact)
-        //    result = (-weightForce + DamperForce) * transform.up;
+        //    SpringRestPosition = EffectiveSpringLength - (averageWeight / SpringStrength);
+        //    float upwardForce = (transform.localPosition.y - SpringRestPosition) * SpringStrength;
 
-        //    // Apply the force to the rigidbody at the wheel's contact point
+        //    result = (-averageWeight + upwardForce + DamperForce) * transform.up;
+        //    //SpringForces = transform.up * upwardForce;
+        //    //DamperForces = transform.up * DamperForce;
         //    rb.AddForceAtPosition(result, WheelHitPoint, ForceMode.Force);
         //}
+        Vector3 result = Vector3.zero;
+
+
+        // Calculate the change in spring length over time
+        float deltaDistance = hitDistance - transform.localPosition.y;
+        float deltaSpringVelocity = deltaDistance / Time.fixedDeltaTime;
+        transform.localPosition = new Vector3(transform.localPosition.x, hitDistance, transform.localPosition.z);
+
+        if (isGrounded)
+        {
+            // Calculate damping force
+            //Note: Calculated Damper Force is applied to Car, not the spring, therefor a decompressing spring doesn't dampen car's position in world space.
+            //float DamperForce = Mathf.Clamp(deltaSpringVelocity * DampenerResistance, -1000, 99999);
+            float DamperForce = deltaSpringVelocity * (SpringStrength * DampenerRate);
+            float SpringForce = (EffectiveSpringLength - hitDistance) * Runtime_SpringStrength;
+
+            compressedStrength = deltaDistance * Runtime_SpringStrength;
+            weightForce = weightOnWheel - SpringForce;// + ((SpringRestMass - massOnWheel) * Physics.gravity.y);
+            // Spring has to overcome the weigh on the spring,
+
+
+            // Calculate the impact force based on the rigidbody's velocity
+            float velocityAlongSpring = Vector3.Dot(WheelWorldSpaceVelocity, transform.up);
+            float impactForce = velocityAlongSpring * massOnWheel; // F = m * v
+
+
+            //Debug.Log($"{0}, force: {DamperForce}, ImpactForce: {impactForce}");
+            // Combine all forces (spring, damping, and impact)
+            result = (weightForce + DamperForce) * transform.up;
+
+            // Apply the force to the rigidbody at the wheel's contact point
+            rb.AddForceAtPosition(result, WheelHitPoint, ForceMode.Force);
+        }
     }
 
 }
