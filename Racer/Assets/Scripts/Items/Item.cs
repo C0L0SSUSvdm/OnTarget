@@ -11,6 +11,10 @@ public abstract class Item : ScriptableObject
     {
         Chasis,
         Engine,
+        CamShaft,
+        CrankShaft,
+        FlyWheel,
+        AirController,
         Tires,
         ShockAbsorbers,
         PowerSteering,
@@ -32,4 +36,5 @@ public abstract class Item : ScriptableObject
     public Sprite Background;
     public Sprite Icon;
     public string Description;
+    public float Mass;
 }

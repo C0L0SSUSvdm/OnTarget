@@ -288,8 +288,8 @@ public class carCreation : MonoBehaviour, ISerializationCallbackReceiver
         ItemName.text = SelectedEngine.Name;
         ClearPreviewText();
         CreateText($"Engine Cost: {SelectedEngine.Cost}", 0);
-        CreateText($"Motor Mass: {SelectedEngine.motorMass}", 1);
-        CreateText($"Motor Power: {SelectedEngine.motorPower}", 2);
+        //CreateText($"Motor Mass: {SelectedEngine.motorMass}", 1);
+        //CreateText($"Motor Power: {SelectedEngine.motorPower}", 2);
     }
 
     private void SetSelectedTires(uint tiresID)

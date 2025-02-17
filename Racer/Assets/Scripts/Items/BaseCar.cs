@@ -10,12 +10,28 @@ public class BaseCar : ScriptableObject
 {
     //Chasis
     [Header("Car Chasis")]
-    [SerializeField] public uint chasisID;
+    public uint chasisID;
     public Chasis chasis { get; set; }
 
     [Header("Car Engine")]
-    [SerializeField] public uint engineID;
+    public uint engineID;
     public Engine engine { get; set; }
+
+    [Header("Car Cam Shaft")]
+    public uint camshaftID;
+    public CamShaft camShaft { get; set; }
+
+    [Header("Car Crank Shaft")]
+    public uint crankShaftID;
+    public CrankShaft crankShaft { get; set; }
+
+    [Header("Car FlyWheel")]
+    public uint flyWheelID;
+    public FlyWheel flyWheel { get; set; }
+
+    [Header("Car Air Controller")]
+    public uint airControlerID;
+    public AirController airController { get; set; }
 
     [Header("Car Front Tires")]
     public uint FrontTiresID;
@@ -37,35 +53,5 @@ public class BaseCar : ScriptableObject
     public uint brakesID;
     public Brakes brakes { get; set; }
 
-    //[Header("Input Scalars")]
-    //[SerializeField] public float motorPower;
-    //[SerializeField] public float steerPower; // 50 is a Euler angle
-    //[SerializeField] public float brakePower;
-    //[Header("RigidBody Fields")]
-    //[SerializeField] float basemass;
-    //[SerializeField] float baseDrag;
-    //[SerializeField] float baseAngularDrag;
-
-    //[Header("Wheel Collider Fields")]
-    //[SerializeField] float baseMass;
-    //[SerializeField] float baseWheelDampingRate;
-    //[SerializeField] float baseSuspensionDistance;
-    //[SerializeField] float baseForceAppPointDistance;
-    //[Header("Wheel Spring Fields")]
-    //[SerializeField] float baseSpringForce;
-    //[SerializeField] float baseSpringDamper;
-    //[SerializeField] float baseSpringTargetPosition;
-    //[Header("Foward Friction Curve")]
-    //[SerializeField] float baseFwdExtremumSlip;
-    //[SerializeField] float baseFwdExtremumValue;
-    //[SerializeField] float baseFwdAsymptoteSlip;
-    //[SerializeField] float baseFwdAsymptoteValue;
-    //[SerializeField] float baseFwdStiffness;
-    //[Header("Side Friction Curve")]
-    //[SerializeField] float baseSideExtremumSlip;
-    //[SerializeField] float baseSideExtremumValue;
-    //[SerializeField] float baseSideAsymptoteSlip;
-    //[SerializeField] float baseSideAsymptoteValue;
-    //[SerializeField] float baseSideStiffness;
 
 }

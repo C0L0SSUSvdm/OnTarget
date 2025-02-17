@@ -58,7 +58,7 @@ public class IndySelector : subMenu
         {
             BaseCar car = gameManager.instance.DataManager().LoadIndyModeSave(fileName);
             script.SetNameText(fileName);
-            script.SetMotorPowerText(car.engine.motorPower);
+            //script.SetMotorPowerText(car.engine.motorPower);
         }
         else
         {

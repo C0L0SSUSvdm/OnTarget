@@ -8,6 +8,10 @@ public class DataManager : MonoBehaviour
 {
     [SerializeField] private SO_Item_Database chasiesDB;
     [SerializeField] private SO_Item_Database enginesDB;
+    [SerializeField] private SO_Item_Database camshaftDB;
+    [SerializeField] private SO_Item_Database crankshaftDB;
+    [SerializeField] private SO_Item_Database flyWheelDB;
+    [SerializeField] private SO_Item_Database airControllerDB;
     [SerializeField] private SO_Item_Database tiresDB;
     [SerializeField] private SO_Item_Database powerSteeringDB;
     [SerializeField] private SO_Item_Database shockAbsorbersDB;
@@ -16,35 +20,25 @@ public class DataManager : MonoBehaviour
 
     private DirectoryInfo modeInfo_Indy = new DirectoryInfo("Assets/Resources/PlayerData/IndyMode");
 
-    public SO_Item_Database Engines()
-    {
-        return enginesDB;
-    }
+    public SO_Item_Database Engines() { return enginesDB; }
 
-    public SO_Item_Database Chasies()
-    {
-        return chasiesDB;
-    }
+    public SO_Item_Database CamShafts() { return camshaftDB; }
 
-    public SO_Item_Database Tires()
-    {
-        return tiresDB;
-    }
+    public SO_Item_Database CrankShafts() { return crankshaftDB; }
 
-    public SO_Item_Database PowerSteering()
-    {
-        return powerSteeringDB;
-    }
+    public SO_Item_Database FlyWheel() {  return flyWheelDB; }
 
-    public SO_Item_Database ShockAbsorbers()
-    {
-        return shockAbsorbersDB;
-    }
+    public SO_Item_Database AirController() { return airControllerDB; }
 
-    public SO_Item_Database Brakes()
-    {
-        return brakesDB;
-    }
+    public SO_Item_Database Chasies()  { return chasiesDB; }
+
+    public SO_Item_Database Tires() { return tiresDB; }
+
+    public SO_Item_Database PowerSteering() { return powerSteeringDB; }
+
+    public SO_Item_Database ShockAbsorbers() { return shockAbsorbersDB; }
+
+    public SO_Item_Database Brakes() { return brakesDB; }
 
     public SO_Item_Database SearchItems()
     {
