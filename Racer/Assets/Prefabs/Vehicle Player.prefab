@@ -90,7 +90,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3038515452091302734}
+  - {fileID: 8306603915908550324}
   m_Father: {fileID: 5904074708630851800}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -102,10 +102,11 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3038515452091302734}
+  - component: {fileID: 8306603915908550324}
   - component: {fileID: 6289427993839114009}
   - component: {fileID: 7299616458460703314}
   - component: {fileID: 757945539238798246}
+  - component: {fileID: 3902919394760139142}
   m_Layer: 0
   m_Name: CarCamera
   m_TagString: Untagged
@@ -113,8 +114,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!4 &3038515452091302734
-Transform:
+--- !u!224 &8306603915908550324
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -128,6 +129,11 @@ Transform:
   m_Father: {fileID: 6744861302468377087}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!20 &6289427993839114009
 Camera:
   m_ObjectHideFlags: 0
@@ -212,6 +218,14 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!222 &3902919394760139142
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3634917264080333378}
+  m_CullTransparentMesh: 1
 --- !u!1 &4478330661727088293
 GameObject:
   m_ObjectHideFlags: 0
@@ -279,20 +293,17 @@ MonoBehaviour:
   RunTimeCombustionForce: 0
   RunTimeCrankTorque: 0
   RunTimeHorsePower: 0
+  RunTimeWheelTorque: 0
   RunTimeMotorPower: 0
   RedLineRPM: 8000
-  CarBuild: {fileID: 11400000, guid: 00b232090bec46447b9fc66079fbb4e1, type: 2}
-  Engine: {fileID: 0}
-  IgnitionsPerSecond: 200
-  CamShaftRadius: 0.75
-  PerformanceEfficiency: 0.7
-  CrankShaftAngle: 45
-  CamShaftProfileEfficiency: 0.9
-  FlyWheelMass: 25
-  FlyWheelRadius: 4
   FlyWheelInertia: 0
-  IdleRPMs: 1000
-  AirFlowRate: 450
+  RunTimeWheelTrainRatio: 0
+  Car: {fileID: 0}
+  Engine: {fileID: 0}
+  CamShaft: {fileID: 0}
+  CrankShaft: {fileID: 0}
+  FlyWheel: {fileID: 0}
+  AirController: {fileID: 0}
   ValveMass: 0.1
   SpringStiffness: 28000
   PistonMass: 0
