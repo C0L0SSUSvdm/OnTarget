@@ -30151,7 +30151,19 @@ PrefabInstance:
     - target: {fileID: 5904074708630851799, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: Engine
       value: 
-      objectReference: {fileID: 11400000, guid: 2acfe624b136fbc45ba2fbccc0ff2070, type: 2}
+      objectReference: {fileID: 11400000, guid: 6f99d53f57c31834eb260194a7565a26, type: 2}
+    - target: {fileID: 5904074708630851799, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: CamShaft
+      value: 
+      objectReference: {fileID: 11400000, guid: c5263a29297b8de408fe38e95ecbcc43, type: 2}
+    - target: {fileID: 5904074708630851799, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: FlyWheel
+      value: 
+      objectReference: {fileID: 11400000, guid: aea43b8c4c5c9ed4cad6d749d6796b26, type: 2}
+    - target: {fileID: 5904074708630851799, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: CrankShaft
+      value: 
+      objectReference: {fileID: 11400000, guid: 62706adc407d21543b5410707b762a2a, type: 2}
     - target: {fileID: 5904074708630851799, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: RedLineRPM
       value: 0
@@ -30164,6 +30176,10 @@ PrefabInstance:
       propertyPath: ShiftDownRPM
       value: 3000
       objectReference: {fileID: 0}
+    - target: {fileID: 5904074708630851799, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: AirController
+      value: 
+      objectReference: {fileID: 11400000, guid: c9383b133284f284589d12245d9b2089, type: 2}
     - target: {fileID: 5904074708630851799, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: TempEnginePower
       value: 19658
@@ -55379,5 +55395,6 @@ PrefabInstance:
       propertyPath: lapTimeText
       value: 
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2276462270034519131, guid: 55e7718f0e6e8f34aafefd8a26b99114, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 55e7718f0e6e8f34aafefd8a26b99114, type: 3}

@@ -6,7 +6,7 @@ public class levelData : MonoBehaviour
 {
     public AudioClip levelMusic;
 
-    private float levelTime;
+    //private float levelTime;
 
     void Start()
     {
@@ -18,8 +18,9 @@ public class levelData : MonoBehaviour
     {
         if(gameManager.instance.TitleScreen == false && gameManager.instance.Hud != null)
         {
-            levelTime += Time.deltaTime;
-            HUD.Item.UpdateTimer(levelTime);
+            gameManager.instance.timeSinceRaceStart += Time.deltaTime;
+            HUD.Item.UpdateTimer(gameManager.instance.timeSinceRaceStart);
+            HUD.Item.UpdateLapTimer();
         }
 
     }

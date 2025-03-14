@@ -29,6 +29,11 @@ public class HUD : MonoBehaviour
         Item = null;
     }
 
+    public void UpdateLapTimer()
+    {
+        timerInterface.UpdateLapTimer();
+    }
+
     public void UpdateSpeedometer(float speed)
     {
         speedometerInterface.UpdateSpeedometer(speed);

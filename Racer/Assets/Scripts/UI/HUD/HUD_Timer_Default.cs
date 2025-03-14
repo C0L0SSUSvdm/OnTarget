@@ -6,6 +6,11 @@ using System;
 
 public class HUD_Timer_Default : MonoBehaviour, HUD_Interface_Director
 {
+    public void createTimestamp()
+    {
+        throw new System.NotImplementedException();
+    }
+
     [Header("----- Drag N Drop -----")]
     [SerializeField] TextMeshProUGUI timerText;
 

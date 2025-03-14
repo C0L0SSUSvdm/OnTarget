@@ -44,6 +44,9 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject PersistantDataObject;
     [SerializeField] DataManager dataHandler;
 
+    [Header("----- Timers -----")]
+    public float timeSinceRaceStart = 0.0f;
+
     //[SerializeField] public float Grav;
 
     void Awake()
