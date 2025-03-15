@@ -5,6 +5,8 @@ using UnityEngine;
 public interface HUD_Interface_Director
 {
     public void UpdateTimer(float time);
+    public void createTimestamp();
+
 }
 
 public class HUD_Interface_Timer : MonoBehaviour
@@ -32,5 +34,8 @@ public class HUD_Interface_Timer : MonoBehaviour
     {
         activeTimer.GetComponent<HUD_Interface_Director>().UpdateTimer(time);
     }
-
+    public void UpdateLapTimer()
+    {
+        activeTimer.GetComponent<HUD_Interface_Director>().createTimestamp();
+    }
 }
