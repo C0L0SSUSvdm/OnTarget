@@ -255,11 +255,9 @@ public class baseVehicle : MonoBehaviour
         float exponent = CalculateCurveExponent(CurrentRPM);
         float NormalCurveRatio = Mathf.Pow(RunTimeWheelTrainRatio, exponent);
 
-       
-        float test = 0.5f;
-
-        float CurrentAirFlow = (input == 0 ? 0.05f : input) * RunTimeAirFlow * CalculateRunTimeCrankTorque();
-        RunTimeCrankTorque = CurrentAirFlow * NormalCurveRatio;
+        float currentAirFlow = (input == 0 ? 0.05f : input) * RunTimeAirFlow;
+        float AirFlowPower =  currentAirFlow * CalculateRunTimeCrankTorque();
+        RunTimeCrankTorque = AirFlowPower * NormalCurveRatio;
 
         CalculateRunTimeHorsePower();
         
@@ -271,19 +269,18 @@ public class baseVehicle : MonoBehaviour
         float averageWheelVelocity = (rb.GetPointVelocity(WheelOBJ_BL.transform.position) + rb.GetPointVelocity(WheelOBJ_BR.transform.position)).magnitude * 0.5f;
         RunTimeWheelTrainRatio = ShiftTranmission(averageWheelVelocity);
 
-        float wheelTorque_ftP = (RunTimeWheelTrainRatio * RunTimeCrankTorque);// - FlyWheelInertia; //Convert from Foot pounds to Newton Meters with 1.35582
+        float wheelTorque_Nm = (RunTimeWheelTrainRatio * RunTimeCrankTorque) / 0.5f;// - FlyWheelInertia; //Convert from Foot pounds to Newton Meters with 1.35582
 
         float wheelAngularVelocity = CalculateWheelAngularVelocity();
 
-        float peekPower = CalculatePeekPower(input, wheelAngularVelocity) * 0.5f;
+        //float peekPower = CalculatePeekPower(input, wheelAngularVelocity) * 0.5f;
+        float peekPower = (RunTimeHorsePower * 745.7f) / rb.velocity.magnitude;
 
-
-        float wheelTorque_Nm = wheelTorque_ftP; //Divide by Wheel
         RunTimeWheelTorque = wheelTorque_Nm;
 
 
         //RunTimeMotorPower = (peekPower * NormalCurveRatio) + wheelTorque_Nm;
-        RunTimeMotorPower = wheelTorque_Nm; // / 0.5f for the wheel radius
+        RunTimeMotorPower = peekPower + RunTimeWheelTorque; // / 0.5f for the wheel radius
                                                     // float WheelAngularVelocity = averageWheelVelocity / (RearTireRadius);
 
         wheel_FL.DriveWheel(0, rb.GetPointVelocity(WheelOBJ_FL.transform.position), wheelAngularVelocity);
@@ -341,8 +338,10 @@ public class baseVehicle : MonoBehaviour
 
         float fuelEfficiency = 0.9f;
         //Loads and Frictions
+        RunTimeCombustionForce = (CylinderForce / (Engine.NumberOfStrokes / 2) * fuelEfficiency);
+
         RunTImeLoadPistonFriction = ((RunTimeCompressionRatio * RunTimePistonDisplacement) + PistonRingForce) * FrictionCoefficient * Engine.CylinderCount;
-        RunTimeCombustionForce = (CylinderForce / (Engine.NumberOfStrokes / 2) * fuelEfficiency) - RunTImeLoadPistonFriction;
+
     }
 
     //https://www.symbolab.com/graphing-calculator/bell-curve-graph
@@ -353,7 +352,7 @@ public class baseVehicle : MonoBehaviour
         CalculateAirFlow();
 
         //Use Log to scale better with high RPM engine builds
-        float deviationScalingFactor = 0.15f * Mathf.Log(RedLineRPM / 1000f + 1);
+        float deviationScalingFactor = 0.20f * Mathf.Log(RedLineRPM / 1000f + 1);
         //Debug.Log(deviationScalingFactor);
         float deviation = RedLineRPM * deviationScalingFactor;
         RunTimeCurveDeviation_Inverse = 1 / (2 * deviation * deviation);
@@ -368,19 +367,6 @@ public class baseVehicle : MonoBehaviour
         return -exponent;
     }
 
-
-
-    private float CalculatePeekPower(float Input, float wheelAngularVelocity)
-    {
-        // Calculate load based on wheel speed
-        float load = wheelAngularVelocity * WheelLoadFactor;
-
-        float power = (RedLineRPM / RunTimeWheelTrainRatio * Input - load) * Time.fixedDeltaTime * RunTimeHorsePower;
-
-
-        return power;
-    }
-
     private float CalculateWheelAngularVelocity()
     {
         //RunTimeWheelTrainRatio = DifferentialRatio * GearRatio[GearIndex];
@@ -392,8 +378,9 @@ public class baseVehicle : MonoBehaviour
         //Super Charger coefficient
         float volumetricEfficiency = 1.0f;
 
-        RunTimeAirFlow = ((RunTimePistonDisplacement * Engine.CylinderCount * RedLineRPM) / 14158.4f) * volumetricEfficiency;
+        float CFM_CubicMetersMinute = ((RunTimePistonDisplacement * (Engine.CylinderCount / (Engine.NumberOfStrokes / 2)) * RedLineRPM) / 14158.4f) * volumetricEfficiency;
 
+        RunTimeAirFlow = CFM_CubicMetersMinute * 0.0283168f;//cubic Meters
     }
 
     private float CalculateRPM_MaxPistonSpeed()

@@ -20,6 +20,7 @@ public class levelData : MonoBehaviour
         {
             levelTime += Time.deltaTime;
             HUD.Item.UpdateTimer(levelTime);
+            
         }
 
     }

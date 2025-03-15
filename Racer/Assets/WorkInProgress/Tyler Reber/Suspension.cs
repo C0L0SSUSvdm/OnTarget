@@ -16,7 +16,7 @@ public class Suspension : MonoBehaviour
     [Range(0, 1), SerializeField] float DampenerRate;
     [SerializeField] float Runtime_SpringStrength;
     [Range(0, 2), SerializeField] float EffectiveSpringLength;
-    [SerializeField] float WheelMass;   
+    [SerializeField] float WheelMass;
     [SerializeField] int NumberOfCoils;
     [Header("RunTime Values -----")]
     float CenterOfMassDistance;
@@ -129,7 +129,7 @@ public class Suspension : MonoBehaviour
         if (isGrounded)
         {
             float maxBrakeForce = 20000;
-            
+
             //float forwardVelocity = Vector3.Dot(rb.velocity.normalized, transform.right);
 
             // Calculate the brake force magnitude based on brake input and velocity
@@ -162,20 +162,16 @@ public class Suspension : MonoBehaviour
         Vector3 localVelocity = transform.InverseTransformDirection(wheelVelocity);
 
         float slipAngle = Mathf.Atan2(localVelocity.x, Mathf.Abs(localVelocity.z)) * Mathf.Rad2Deg;
-        
+
         float tireCoefficient = 0.3f;
         float lateralForceMagnitude = weightOnWheel * tireCoefficient * slipAngle * Time.deltaTime;
 
         Vector3 lateralSlipForce = transform.right * lateralForceMagnitude;
 
-        Vector3 tireGripForce = -transform.right * (localVelocity.x * massOnWheel * 0.7f);
+        Vector3 tireGripForce = -transform.right * (localVelocity.x * massOnWheel * 0.88f);
 
         rb.AddForceAtPosition(lateralSlipForce + tireGripForce, transform.position);
 
-
-        //rb.AddForceAtPosition(localVelocity.x * -transform.right * massOnWheel, transform.position);
-        //Debug.DrawRay(transform.position, (localVelocity.x * -transform.right * massOnWheel) * 0.1f, Color.cyan);
-        //Debug.DrawRay(transform.position, (localVelocity.x * -transform.right * massOnWheel) * 0.1f, Color.red);
 
         return slipAngle;
     }
@@ -195,7 +191,7 @@ public class Suspension : MonoBehaviour
         Vector3 sphereCastOrigin = transform.position + transform.up * -transform.localPosition.y;
         float sphereRadius = WheelRadius * 0.5f;
         float maxDistance = WheelRadius + Mathf.Abs(EffectiveSpringLength);
-        
+
         Debug.DrawRay(sphereCastOrigin, -transform.up * maxDistance, Color.red);
 
         RaycastHit hit;
@@ -238,7 +234,7 @@ public class Suspension : MonoBehaviour
         {
             //tiltDelta = SpringRestMass - delta;
             massOnWheel = (delta * sumOfCompression_Inverse_Mass);
-            
+
             //Debug.Log(ShiftedMass);
         }
         else

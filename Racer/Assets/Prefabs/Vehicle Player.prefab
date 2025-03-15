@@ -273,31 +273,38 @@ MonoBehaviour:
   currentSteerAngle: 0
   isClutchEngaged: 1
   CurrentRPM: 0
+  RunTimePistonDisplacement: 0
+  RunTimeCompressionRatio: 0
+  RunTimeCombustionPressure: 0
+  RunTimeCombustionForce: 0
+  RunTimeAirFlow: 0
   RunTimeMeanRPM: 0
   RunTimeCurveDeviation_Inverse: 0
   RunTimeBackPressure: 0
-  RunTimeCombustionForce: 0
   RunTimeCrankTorque: 0
   RunTimeHorsePower: 0
+  RunTimeWheelTorque: 0
   RunTimeMotorPower: 0
   RedLineRPM: 8000
-  CarBuild: {fileID: 11400000, guid: 00b232090bec46447b9fc66079fbb4e1, type: 2}
-  Engine: {fileID: 0}
-  IgnitionsPerSecond: 200
-  CamShaftRadius: 0.75
-  PerformanceEfficiency: 0.7
-  CrankShaftAngle: 45
-  CamShaftProfileEfficiency: 0.9
-  FlyWheelMass: 25
-  FlyWheelRadius: 4
   FlyWheelInertia: 0
-  IdleRPMs: 1000
-  AirFlowRate: 450
+  RunTimeWheelTrainRatio: 0
+  RunTImeLoadPistonFriction: 0
+  RunTimeIgnitionTimingLoss: 0
+  RunTimeThermalLoss: 0
+  Car: {fileID: 0}
+  Engine: {fileID: 0}
+  CamShaft: {fileID: 0}
+  CrankShaft: {fileID: 0}
+  FlyWheel: {fileID: 0}
+  AirController: {fileID: 0}
   ValveMass: 0.1
   SpringStiffness: 28000
   PistonMass: 0
-  PistonCompressionOffset: 0
+  PistonSize: 0.24
+  PistonRodLength: 0.25
   PistonSpeed: 2500
+  FrictionCoefficient: 0.07
+  PistonRingForce: 100
   ChamberCompressionArea: 59
   HeaderBackPressure: 0.1
   GearIndex: 0
@@ -543,11 +550,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1771894626972801053, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1771894626972801053, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
       propertyPath: m_Center.y
-      value: 0.6
+      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 2605758971624785286, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
       propertyPath: SafeRadius
@@ -611,25 +618,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
---- !u!1 &7164854844040782634 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5603582998631515392, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}
-  m_PrefabInstance: {fileID: 3363415455221949994}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &1983208730802324545
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7164854844040782634}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 6448672cf1a2a5648a95334c88368095, type: 2}
 --- !u!4 &8283458879890256115 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6654492311172011737, guid: 2379539c854f16043ab19fe06c16e1a1, type: 3}

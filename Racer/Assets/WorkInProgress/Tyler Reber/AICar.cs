@@ -19,7 +19,7 @@ public class AICar : baseVehicle
     public List<FlockObject> otherFlockObjects;
     Vector3 averageForward;
     Vector3 averagePosition;
-    Vector3 trackAveragePosition;
+    Vector3 trackTargetPosition;
 
 
     public Vector3 TestLogicPosition;
@@ -55,7 +55,7 @@ public class AICar : baseVehicle
         //TestLogicPosition = seperation;
 
         Vector3 averageOffset = (transform.position - averagePosition);
-        float angle = Vector3.SignedAngle(transform.forward, (trackAveragePosition + averageOffset - seperation) - transform.position, Vector3.up);
+        float angle = Vector3.SignedAngle(transform.forward, (trackTargetPosition + averageOffset - seperation) - transform.position, Vector3.up);
 
         float adjustedAngle = angle;// + (cohesion * 0.5f) + (seperation * 0.5f);// + seperation;// + cohesion;
         
@@ -70,7 +70,7 @@ public class AICar : baseVehicle
 
         if (lineRenderer != null)
         {
-            UpdateFieldOfView();
+            //UpdateFieldOfView();
         }
     }
 
@@ -162,14 +162,21 @@ public class AICar : baseVehicle
         int raceTrackNodeCount = 0;
         averageForward = transform.forward;
         averagePosition = transform.position;
-        trackAveragePosition = Vector3.zero;
+        trackTargetPosition = Vector3.zero;
+        float FurthestDistance = 0;
+
         foreach (FlockObject flockObject in otherFlockObjects)
         {
 
             if (flockObject.tag == "TrackNode")
             {
-                trackAveragePosition += flockObject.GetTrackCenterPoint();
-                raceTrackNodeCount++;
+                if((flockObject.GetTrackCenterPoint() - transform.position).magnitude > FurthestDistance)
+                {
+                    FurthestDistance = (flockObject.GetTrackCenterPoint() - transform.position).magnitude;
+                    trackTargetPosition = flockObject.GetTrackCenterPoint();
+                }
+                //trackAveragePosition += flockObject.GetTrackCenterPoint();
+                //raceTrackNodeCount++;
             }
             else
             {
@@ -189,11 +196,12 @@ public class AICar : baseVehicle
         averagePosition /= vehicleCount;
         if (raceTrackNodeCount > 0)
         {
-            trackAveragePosition = ((trackAveragePosition / raceTrackNodeCount) + transform.position) * 0.5f;
+            trackTargetPosition = (trackTargetPosition + transform.position) * 0.5f;
+            //trackAveragePosition = ((trackAveragePosition / raceTrackNodeCount) + transform.position) * 0.5f;
         }
         else
         {
-            Debug.Log("Fix 0 Node Case");
+            Debug.Log("No Track nodes detected");
         }
 
 
@@ -207,12 +215,12 @@ public class AICar : baseVehicle
     void DrawLocationSphere()
     {
         Gizmos.color = Color.white;
-        Gizmos.DrawSphere(trackAveragePosition, 1.0f);
+        Gizmos.DrawSphere(trackTargetPosition, 1.0f);
 
 
         Vector3 offset = transform.position - averagePosition;
         Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(trackAveragePosition + offset, 1.0f);
+        Gizmos.DrawSphere(trackTargetPosition + offset, 1.0f);
 
 
         Gizmos.color = Color.red;
@@ -242,10 +250,6 @@ public class AICar : baseVehicle
                     otherFlockObjects.Add(flockObject);
                 }
             }
-
-
-
-
         }
     }
 
