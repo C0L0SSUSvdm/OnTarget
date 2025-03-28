@@ -9,17 +9,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e4033f86082974418ce25134d6218f0, type: 3}
-  m_Name: V8
+  m_Script: {fileID: 11500000, guid: 5eaab83bff1d5b24a92a1839a1271ec8, type: 3}
+  m_Name: Default_Test_Transmission
   m_EditorClassIdentifier: 
-  Name: 
-  Type: 1
-  Cost: 1000
+  Name: Gear Kinker
+  Type: 10
+  Cost: 200
   Background: {fileID: 21300000, guid: 76770918a68331b4bb34e67e241296e5, type: 3}
   Icon: {fileID: 21300000, guid: 1feae16766dc78b4d8da479d3ad8dc8e, type: 3}
-  Description: 
-  weight: 0
-  CylinderStrokeLength: 2.2
-  CylinderCount: 8
-  CylinderDiameter: 4
-  NumberOfStrokes: 4
+  Description: aTest Transmission
+  Mass: 200
+  ShiftTime: 0.1
+  GearRatio:
+  - 3.62
+  - 2.2
+  - 1.4
+  - 1
+  - 0.8

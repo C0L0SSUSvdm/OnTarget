@@ -109,6 +109,43 @@ public class Suspension : MonoBehaviour
         //Debug.DrawRay(transform.position, -transform.right * 25, Color.red);
     }
 
+    //public void ApplyWheelTorque(float torque)
+    //{
+
+    //    // 1. Calculate available friction force
+    //    //normal_force = calculateNormalForce() // Weight on this wheel
+    //    float max_friction_force = WheelFriction * weightOnWheel;
+
+    //    // 2. Calculate torque at wheel
+    //    //float wheel_torque = engine_torque * gear_ratio * differential_ratio
+
+    //    // 3. Calculate angular acceleration
+    //    float angular_acceleration = torque / wheel_moment_of_inertia;
+
+    //// 4. Update angular velocity
+    //    float wheel_angular_velocity += angular_acceleration * Time.fixedDeltaTime;
+
+    //// 5. Calculate t heoretical linear speed at contact patch
+    //    theoretical_speed = wheel_angular_velocity * wheel_radius
+
+    //// 6. Determine actual force applied based on friction
+    //if abs(theoretical_speed - vehicle_speed) > slip_threshold:
+    //    // Wheel is slipping - use kinetic friction
+    //    applied_force = sign(theoretical_speed) * max_friction_force * slip_factor
+    //else:
+    //    // Wheel has grip - use static friction
+    //    applied_force = (theoretical_speed - vehicle_speed) * grip_factor
+
+    //// 7. Apply force to vehicle chassis
+    //applyForceToChassis(applied_force)
+
+    //// 8. Optionally update angular velocity based on actual movement
+    //if not isSlipping:
+    //        wheel_angular_velocity = vehicle_speed / wheel_radius
+
+
+    //}
+
     public void DriveWheel(float EngineForce, Vector3 wheelVelocity, float WheelAngularVelocity)
     {
         AngularVelocity = WheelAngularVelocity;// / wheelradius

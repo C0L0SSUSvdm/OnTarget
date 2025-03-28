@@ -30,17 +30,20 @@ public class baseVehicle : MonoBehaviour
     [SerializeField] float RunTimeMeanRPM;
     [SerializeField] float RunTimeCurveDeviation_Inverse;
     [SerializeField] float RunTimeBackPressure;
+    [SerializeField] float RunTimeCrankShaftThrowLength_CM;
 
     [SerializeField] float RunTimeCrankTorque;
     [SerializeField] float RunTimeHorsePower;
     [SerializeField] float RunTimeWheelTorque;
     [SerializeField] float RunTimeMotorPower;
     [SerializeField] int RedLineRPM;
+    [SerializeField] protected int RunTimeGearIndex = 0;
     //[SerializeField] float ThrottleRepsonse = 1000.0f;
     [SerializeField] float FlyWheelInertia;
     [SerializeField] float RunTimeWheelTrainRatio;
     [Header("----- Load Factors and Reductions -----")]
-    [SerializeField] float RunTImeLoadPistonFriction;
+    [SerializeField] float RunTimeLoadPistonFriction;
+    [SerializeField] float RunTimePistonMass;
     [SerializeField] float RunTimeIgnitionTimingLoss;
     [SerializeField] float RunTimeThermalLoss;
 
@@ -51,6 +54,8 @@ public class baseVehicle : MonoBehaviour
     [SerializeField] CrankShaft CrankShaft;
     [SerializeField] FlyWheel FlyWheel;
     [SerializeField] AirController AirController;
+    [SerializeField] Transmission Transmission;
+    [SerializeField] Piston Piston;
 
 
     [Header("Valve")]
@@ -58,19 +63,20 @@ public class baseVehicle : MonoBehaviour
     [Header("Valve Spring")]
     [Range(10000.0f, 50000.0f), SerializeField] float SpringStiffness = 24000; // N/m
     [Header("----- Piston Fields -----")]
-    [Range(10, 100), SerializeField] float PistonMass = 0;
-    [Range(0, 0.5f), SerializeField] float PistonSize = 0.24f;
-    [Range(0, 0.5f), SerializeField] float PistonRodLength = 0.25f;
-    [Range(1000, 8000), SerializeField] float PistonSpeed = 2300; //Feet/Min
+    //[Range(10, 100), SerializeField] float PistonMass_kg = 0;
+    //[Range(0, 0.5f), SerializeField] float RodLengthCoefficient = 0.75f;
+    //[Range(4000, 14000), SerializeField] int MaximumForceRating_N = 5000;
+    //[Range(0.1f, 1.2f), SerializeField] float mass_kg = 0.5f;
+    [Header("Piston Ring")]
     [Range(0.01f, 0.2f), SerializeField] float FrictionCoefficient = 0.07f;
-    [Range(50, 200), SerializeField] float PistonRingForce = 100; //Newtons
+    [Range(50, 200), SerializeField] float PistonRingForce_N = 100; //Newtons
     [Header("----- Cylinder Header -----")] //Phase Out
     [Range(0.1f, 100.0f), SerializeField] float ChamberCompressionArea = 65.0f; //CC
     [Range(0.01f, 0.2f), SerializeField] float HeaderBackPressure = 0.1f;
     [Header("----- Transmission Fields -----")]
-    [SerializeField] protected int GearIndex = 0;
-    [SerializeField] float ShiftTime = 0.1f;
-    [SerializeField] float[] GearRatio = new float[6] { 3.82f, 2.2f, 1.4f, 1.0f, 0.8f, 0.6f };
+    //[SerializeField] protected int GearIndex = 0;
+    //[SerializeField] float ShiftTime = 0.1f;
+    //[SerializeField] float[] GearRatio = new float[6] { 3.82f, 2.2f, 1.4f, 1.0f, 0.8f, 0.6f };
 
     [Header("----- Transmission Control Module -----")]
     [Range(500, 8000), SerializeField] int ShiftDownRPM = 2200;
@@ -110,11 +116,13 @@ public class baseVehicle : MonoBehaviour
 
     private void Awake()
     {
+
         //Engine = gameManager.instance.DataManager().Engines().GetItem(Car.engineID) as Engine;
         //CamShaft = gameManager.instance.DataManager().CamShafts().GetItem(Car.camshaftID) as CamShaft;
         //CrankShaft = gameManager.instance.DataManager().CrankShafts().GetItem(Car.crankShaftID) as CrankShaft;
         //FlyWheel = gameManager.instance.DataManager().FlyWheel().GetItem(Car.flyWheelID) as FlyWheel;
         //AirController = gameManager.instance.DataManager().AirController().GetItem(Car.airControlerID) as AirController;
+        
     }
 
     protected void Start()
@@ -156,11 +164,11 @@ public class baseVehicle : MonoBehaviour
         FlyWheelInertia = 0.5f * FlyWheel.FlyWheelMass * Mathf.Pow(FlyWheel.FlyWheelRadius, 2);
 
         CurrentRPM = AirController.IdleRPMs;
-
-       
+     
         RunTimeBackPressure = ExhaustHeaderBackPressure + ExhaustPipeBackPressure + HeaderBackPressure;
-        InitializeNormalDistibutionCurve();
+
         CalculateCylinderDisplacement();
+        InitializeNormalDistibutionCurve();
         CalculateAirFlow();
 
         float sumofDistance = wheel_FL.COMDistance(COM) + wheel_FR.COMDistance(COM) + wheel_BL.COMDistance(COM) + wheel_BR.COMDistance(COM);
@@ -213,21 +221,21 @@ public class baseVehicle : MonoBehaviour
 
     private float ShiftTranmission(float WheelVelocity)
     {
-        float WheelTrainRatio = DifferentialRatio * GearRatio[GearIndex];
+        float WheelTrainRatio = DifferentialRatio * Transmission.GearRatio[RunTimeGearIndex];
         float WheelAngularVelocity = WheelVelocity / 0.5f;
         float WheelRPM = (int)(WheelAngularVelocity * 60 / (2 * Mathf.PI));
 
 
-        if (CurrentRPM < ShiftDownRPM && GearIndex > 0)
+        if (CurrentRPM < ShiftDownRPM && RunTimeGearIndex > 0)
         {
-            GearIndex--;
-            WheelTrainRatio = DifferentialRatio * GearRatio[GearIndex];
+            RunTimeGearIndex--;
+            WheelTrainRatio = DifferentialRatio * Transmission.GearRatio[RunTimeGearIndex];
             WheelRPM = (int)(WheelAngularVelocity * 60 / (2 * Mathf.PI));
         }
-        else if (CurrentRPM > ShiftUpRPM && GearIndex < GearRatio.Length - 1)
+        else if (CurrentRPM > ShiftUpRPM && RunTimeGearIndex < Transmission.GearRatio.Length - 1)
         {
-            GearIndex++;
-            WheelTrainRatio = DifferentialRatio * GearRatio[GearIndex];
+            RunTimeGearIndex++;
+            WheelTrainRatio = DifferentialRatio * Transmission.GearRatio[RunTimeGearIndex];
             WheelRPM = (int)(WheelAngularVelocity * 60 / (2 * Mathf.PI));
         }
 
@@ -240,7 +248,8 @@ public class baseVehicle : MonoBehaviour
     
     private float CalculateRunTimeCrankTorque()
     {
-        return (Engine.CylinderStrokeLength * 0.0254f / 2) * Mathf.Sin(Mathf.Deg2Rad * CrankShaft.CrankShaftAngle) * (RunTimeCombustionForce);
+        //return (Engine.CylinderMaxLength_CM * 0.01f * RodLengthCoefficient / 2) * Mathf.Sin(Mathf.Deg2Rad * CrankShaft.CrankShaftAngle) * (RunTimeCombustionForce);
+        return (RunTimeCrankShaftThrowLength_CM * 0.01f / 2) * Mathf.Sin(Mathf.Deg2Rad * CrankShaft.CrankShaftAngle) * (RunTimeCombustionForce);
     }
 
     private void CalculateRunTimeHorsePower()
@@ -255,11 +264,13 @@ public class baseVehicle : MonoBehaviour
         float exponent = CalculateCurveExponent(CurrentRPM);
         float NormalCurveRatio = Mathf.Pow(RunTimeWheelTrainRatio, exponent);
 
-        float currentAirFlow = (input == 0 ? 0.05f : input) * RunTimeAirFlow;
+        float currentAirFlow = (input == 0 ? 0.01f : input) * RunTimeAirFlow;
         float AirFlowPower =  currentAirFlow * CalculateRunTimeCrankTorque();
         RunTimeCrankTorque = AirFlowPower * NormalCurveRatio;
 
         CalculateRunTimeHorsePower();
+
+
         
         if(engineSound != null)
         {
@@ -274,7 +285,7 @@ public class baseVehicle : MonoBehaviour
         float wheelAngularVelocity = CalculateWheelAngularVelocity();
 
         //float peekPower = CalculatePeekPower(input, wheelAngularVelocity) * 0.5f;
-        float peekPower = (RunTimeHorsePower * 745.7f) / rb.velocity.magnitude;
+        float peekPower = (RunTimeHorsePower * 745.7f) / rb.velocity.magnitude * 0.5f;
 
         RunTimeWheelTorque = wheelTorque_Nm;
 
@@ -285,8 +296,8 @@ public class baseVehicle : MonoBehaviour
 
         wheel_FL.DriveWheel(0, rb.GetPointVelocity(WheelOBJ_FL.transform.position), wheelAngularVelocity);
         wheel_FR.DriveWheel(0, rb.GetPointVelocity(WheelOBJ_FR.transform.position), wheelAngularVelocity);
-        wheel_BL.DriveWheel(input * (RunTimeMotorPower), rb.GetPointVelocity(WheelOBJ_BL.transform.position), wheelAngularVelocity);
-        wheel_BR.DriveWheel(input * (RunTimeMotorPower), rb.GetPointVelocity(WheelOBJ_BR.transform.position), wheelAngularVelocity);
+        wheel_BL.DriveWheel(RunTimeMotorPower, rb.GetPointVelocity(WheelOBJ_BL.transform.position), wheelAngularVelocity);
+        wheel_BR.DriveWheel(RunTimeMotorPower, rb.GetPointVelocity(WheelOBJ_BR.transform.position), wheelAngularVelocity);
     }
 
     protected void ApplyBrake(float input)
@@ -320,10 +331,19 @@ public class baseVehicle : MonoBehaviour
 
     private void CalculateCylinderDisplacement()
     {
-        float boreRadius_cm = Engine.CylinderDiameter * 2.54f / 2f;
-        float strokeLength_cm = Engine.CylinderStrokeLength * 0.75f * 2.54f;
+        //float boreRadius_cm = Engine.CylinderDiameter_CM * 2.54f / 2f;
+        //float strokeLength_cm = Engine.CylinderMaxLength_CM * RodLengthCoefficient * 2.54f;
+        
+        float boreRadius_cm = Engine.CylinderDiameter_CM / 2f;
+        float CylinderCrossSectionalArea = Mathf.PI * Mathf.Pow(boreRadius_cm, 2.0f);
 
-        RunTimePistonDisplacement = (Mathf.PI * Mathf.Pow(boreRadius_cm, 2.0f) * strokeLength_cm);
+        float PistonArea_CM = (Engine.CylinderMaxLength_CM * Piston.ThicknessCoefficient_CM) * CylinderCrossSectionalArea;
+        RunTimePistonMass = PistonArea_CM / 1000000 * Piston.Mass_M3_KG; 
+
+        RunTimePistonDisplacement = (CylinderCrossSectionalArea * Engine.CylinderMaxLength_CM) - PistonArea_CM;
+
+        
+
         RunTimeCompressionRatio = (RunTimePistonDisplacement + ChamberCompressionArea) / ChamberCompressionArea;
 
         RunTimeCombustionPressure = CompressedAirPressure * RunTimeCompressionRatio;
@@ -340,14 +360,15 @@ public class baseVehicle : MonoBehaviour
         //Loads and Frictions
         RunTimeCombustionForce = (CylinderForce / (Engine.NumberOfStrokes / 2) * fuelEfficiency);
 
-        RunTImeLoadPistonFriction = ((RunTimeCompressionRatio * RunTimePistonDisplacement) + PistonRingForce) * FrictionCoefficient * Engine.CylinderCount;
+        RunTimeLoadPistonFriction = ((RunTimeCompressionRatio * RunTimePistonDisplacement) + PistonRingForce_N) * FrictionCoefficient * Engine.CylinderCount;
 
     }
 
     //https://www.symbolab.com/graphing-calculator/bell-curve-graph
     private void InitializeNormalDistibutionCurve()
-    {
-        //CalculateRunTimeCrankTorque();
+    {       
+        
+
         RedLineRPM = (int)((CalculateRPM_IgnitionControl() + CalculateRPM_MaxPistonSpeed() + CalculateRPM_ValveControl())) / 3;
         CalculateAirFlow();
 
@@ -385,8 +406,12 @@ public class baseVehicle : MonoBehaviour
 
     private float CalculateRPM_MaxPistonSpeed()
     {
-        float CylinderFeetRadius = Engine.CylinderStrokeLength / 12;
-        return PistonSpeed / (2.0f * CylinderFeetRadius);
+        RunTimeCrankShaftThrowLength_CM = Engine.CylinderMaxLength_CM * CrankShaft.ThrowLengthCoefficient;
+
+        float EffectiveRodLength_M = RunTimeCrankShaftThrowLength_CM / 100; //Convert CM to M
+
+        Debug.Log((60f / Mathf.PI) * Mathf.Sqrt(Piston.MaximumForceRating_N / (RunTimePistonMass * EffectiveRodLength_M)));
+        return (60f / Mathf.PI) * Mathf.Sqrt(Piston.MaximumForceRating_N / (RunTimePistonMass * EffectiveRodLength_M));//PistonSpeed / (2.0f * CylinderFeetRadius);
     }
 
     private float CalculateRPM_ValveControl()

@@ -53,5 +53,13 @@ public class BaseCar : ScriptableObject
     public uint brakesID;
     public Brakes brakes { get; set; }
 
+    [Header("Car Transmission")]
+    public uint transmissionID;
+    public uint transmission { get; set; }
+
+    [Header("Car Piston")]
+    public uint pistonID;
+    public uint piston { get; set; }
+
 
 }

@@ -59,7 +59,7 @@ public class PlayerCar : baseVehicle
 
         HUD.Item.UpdateSpeedometer(rb.velocity.magnitude);
         HUD.Item.UpdateRPMGuage(CurrentRPM);
-        HUD.Item.UpdateTransmissionGuage(GearIndex);
+        HUD.Item.UpdateTransmissionGuage(RunTimeGearIndex);
     }
 
     private void Update()

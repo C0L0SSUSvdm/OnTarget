@@ -19,6 +19,8 @@ public abstract class Item : ScriptableObject
         ShockAbsorbers,
         PowerSteering,
         Brakes,
+        Transmission,
+        Piston
         //Weapon,
         //Armor,
         //Consumable,
@@ -36,5 +38,5 @@ public abstract class Item : ScriptableObject
     public Sprite Background;
     public Sprite Icon;
     public string Description;
-    public float Mass;
+    //public float Mass;
 }

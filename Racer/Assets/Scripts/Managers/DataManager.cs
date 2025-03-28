@@ -16,6 +16,8 @@ public class DataManager : MonoBehaviour
     [SerializeField] private SO_Item_Database powerSteeringDB;
     [SerializeField] private SO_Item_Database shockAbsorbersDB;
     [SerializeField] private SO_Item_Database brakesDB;
+    [SerializeField] private SO_Item_Database transmissionDB;
+    [SerializeField] private SO_Item_Database pistonsDB;
 
 
     private DirectoryInfo modeInfo_Indy = new DirectoryInfo("Assets/Resources/PlayerData/IndyMode");
@@ -39,6 +41,10 @@ public class DataManager : MonoBehaviour
     public SO_Item_Database ShockAbsorbers() { return shockAbsorbersDB; }
 
     public SO_Item_Database Brakes() { return brakesDB; }
+
+    public SO_Item_Database Transmission() { return transmissionDB; }
+
+    public SO_Item_Database Piston() { return pistonsDB; }
 
     public SO_Item_Database SearchItems()
     {
