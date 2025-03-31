@@ -44,6 +44,7 @@ public class Suspension : MonoBehaviour
     [SerializeField] public Vector3 WheelSlippage = new(0.8f, 0.0f, 0.05f); //Wheel Offset (x, y, z
 
     [Header("----- Visual Components -----")]
+    [SerializeField] ParticleSystem WheelParticleSystem;
     [SerializeField] LineRenderer SpringHelix;
     [SerializeField] float SpringThickness = 0.035f;
     const int SpringCurvatureResolution = 30; //360 degree / 12 segements
@@ -55,6 +56,7 @@ public class Suspension : MonoBehaviour
 
     void Start()
     {
+
         //SpringStrength = MaximumSpringForce;
         EffectiveSpringLength *= -1;
 
@@ -109,56 +111,52 @@ public class Suspension : MonoBehaviour
         //Debug.DrawRay(transform.position, -transform.right * 25, Color.red);
     }
 
-    //public void ApplyWheelTorque(float torque)
-    //{
-
-    //    // 1. Calculate available friction force
-    //    //normal_force = calculateNormalForce() // Weight on this wheel
-    //    float max_friction_force = WheelFriction * weightOnWheel;
-
-    //    // 2. Calculate torque at wheel
-    //    //float wheel_torque = engine_torque * gear_ratio * differential_ratio
-
-    //    // 3. Calculate angular acceleration
-    //    float angular_acceleration = torque / wheel_moment_of_inertia;
-
-    //// 4. Update angular velocity
-    //    float wheel_angular_velocity += angular_acceleration * Time.fixedDeltaTime;
-
-    //// 5. Calculate t heoretical linear speed at contact patch
-    //    theoretical_speed = wheel_angular_velocity * wheel_radius
-
-    //// 6. Determine actual force applied based on friction
-    //if abs(theoretical_speed - vehicle_speed) > slip_threshold:
-    //    // Wheel is slipping - use kinetic friction
-    //    applied_force = sign(theoretical_speed) * max_friction_force * slip_factor
-    //else:
-    //    // Wheel has grip - use static friction
-    //    applied_force = (theoretical_speed - vehicle_speed) * grip_factor
-
-    //// 7. Apply force to vehicle chassis
-    //applyForceToChassis(applied_force)
-
-    //// 8. Optionally update angular velocity based on actual movement
-    //if not isSlipping:
-    //        wheel_angular_velocity = vehicle_speed / wheel_radius
-
-
-    //}
-
-    public void DriveWheel(float EngineForce, Vector3 wheelVelocity, float WheelAngularVelocity)
+    public void DriveWheel(float TorqueForce, float EngineRpm, float WheelAngularVelocity)
     {
-        AngularVelocity = WheelAngularVelocity;// / wheelradius
-        float theta = (AngularVelocity / (2 * Mathf.PI)) * 360 * Time.deltaTime;
-        Wheel.transform.Rotate(theta, 0, 0);
+        
 
-        if (isGrounded)
+        if(TorqueForce != 0)
         {
-            rb.AddForceAtPosition(transform.forward * EngineForce, WheelHitPoint, ForceMode.Force);
+            float EngineForce = 0;
+            float max_friction_force = WheelFriction * Mathf.Abs(weightOnWheel);
+            float Power_KE = 0.5f * massOnWheel * Mathf.Pow(rb.GetPointVelocity(gameObject.transform.position).magnitude, 2) * Time.fixedDeltaTime;
+            if ((Mathf.Abs(TorqueForce) - Power_KE) > max_friction_force)
+            {
+
+                if (WheelParticleSystem.isPlaying == false)
+                {
+                    WheelParticleSystem.Play(); WheelParticleSystem.Play();
+                }
+                EngineForce = Mathf.Sign(TorqueForce) * max_friction_force;
+            }
+            else
+            {
+                if (WheelParticleSystem.isPlaying == true)
+                {
+                    WheelParticleSystem.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+                    
+                    
+                }
+
+                EngineForce = TorqueForce;
+            }
+
+            if (isGrounded)
+            {
+                rb.AddForceAtPosition(transform.forward * EngineForce, WheelHitPoint, ForceMode.Force);
+            }
+            float theta = EngineRpm * 2 * Mathf.PI * Time.fixedDeltaTime;
+            Wheel.transform.Rotate(theta, 0, 0);
+        }
+        else
+        {
+            AngularVelocity = WheelAngularVelocity;// / wheelradius
+            float theta = (AngularVelocity / (2 * Mathf.PI)) * 360 * Time.fixedDeltaTime;
+            Wheel.transform.Rotate(theta, 0, 0);
         }
 
 
-        SteerVehicle(wheelVelocity);
+        //SteerVehicle(EngineRpm);
     }
 
     public void ApplyBrakesWheel(float brakeInput)
@@ -194,20 +192,25 @@ public class Suspension : MonoBehaviour
 
     public float SteerVehicle(Vector3 wheelVelocity)
     {
+        float slipAngle = 0;
+
         //float angle = transform.transform.eulerAngles.y;
+        if (isGrounded)
+        {
+            Vector3 localVelocity = transform.InverseTransformDirection(wheelVelocity);
 
-        Vector3 localVelocity = transform.InverseTransformDirection(wheelVelocity);
+            slipAngle = Mathf.Atan2(localVelocity.x, Mathf.Abs(localVelocity.z)) * Mathf.Rad2Deg;
 
-        float slipAngle = Mathf.Atan2(localVelocity.x, Mathf.Abs(localVelocity.z)) * Mathf.Rad2Deg;
+            float tireCoefficient = 0.3f;
+            float lateralForceMagnitude = weightOnWheel * tireCoefficient * slipAngle * Time.deltaTime;
 
-        float tireCoefficient = 0.3f;
-        float lateralForceMagnitude = weightOnWheel * tireCoefficient * slipAngle * Time.deltaTime;
+            Vector3 lateralSlipForce = transform.right * lateralForceMagnitude;
 
-        Vector3 lateralSlipForce = transform.right * lateralForceMagnitude;
+            Vector3 tireGripForce = -transform.right * (localVelocity.x * massOnWheel * 0.88f);
 
-        Vector3 tireGripForce = -transform.right * (localVelocity.x * massOnWheel * 0.88f);
+            rb.AddForceAtPosition(lateralSlipForce + tireGripForce, transform.position);
+        }
 
-        rb.AddForceAtPosition(lateralSlipForce + tireGripForce, transform.position);
 
 
         return slipAngle;

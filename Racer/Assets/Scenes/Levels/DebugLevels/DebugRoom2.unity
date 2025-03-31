@@ -2142,13 +2142,29 @@ PrefabInstance:
       propertyPath: DampenerResistance
       value: 3500
       objectReference: {fileID: 0}
+    - target: {fileID: 3834868191104226047, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: InitialModule.size3D
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3834868191104226047, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3834868191104226047, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3834868191104226047, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: EmissionModule.rateOverDistance.scalar
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4132112025350686852, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: m_Drag
-      value: 0.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4132112025350686852, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: m_AngularDrag
-      value: 0.05
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4478330661727088293, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: m_Name
@@ -2167,6 +2183,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 2acfe624b136fbc45ba2fbccc0ff2070, type: 2}
     - target: {fileID: 5904074708630851799, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: Piston
+      value: 
+      objectReference: {fileID: 11400000, guid: b0ce55cdbec17a846be92e061811a81a, type: 2}
+    - target: {fileID: 5904074708630851799, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: CamShaft
       value: 
       objectReference: {fileID: 11400000, guid: c5263a29297b8de408fe38e95ecbcc43, type: 2}
@@ -2178,6 +2198,10 @@ PrefabInstance:
       propertyPath: CrankShaft
       value: 
       objectReference: {fileID: 11400000, guid: 62706adc407d21543b5410707b762a2a, type: 2}
+    - target: {fileID: 5904074708630851799, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: Transmission
+      value: 
+      objectReference: {fileID: 11400000, guid: b378827e5923f0e4eb77354ecbf99f09, type: 2}
     - target: {fileID: 5904074708630851799, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: AirController
       value: 
@@ -2233,6 +2257,10 @@ PrefabInstance:
     - target: {fileID: 5904074708630851800, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6884452469396089950, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8064169478203780278, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: DampenerResistance
@@ -7832,7 +7860,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: dba615b1dc535d44792dc890edbf0d13, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.5160217
+      value: -1.2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: dba615b1dc535d44792dc890edbf0d13, type: 3}
       propertyPath: m_LocalPosition.z
@@ -9625,6 +9653,25 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5885870659762850279, guid: e75c20a2de742dd4bb2ffb2a5bf08ce7, type: 3}
   m_PrefabInstance: {fileID: 1780040548}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1817945678 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7749953497632866695, guid: dba615b1dc535d44792dc890edbf0d13, type: 3}
+  m_PrefabInstance: {fileID: 1371505015}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1817945682
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1817945678}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4877366222351349938, guid: dba615b1dc535d44792dc890edbf0d13, type: 3}
 --- !u!1001 &1831118012
 PrefabInstance:
   m_ObjectHideFlags: 0

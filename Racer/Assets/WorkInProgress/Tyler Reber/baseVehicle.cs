@@ -134,7 +134,7 @@ public class baseVehicle : MonoBehaviour
         rb.useGravity = true;
         //rb.mass = 1000;
         rb.drag = 0.1f;// 0.5f;
-        rb.angularDrag = 0.5f;// 0.5f;
+        //rb.angularDrag = 0.05f;// 0.5f;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         rb.maxAngularVelocity = 7;
@@ -285,7 +285,7 @@ public class baseVehicle : MonoBehaviour
         float wheelAngularVelocity = CalculateWheelAngularVelocity();
 
         //float peekPower = CalculatePeekPower(input, wheelAngularVelocity) * 0.5f;
-        float peekPower = (RunTimeHorsePower * 745.7f) / rb.velocity.magnitude * 0.5f;
+        float peekPower = (RunTimeHorsePower * 745.7f) / rb.velocity.magnitude * 0.5f; //Energy Split accross wheels.
 
         RunTimeWheelTorque = wheelTorque_Nm;
 
@@ -294,10 +294,16 @@ public class baseVehicle : MonoBehaviour
         RunTimeMotorPower = peekPower + RunTimeWheelTorque; // / 0.5f for the wheel radius
                                                     // float WheelAngularVelocity = averageWheelVelocity / (RearTireRadius);
 
-        wheel_FL.DriveWheel(0, rb.GetPointVelocity(WheelOBJ_FL.transform.position), wheelAngularVelocity);
-        wheel_FR.DriveWheel(0, rb.GetPointVelocity(WheelOBJ_FR.transform.position), wheelAngularVelocity);
-        wheel_BL.DriveWheel(RunTimeMotorPower, rb.GetPointVelocity(WheelOBJ_BL.transform.position), wheelAngularVelocity);
-        wheel_BR.DriveWheel(RunTimeMotorPower, rb.GetPointVelocity(WheelOBJ_BR.transform.position), wheelAngularVelocity);
+        wheel_FL.DriveWheel(0, CurrentRPM, wheelAngularVelocity);
+        wheel_FR.DriveWheel(0, CurrentRPM, wheelAngularVelocity);
+        wheel_BL.DriveWheel(RunTimeMotorPower, CurrentRPM, wheelAngularVelocity);
+        wheel_BR.DriveWheel(RunTimeMotorPower, CurrentRPM, wheelAngularVelocity);
+
+        wheel_FL.SteerVehicle(rb.GetPointVelocity(WheelOBJ_FL.transform.position));
+        wheel_FR.SteerVehicle(rb.GetPointVelocity(WheelOBJ_FR.transform.position));
+        wheel_BL.SteerVehicle(rb.GetPointVelocity(WheelOBJ_BL.transform.position));
+        wheel_BR.SteerVehicle(rb.GetPointVelocity(WheelOBJ_BR.transform.position));
+
     }
 
     protected void ApplyBrake(float input)
