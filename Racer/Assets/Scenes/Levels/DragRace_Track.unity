@@ -4040,7 +4040,7 @@ Transform:
   - {fileID: 581123647}
   - {fileID: 651728250}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &475215708
 PrefabInstance:
@@ -4297,7 +4297,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7001673664432761239, guid: a674e85aedc1f4aaaa33310b82dba044, type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7001673664432761239, guid: a674e85aedc1f4aaaa33310b82dba044, type: 3}
       propertyPath: m_LocalScale.x
@@ -5430,7 +5430,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4089494628025429678, guid: 460b6c011c3a6a740a7af4d62bf100c1, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4089494628025429678, guid: 460b6c011c3a6a740a7af4d62bf100c1, type: 3}
       propertyPath: m_LocalScale.x
@@ -6013,6 +6013,7 @@ GameObject:
   - component: {fileID: 681171812}
   - component: {fileID: 681171811}
   - component: {fileID: 681171810}
+  - component: {fileID: 681171813}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -6052,7 +6053,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 4000
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -6086,6 +6087,39 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &681171813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 681171809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
 --- !u!1001 &695945297
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6333,7 +6367,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: c9383b133284f284589d12245d9b2089, type: 2}
     - target: {fileID: 5904074708630851800, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 5904074708630851800, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7953,7 +7987,7 @@ Transform:
   - {fileID: 522920257}
   - {fileID: 1632062256}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &908196748
 PrefabInstance:
@@ -14503,7 +14537,7 @@ Transform:
   - {fileID: 1267512725}
   - {fileID: 657631145}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1775650859
 PrefabInstance:
@@ -14817,7 +14851,7 @@ Transform:
   - {fileID: 1489433049}
   - {fileID: 2087444834}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1822191230
 PrefabInstance:
