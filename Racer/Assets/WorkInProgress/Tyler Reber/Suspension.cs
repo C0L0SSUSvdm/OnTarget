@@ -22,6 +22,7 @@ public class Suspension : MonoBehaviour
     float CenterOfMassDistance;
     Rigidbody rb;
     public bool isGrounded;
+    bool isSkidding = false;
 
     [Header("----- Spring Spring Values -----")]
     //[SerializeField] float SpringrRestPosition = -0.25f;
@@ -120,21 +121,29 @@ public class Suspension : MonoBehaviour
             float EngineForce = 0;
             float max_friction_force = WheelFriction * Mathf.Abs(weightOnWheel);
             float Power_KE = 0.5f * massOnWheel * Mathf.Pow(rb.GetPointVelocity(gameObject.transform.position).magnitude, 2) * Time.fixedDeltaTime;
+
+            var test = WheelParticleSystem.main;
             if ((Mathf.Abs(TorqueForce) - Power_KE) > max_friction_force)
             {
 
-                if (WheelParticleSystem.isPlaying == false)
+                if (isSkidding == false)
                 {
-                    WheelParticleSystem.Play(); WheelParticleSystem.Play();
+                    isSkidding = true;
+                    
+
+                    
+                    test.startSizeMultiplier = 50.0f;
+                    //WheelParticleSystem.Play();
                 }
                 EngineForce = Mathf.Sign(TorqueForce) * max_friction_force;
             }
             else
             {
-                if (WheelParticleSystem.isPlaying == true)
+                if (isSkidding == true)
                 {
-                    WheelParticleSystem.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-                    
+                    isSkidding = false;
+                    //heelParticleSystem.Pause();
+                    test.startSizeMultiplier = 0.5f;
                     
                 }
 
