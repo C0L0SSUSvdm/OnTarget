@@ -20,11 +20,11 @@ public class HUD_RPMGuage_Default : MonoBehaviour, HUD_RPMGuage_Director
     {
         //164 from 0 to max
         float convertedspeed = (rpm * 0.625f);
-        float spedometerangle = (rpm / 160.0f) * 164;
+        float spedometerangle = (rpm / 1000.0f) * 180;
 
 
-        Quaternion roation = Quaternion.Euler(0, 0, -(spedometerangle - 10.5f));
-        needle.transform.rotation = roation;
+        Quaternion rotation = Quaternion.Euler(0, 0, -(spedometerangle - 30.0f));
+        needle.transform.rotation = rotation;
 
 
 
