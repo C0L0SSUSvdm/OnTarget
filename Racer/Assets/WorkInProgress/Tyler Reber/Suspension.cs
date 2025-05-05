@@ -132,7 +132,7 @@ public class Suspension : MonoBehaviour
                     
 
                     
-                    test.startSizeMultiplier = 50.0f;
+                    test.startSizeMultiplier = 5.0f;
                     //WheelParticleSystem.Play();
                 }
                 EngineForce = Mathf.Sign(TorqueForce) * max_friction_force;
