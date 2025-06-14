@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028305, g: 0.22571313, b: 0.3069213, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6806,6 +6806,28 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6c4a6e926f5bbbd49ace3a34641b4aef, type: 3}
   m_PrefabInstance: {fileID: 963782889}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &995854445 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4478330661727088293, guid: 56259fe65c7c732479af17e502ed0c76, type: 3}
+  m_PrefabInstance: {fileID: 317141599}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &995854446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 995854445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85270dacf384e994895e0fa8ca7f7582, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rollSpeed: 100
+  groundCheckDistance: 2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!64 &1012372542
 MeshCollider:
   m_ObjectHideFlags: 0
