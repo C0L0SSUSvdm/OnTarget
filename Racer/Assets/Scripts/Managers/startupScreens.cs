@@ -20,6 +20,11 @@ public class startupScreens : MonoBehaviour
     [SerializeField] public Image SlideTwo;
     [SerializeField] public Image SlideThree;
 
+    [SerializeField] private string startupUIScene;
+    [SerializeField] private string startupLevelScene;
+    [SerializeField] private string SplashScreens;
+    [SerializeField] private string BlankScene;
+    
     private float maxslideTime = 0.25f;
     private float maxFadeTime = 0.5f;
 
@@ -95,14 +100,14 @@ public class startupScreens : MonoBehaviour
         }
         else
         {
-            gameManager.instance.ActiveUI = "UI_Title";
-            gameManager.instance.ActiveLevel = "TitleLevel";
+            gameManager.instance.ActiveUI = startupUIScene;
+            gameManager.instance.ActiveLevel = startupLevelScene;
             //gameManager.instance.SelectedUI = "GamePlayUI";
             //gameManager.instance.SelectedLevel = "DebugRoom2";
-            SceneManager.LoadSceneAsync("UI_Title", LoadSceneMode.Additive);
-            SceneManager.LoadSceneAsync("TitleLevel", LoadSceneMode.Additive);
-            SceneManager.UnloadSceneAsync("SplashScreens");
-            SceneManager.UnloadSceneAsync("BlankScene");
+            SceneManager.LoadSceneAsync(startupUIScene, LoadSceneMode.Additive);
+            SceneManager.LoadSceneAsync(startupLevelScene, LoadSceneMode.Additive);
+            SceneManager.UnloadSceneAsync(SplashScreens);
+            SceneManager.UnloadSceneAsync(BlankScene);
 
             StartCoroutine(LoadingProgress());
         }
