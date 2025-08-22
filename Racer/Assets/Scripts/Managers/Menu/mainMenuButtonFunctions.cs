@@ -63,17 +63,17 @@ public class mainMenuButtonFunctions : MonoBehaviour
                 // Store cameras by their names
                 if (camName == mainVCamName)
                 {
-                    vCameras["main"] = cam;
+                    vCameras[mainVCamName] = cam;
                     Debug.Log($"Found Main VCam: {camName}");
                 }
                 else if (camName == levelSelectVCamName)
                 {
-                    vCameras["levelselect"] = cam;
+                    vCameras[levelSelectVCamName] = cam;
                     Debug.Log($"Found Level Select VCam: {camName}");
                 }
                 else if (camName == garrageVCamName)
                 {
-                    vCameras["garrageVCamName"] = cam;
+                    vCameras[garrageVCamName] = cam;
                     Debug.Log($"Found Settings VCam: {camName}");
                 }
             }
@@ -89,24 +89,46 @@ public class mainMenuButtonFunctions : MonoBehaviour
             Debug.LogWarning("Garage scene not loaded yet, cannot switch cameras");
             return;
         }
-        
-        // Turn off all cameras
-        foreach (var cam in vCameras.Values)
+    
+        Debug.Log($"Attempting to switch to camera: {targetCamera}");
+        Debug.Log($"Available cameras: {string.Join(", ", vCameras.Keys)}");
+    
+        // Check if target camera exists
+        if (!vCameras.ContainsKey(targetCamera))
         {
-            if (cam != null)
-                cam.Priority = 0;
+            Debug.LogError($"Camera '{targetCamera}' not found! Available cameras: {string.Join(", ", vCameras.Keys)}");
+            return;
         }
-        
-        // Turn on target camera
-        if (vCameras.ContainsKey(targetCamera) && vCameras[targetCamera] != null)
+    
+        if (vCameras[targetCamera] == null)
         {
-            vCameras[targetCamera].Priority = 10;
-            currentActiveCam = targetCamera;
-            Debug.Log($"Switched to {targetCamera} camera");
+            Debug.LogError($"Camera '{targetCamera}' reference is null!");
+            return;
         }
-        else
+    
+        // Turn off all cameras first
+        foreach (var kvp in vCameras)
         {
-            Debug.LogWarning($"Camera '{targetCamera}' not found in Garage scene!");
+            if (kvp.Value != null)
+            {
+                kvp.Value.Priority = 0;
+                Debug.Log($"Set {kvp.Key} camera priority to 0");
+            }
+        }
+    
+        // Turn on target camera with higher priority
+        vCameras[targetCamera].Priority = 100; // Use higher priority to ensure it takes precedence
+        currentActiveCam = targetCamera;
+    
+        Debug.Log($"Successfully switched to {targetCamera} camera (Priority: {vCameras[targetCamera].Priority})");
+    
+        // Optional: Log all camera priorities for debugging
+        foreach (var kvp in vCameras)
+        {
+            if (kvp.Value != null)
+            {
+                Debug.Log($"{kvp.Key} camera priority: {kvp.Value.Priority}");
+            }
         }
     }
     
