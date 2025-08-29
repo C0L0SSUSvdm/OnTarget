@@ -6,19 +6,11 @@ using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-
 //This Script is Loaded by the gameManager.cs
-//After the Startup Splash screens are done, this script intializes the GameManager Settings to run for the title screen.
+//After the Startup Splash screens are done, this script initializes the GameManager Settings to run for the title screen.
 public class startupScreens : MonoBehaviour
 {
-
-    [SerializeField] public Image ActiveImage;
-    [SerializeField] public int index = 0;
-    [SerializeField] public int SlideCount = 3;
-
-    [SerializeField] public Image SlideOne;
-    [SerializeField] public Image SlideTwo;
-    [SerializeField] public Image SlideThree;
+    [SerializeField] public List<Image> FadeObjects = new List<Image>();
 
     [SerializeField] private string startupUIScene;
     [SerializeField] private string startupLevelScene;
@@ -37,81 +29,77 @@ public class startupScreens : MonoBehaviour
     private void Awake()
     {
         gameManager.instance.SetMenuObject(gameObject);
-        
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        ActiveImage = gameObject.transform.GetChild(index).gameObject.GetComponent<Image>();
-        ActiveImage.gameObject.SetActive(true);
+        // Activate all fade objects
+        foreach (Image fadeObject in FadeObjects)
+        {
+            fadeObject.gameObject.SetActive(true);
+        }
+        
         StartCoroutine(TransitionSlide());
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ShowSlideTimer = maxslideTime;
-        }
-    }
-
-
+    
     IEnumerator TransitionSlide()
     {
-
+        // Fade In
         while (FadeInTimer < maxFadeTime)
         {
             FadeInTimer += Time.deltaTime;
             float ratio = FadeInTimer / maxFadeTime;
-            Color color = new Color(ActiveImage.color.r, ActiveImage.color.g, ActiveImage.color.b, Mathf.Lerp(0, 1, ratio));
-            ActiveImage.color = color;
+            
+            // Fade in all objects simultaneously
+            foreach (Image fadeObject in FadeObjects)
+            {
+                Color color = new Color(fadeObject.color.r, fadeObject.color.g, fadeObject.color.b, Mathf.Lerp(0, 1, ratio));
+                fadeObject.color = color;
+            }
 
             yield return null;
         }
 
+        // Show Slide - Wait minimum time first
         while (ShowSlideTimer < maxslideTime)
         {
-            
             ShowSlideTimer += Time.deltaTime;
-
             yield return null;
         }
 
-        while (FadeOutTimer > maxFadeTime * 0.5f) // Doesn't Work Correctly yet
+        // Wait for Space Input
+        while (!Input.GetKeyDown(KeyCode.Space))
+        {
+            yield return null;
+        }
+
+        // Fade Out
+        while (FadeOutTimer < maxFadeTime * 0.5f)
         {
             FadeOutTimer += Time.deltaTime;
-            float ratio = FadeOutTimer / maxFadeTime * 0.5f;
-            Color color = new Color(ActiveImage.color.r, ActiveImage.color.g, ActiveImage.color.b, Mathf.Lerp(0, 1, ratio));
-            ActiveImage.color = color;
+            float ratio = FadeOutTimer / (maxFadeTime * 0.5f);
+            
+            // Fade out all objects simultaneously
+            foreach (Image fadeObject in FadeObjects)
+            {
+                Color color = new Color(fadeObject.color.r, fadeObject.color.g, fadeObject.color.b, Mathf.Lerp(1, 0, ratio));
+                fadeObject.color = color;
+            }
+            
             yield return null;
         }
-        index++;
-        if (index < SlideCount)
-        {
-            FadeInTimer = 0.0f;
-            FadeOutTimer = 0.0f;
-            ShowSlideTimer = 0.0f;
-            ActiveImage.gameObject.SetActive(false);
-            ActiveImage = gameObject.transform.GetChild(index).gameObject.GetComponent<Image>();
-            ActiveImage.gameObject.SetActive(true);           
-            StartCoroutine(TransitionSlide());
-        }
-        else
-        {
-            gameManager.instance.ActiveUI = startupUIScene;
-            gameManager.instance.ActiveLevel = startupLevelScene;
-            //gameManager.instance.SelectedUI = "GamePlayUI";
-            //gameManager.instance.SelectedLevel = "DebugRoom2";
-            SceneManager.LoadSceneAsync(startupUIScene, LoadSceneMode.Additive);
-            SceneManager.LoadSceneAsync(startupLevelScene, LoadSceneMode.Additive);
-            SceneManager.UnloadSceneAsync(SplashScreens);
-            SceneManager.UnloadSceneAsync(BlankScene);
+        
+        // Load next scenes after splash is done
+        gameManager.instance.ActiveUI = startupUIScene;
+        gameManager.instance.ActiveLevel = startupLevelScene;
+        
+        SceneManager.LoadSceneAsync(startupUIScene, LoadSceneMode.Additive);
+        SceneManager.LoadSceneAsync(startupLevelScene, LoadSceneMode.Additive);
+        SceneManager.UnloadSceneAsync(SplashScreens);
+        SceneManager.UnloadSceneAsync(BlankScene);
 
-            StartCoroutine(LoadingProgress());
-        }
-
+        StartCoroutine(LoadingProgress());
     }
 
     IEnumerator LoadingProgress()
@@ -130,5 +118,4 @@ public class startupScreens : MonoBehaviour
 
         gameManager.instance.LoadingScreen.SetActive(false);
     }
-
 }
