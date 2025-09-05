@@ -1,12 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
-
-
 
 public class modeSelector : MonoBehaviour
 {
@@ -15,6 +11,7 @@ public class modeSelector : MonoBehaviour
 
     [SerializeField] Image ThumbnailImage;
     [SerializeField] TextMeshProUGUI DescriptionText;
+
 
     private void Start()
     {
@@ -33,7 +30,17 @@ public class modeSelector : MonoBehaviour
         {
             selectedModeIndex--;
         }
-        UpdateViewSprite();
+
+        var _mainMenuButtonFunctions = FindObjectsByType<mainMenuButtonFunctions>(FindObjectsSortMode.None);
+        foreach (var _menuButtonFunction in _mainMenuButtonFunctions)
+        {
+            if (_menuButtonFunction.gameObject.name == "Level Select Button")
+            {
+                _menuButtonFunction.NextPoster();
+            }
+        }
+
+        //UpdateViewSprite();
         //UpdateScenes();
     }
 
@@ -47,7 +54,17 @@ public class modeSelector : MonoBehaviour
         {
             selectedModeIndex++;
         }
-        UpdateViewSprite();
+        
+        var _mainMenuButtonFunctions = FindObjectsByType<mainMenuButtonFunctions>(FindObjectsSortMode.None);
+        foreach (var _menuButtonFunction in _mainMenuButtonFunctions)
+        {
+            if (_menuButtonFunction.gameObject.name == "Level Select Button")
+            {
+                _menuButtonFunction.PreviousPoster();
+            }
+        }
+        
+        //UpdateViewSprite();
         //UpdateScenes();
     }
 
