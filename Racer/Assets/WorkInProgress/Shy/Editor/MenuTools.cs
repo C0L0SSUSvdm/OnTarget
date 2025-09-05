@@ -7,20 +7,20 @@ using UnityEngine;
 
 public class MenuTools
 {
-    [MenuItem("OnTarget/Tools/Play Game")]
+    [MenuItem("OnTarget/Play Game")]
     public static void PlayGameFromGameLoader()
     {
         string currentSceneName = "";
         currentSceneName = EditorSceneManager.GetActiveScene().name;
 
         File.WriteAllText(".lastScene", currentSceneName);
-
+        EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
         EditorSceneManager.OpenScene($"{Directory.GetCurrentDirectory()}/Assets/Scenes/GameManager.unity");
 
         EditorApplication.isPlaying = true;
     }
 
-    [MenuItem("OnTarget/LoadEditedScene")]
+    [MenuItem("OnTarget/Load Last Edited Scene")]
     public static void ReturnToLastScene()
     {
         string lastScene = File.ReadAllText(".lastScene");
