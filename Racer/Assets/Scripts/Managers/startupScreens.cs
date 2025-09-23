@@ -1,14 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
-//This Script is Loaded by the gameManager.cs
-//After the Startup Splash screens are done, this script initializes the GameManager Settings to run for the title screen.
+// This Script is Loaded by the gameManager.cs
+// After the Startup Splash screens are done, this script initializes the GameManager Settings to run for the title screen.
 public class startupScreens : MonoBehaviour
 {
     [Header("Fade Objects")]
