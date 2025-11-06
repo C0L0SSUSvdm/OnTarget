@@ -40,8 +40,8 @@ public class modeSelector : MonoBehaviour
             }
         }
 
-        //UpdateViewSprite();
-        //UpdateScenes();
+        UpdateViewSprite();
+        UpdateScenes();
     }
 
     public void IterateRight()
@@ -64,8 +64,8 @@ public class modeSelector : MonoBehaviour
             }
         }
         
-        //UpdateViewSprite();
-        //UpdateScenes();
+        UpdateViewSprite();
+        UpdateScenes();
     }
 
     public void SetTargetChildName()
@@ -79,11 +79,11 @@ public class modeSelector : MonoBehaviour
         gameManager.instance.SelectedLevel = modes[selectedModeIndex].LevelName;
     }
 
-    //void UpdateScenes()
-    //{
-    //    gameManager.instance.SelectedUI = modes[selectedModeIndex].UIName;
-    //    gameManager.instance.SelectedLevel = modes[selectedModeIndex].LevelName;
-    //}
+    void UpdateScenes()
+    {
+        gameManager.instance.SelectedUI = modes[selectedModeIndex].UIName;
+        gameManager.instance.SelectedLevel = modes[selectedModeIndex].LevelName;
+    }
 
     void UpdateViewSprite()
     {

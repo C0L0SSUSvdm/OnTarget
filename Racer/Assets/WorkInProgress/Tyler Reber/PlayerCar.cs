@@ -57,14 +57,14 @@ public class PlayerCar : baseVehicle
 
         //ApplySteerForce(turnInput);
 
-        HUD.Item.UpdateSpeedometer(rb.velocity.magnitude);
-        HUD.Item.UpdateRPMGuage(CurrentRPM);
-        HUD.Item.UpdateTransmissionGuage(RunTimeGearIndex);
+
     }
 
     private void Update()
     {
-        
+        HUD.Item.UpdateSpeedometer(rb.velocity.magnitude);
+        HUD.Item.UpdateRPMGuage(CurrentRPM);
+        HUD.Item.UpdateTransmissionGuage(RunTimeGearIndex);
     }
 
     private void LateUpdate()

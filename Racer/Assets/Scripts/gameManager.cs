@@ -138,8 +138,9 @@ public class gameManager : MonoBehaviour
     
         SceneManager.UnloadSceneAsync(ActiveUI);
         SceneManager.UnloadSceneAsync(ActiveLevel);
-        scenesToLoad.Add(SceneManager.LoadSceneAsync(SelectedUI, LoadSceneMode.Additive));
         scenesToLoad.Add(SceneManager.LoadSceneAsync(SelectedLevel, LoadSceneMode.Additive));
+        scenesToLoad.Add(SceneManager.LoadSceneAsync(SelectedUI, LoadSceneMode.Additive));
+        
         //Might need to clear Menu references in game manager
         HUD.Item.ResetHUD();
         Hud = null;

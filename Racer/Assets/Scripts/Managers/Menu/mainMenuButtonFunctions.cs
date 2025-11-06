@@ -30,6 +30,8 @@ public class mainMenuButtonFunctions : MonoBehaviour
     {
         // Listen for scene loaded events
         SceneManager.sceneLoaded += OnSceneLoaded;
+        FindVCamerasInGarageScene();
+        FindLevelPosters();
     }
     
     void OnDestroy()
@@ -51,7 +53,7 @@ public class mainMenuButtonFunctions : MonoBehaviour
     
     void FindVCamerasInGarageScene()
     {
-        vCameras.Clear(); // Clear existing cameras
+        //vCameras.Clear(); // Clear existing cameras
     
         Scene garageScene = SceneManager.GetSceneByName("Garage");
         if (!garageScene.isLoaded)
@@ -132,11 +134,11 @@ public class mainMenuButtonFunctions : MonoBehaviour
     
     void SwitchCamera(string targetCamera)
     {
-        if (!garageSceneLoaded)
-        {
-            Debug.LogWarning("Garage scene not loaded yet, cannot switch cameras");
-            return;
-        }
+        // if (!garageSceneLoaded)
+        // {
+        //     Debug.LogWarning("Garage scene not loaded yet, cannot switch cameras");
+        //     return;
+        // }
     
         Debug.Log($"Attempting to switch to camera: {targetCamera}");
         Debug.Log($"Available cameras: {string.Join(", ", vCameras.Keys)}");
@@ -357,7 +359,7 @@ public class mainMenuButtonFunctions : MonoBehaviour
     public void QuitToTitleScreen()
     {
         gameManager.instance.SelectedUI = "UI_Title";
-        gameManager.instance.SelectedLevel = "TitleLevel";
+        gameManager.instance.SelectedLevel = "Garage";
         gameManager.instance.LoadSelectedLevel();
     }
 
