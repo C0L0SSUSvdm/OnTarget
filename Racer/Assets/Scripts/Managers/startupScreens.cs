@@ -77,24 +77,13 @@ public class startupScreens : MonoBehaviour
 
     IEnumerator SequentialFadeIn()
     {
-        // First group (first 2 objects)
-        for (int i = 0; i < Mathf.Min(2, FadeObjects.Count); i++)
+        for (var i = 0; i < FadeObjects.Count; i++)
         {
             if (i > 0)
                 yield return new WaitForSeconds(delayBetweenObjects);
             
             StartCoroutine(FadeInSingleObject(FadeObjects[i]));
         }
-
-        // Wait before spawning second group
-        yield return new WaitForSeconds(delayBetweenGroups);
-
-        // Second group (remaining objects)
-        for (int i = 2; i < FadeObjects.Count; i++)
-        {
-            StartCoroutine(FadeInSingleObject(FadeObjects[i]));
-        }
-
         // Wait for all fade-ins to complete
         yield return new WaitForSeconds(fadeInTime);
     }

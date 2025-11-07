@@ -132,22 +132,12 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3057425289321303741, guid: 030c85348f8a51d4ea02460948b98b95, type: 3}
   m_PrefabInstance: {fileID: 7340555484392589934}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1838855311 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3953839584605266379, guid: 030c85348f8a51d4ea02460948b98b95, type: 3}
-  m_PrefabInstance: {fileID: 7340555484392589934}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &2126682705 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9121710524323123071, guid: 030c85348f8a51d4ea02460948b98b95, type: 3}
-  m_PrefabInstance: {fileID: 7340555484392589934}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2126682707 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8562888137107673041, guid: 030c85348f8a51d4ea02460948b98b95, type: 3}
   m_PrefabInstance: {fileID: 7340555484392589934}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2126682705}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
@@ -161,6 +151,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1240873324538263186, guid: 030c85348f8a51d4ea02460948b98b95, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2281387555553032671, guid: 030c85348f8a51d4ea02460948b98b95, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3953839584605266379, guid: 030c85348f8a51d4ea02460948b98b95, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4707305191027372579, guid: 030c85348f8a51d4ea02460948b98b95, type: 3}
       propertyPath: allowSkip
       value: 1
@@ -199,20 +201,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4707305191027372579, guid: 030c85348f8a51d4ea02460948b98b95, type: 3}
       propertyPath: FadeObjects.Array.size
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4707305191027372579, guid: 030c85348f8a51d4ea02460948b98b95, type: 3}
       propertyPath: FadeObjects.Array.data[0]
       value: 
-      objectReference: {fileID: 2126682705}
+      objectReference: {fileID: 920217020}
     - target: {fileID: 4707305191027372579, guid: 030c85348f8a51d4ea02460948b98b95, type: 3}
       propertyPath: FadeObjects.Array.data[1]
       value: 
-      objectReference: {fileID: 920217020}
+      objectReference: {fileID: 80032148}
     - target: {fileID: 4707305191027372579, guid: 030c85348f8a51d4ea02460948b98b95, type: 3}
       propertyPath: FadeObjects.Array.data[2]
       value: 
-      objectReference: {fileID: 1838855311}
+      objectReference: {fileID: 80032148}
     - target: {fileID: 4707305191027372579, guid: 030c85348f8a51d4ea02460948b98b95, type: 3}
       propertyPath: FadeObjects.Array.data[3]
       value: 
@@ -372,6 +374,10 @@ PrefabInstance:
     - target: {fileID: 4707305191027372579, guid: 030c85348f8a51d4ea02460948b98b95, type: 3}
       propertyPath: fadeObjectsData.Array.data[1].fadeInCurve.m_Curve.Array.data[1].outWeight
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4882975167674104495, guid: 030c85348f8a51d4ea02460948b98b95, type: 3}
+      propertyPath: m_Color.a
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7340555484490208258, guid: 030c85348f8a51d4ea02460948b98b95, type: 3}
       propertyPath: m_Name
